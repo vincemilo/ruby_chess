@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 class Pawn
-  attr_reader :moves
+  attr_accessor :moves
 
   def initialize
-    @moves = [[0, 1], [0, 2]]
+    @moves = [[0, 1]]
   end
 end
