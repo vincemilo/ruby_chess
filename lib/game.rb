@@ -2,7 +2,7 @@
 require_relative 'units/pawn'
 
 class Game
-  attr_reader :board, :captured, :turn
+  attr_accessor :board, :captured, :turn
 
   def initialize
     @board = Array.new(8) { Array.new(8, '0') }
@@ -35,13 +35,13 @@ class Game
   end
 
   def x_pos(pos)
-    # extracts x coordinate (reversed)
-    pos[1]
+    # extracts x coordinate
+    pos[0]
   end
 
   def y_pos(pos)
-    # extracts y coordinate (reversed)
-    pos[0]
+    # extracts y coordinate
+    pos[1]
   end
 
   def capture(pos)
@@ -75,38 +75,27 @@ class Game
   end
 
   def get_piece(piece, start_pos, end_pos)
-    if piece == 'P'
-      # starting line
-      one_ahead = @board[start_pos[1] + 1]
-      two_ahead = @board[start_pos[1] + 2]
-      if start_pos[1] == 1
-        pawn = Pawn.new
-        pawn.moves = [[0, 1], [0, 2]]
-      end
-      pawn
-    # elsif piece.downcase == 'r'
-    #   rook = Rook.new
-    #   rook
+    white_pawn(start_pos, end_pos) if piece == 'P'
+  end
+
+  def white_pawn(start_pos, end_pos)
+    # starting line
+    pawn = Pawn.new
+    one_ahead = @board[y_pos(start_pos) + 1][x_pos(start_pos)]
+    two_ahead = @board[y_pos(start_pos) + 2][x_pos(start_pos)]
+    display_board
+    if start_pos[1] == 1
+      pawn.moves = if one_ahead == '0' && two_ahead == '0'
+                     [[0, 1], [0, 2]]
+                   elsif one_ahead == '0'
+                     [[0, 1]]
+                   else
+                     []
+                   end
     end
+    pawn
   end
 end
 
 # game = Game.new
-# game.display_board
-# game.move_unit([0, 1], [0, 3], 'P')
-# puts ''
-# game.display_board
-# puts ''
-# game.move_unit([6, 1], [4, 1], 'p')
-# puts ''
-# game.display_board
-# puts ''
-# game.move_unit([3, 0], [4, 1], 'P')
-# puts ''
-# game.display_board
-# game.move_unit([6, 2], [4, 2], 'p')
-# puts ''
-# game.display_board
-# game.move_unit([1, 0], [0, 0], 'P')
-# puts ''
 # game.display_board
