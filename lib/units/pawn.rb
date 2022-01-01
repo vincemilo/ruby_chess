@@ -4,6 +4,6 @@ class Pawn
   attr_accessor :moves
 
   def initialize
-    @moves = nil
+    @moves = [[0, 1]]
   end
 end

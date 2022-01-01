@@ -55,7 +55,7 @@ class Game
   #   puts "Captured pieces: #{@captured}"
   # end
 
-  def valid_move?(start_pos, end_pos, piece)
+  def valid_move?(_start_pos, end_pos, _piece)
     return false if end_pos[0].negative? || end_pos[0] > 7 ||
                     end_pos[1].negative? || end_pos[1] > 7
 
@@ -79,9 +79,9 @@ class Game
     white_pieces = %w[P R N B Q K]
     black_pieces = white_pieces.map(&:downcase)
 
-    return true if @turn.zero? && white_pieces.any?(piece)
+    return true if @turn.zero? && black_pieces.any?(piece)
 
-    return true if @turn.positive? && black_pieces.any?(piece)
+    return true if @turn.positive? && white_pieces.any?(piece)
 
     false
   end
@@ -98,32 +98,43 @@ class Game
     @board[y_pos(start_pos) + 2][x_pos(start_pos)]
   end
 
-  def r_diag
+  def r_diag(start_pos)
     @board[y_pos(start_pos) + 1][x_pos(start_pos) + 1]
   end
 
-  def l_diag
+  def l_diag(start_pos)
     @board[y_pos(start_pos) + 1][x_pos(start_pos) - 1]
   end
 
+  def starting_line(start_pos, pawn)
+    if !occupied?(one_ahead(start_pos)) && !occupied?(two_ahead(start_pos))
+      pawn.moves << [0, 2]
+    elsif occupied?(one_ahead(start_pos))
+      pawn.moves = []
+    end
+  end
+
+  def check_diags(start_pos, pawn)
+    if enemy_occupied?(r_diag(start_pos)) && enemy_occupied?(l_diag(start_pos))
+      [[1, 1], [-1, 1]].each { |move| pawn.moves << move }
+    elsif enemy_occupied?(r_diag(start_pos))
+      pawn.moves << [1, 1]
+    elsif enemy_occupied?(l_diag(start_pos))
+      pawn.moves << [-1, 1]
+    end
+  end
+
   def white_pawn(start_pos, end_pos)
-    # starting line
     pawn = Pawn.new
 
     if start_pos[1] == 1
-      pawn.moves = if !occupied?(one_ahead(start_pos)) &&
-                      !occupied?(two_ahead(start_pos))
-                     [[0, 1], [0, 2]]
-                   elsif !occupied?(one_ahead(start_pos))
-                     [[0, 1]]
-                   else
-                     []
-                   end
+      starting_line(start_pos, pawn)
     elsif end_pos[1] == 7
       promote(end_pos)
-    else
-      pawn.moves = [0, 1]
     end
+
+    check_diags(start_pos, pawn)
+
     pawn
   end
 end
