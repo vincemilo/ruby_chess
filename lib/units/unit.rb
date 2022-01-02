@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Utils
+module Unit
   def one_ahead(start_pos)
     @board[y_pos(start_pos) + 1][x_pos(start_pos)]
   end
