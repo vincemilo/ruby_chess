@@ -1,6 +1,48 @@
 # frozen_string_literal: true
 
-module Unit
+require_relative '../board'
+
+class Unit
+  attr_reader :board, :start_pos, :end_pos, :moves
+
+  def initialize(start_pos = nil, end_pos = nil)
+    @board = Board.new
+    @start_pos = start_pos
+    @end_pos = end_pos
+    @moves = []
+  end
+
+  def x_pos(pos)
+    # extracts x coordinate
+    pos[0]
+  end
+
+  def y_pos(pos)
+    # extracts y coordinate
+    pos[1]
+  end
+
+  def occupied?(square)
+    return true unless square == '0'
+
+    false
+  end
+
+  def enemy_occupied?(piece)
+    white_pieces = %w[P R N B Q K]
+    black_pieces = white_pieces.map(&:downcase)
+
+    return true if @turn.zero? && black_pieces.any?(piece)
+
+    return true if @turn.positive? && white_pieces.any?(piece)
+
+    false
+  end
+
+  def get_piece(square)
+    @board[y_pos(square)][x_pos(square)]
+  end
+
   def one_ahead(start_pos)
     @board[y_pos(start_pos) + 1][x_pos(start_pos)]
   end
@@ -10,10 +52,13 @@ module Unit
   end
 
   def r_diag(start_pos)
-    @board[y_pos(start_pos) + 1][x_pos(start_pos) + 1]
+    @board.data[y_pos(start_pos) + 1][x_pos(start_pos) + 1]
   end
 
   def l_diag(start_pos)
     @board[y_pos(start_pos) + 1][x_pos(start_pos) - 1]
   end
 end
+
+# unit = Unit.new
+# unit.board.display_board
