@@ -1,9 +1,19 @@
 # frozen_string_literal: true
 
+# rubocop:disable Metrics/BlockLength
+
 require_relative '../lib/board'
 
 describe Board do
   subject(:board) { described_class.new }
+
+  describe '#valid_move?' do
+    context 'when a piece is moved off the board' do
+      it 'returns false' do
+        expect(board.valid_move?([1, 1], [-1, 1], 'P')).to eq(false)
+      end
+    end
+  end
 
   describe '#enemy_occupied?' do
     context 'when it\'s white\'s turn' do

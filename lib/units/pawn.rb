@@ -3,10 +3,11 @@
 require_relative 'unit'
 
 class Pawn < Unit
-  attr_reader :start_pos, :end_pos, :board, :moves
+  attr_accessor :start_pos, :end_pos, :board, :moves
 
   def initialize(start_pos = nil, end_pos = nil)
     super
+    @moves = [[0, 1]]
   end
 
   def starting_line(start_pos, pawn)
@@ -27,18 +28,18 @@ class Pawn < Unit
     end
   end
 
-  # def white_pawn(start_pos, end_pos, pawn)
+  def white_pawn(start_pos, end_pos, pawn)
 
-  #   if start_pos[1] == 1
-  #     starting_line(start_pos, pawn)
-  #   elsif end_pos[1] == 7
-  #     promote(end_pos)
-  #   end
+    if start_pos[1] == 1
+      starting_line(start_pos, pawn)
+    elsif end_pos[1] == 7
+      promote(end_pos)
+    end
 
-  #   check_diags(start_pos, pawn)
+    check_diags(start_pos, pawn)
 
-  #   pawn
-  # end
+    pawn
+  end
 end
 
 # pawn = Pawn.new

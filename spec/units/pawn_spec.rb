@@ -6,7 +6,6 @@ require_relative '../../lib/units/pawn'
 require_relative '../../lib/board'
 
 describe Pawn do
-  # let(:board) { instance_double(Board) }
   subject(:pawn) { described_class.new }
 
   describe '#r_diag' do
@@ -26,10 +25,10 @@ describe Pawn do
     before do
       x = 1
       y = 2
-      pawn.board[y][x] = 'p' # coords must be entered reverse due to array
+      pawn.board.data[y][x] = 'p'
     end
 
-    xit 'returns the square 1 up and 1 left of the selected piece' do
+    it 'returns the square 1 up and 1 left of the selected piece' do
       start_pos = [2, 1]
       expect(pawn.l_diag(start_pos)).to eq('p')
     end
@@ -40,7 +39,7 @@ describe Pawn do
 
     context 'when a white pawn is in its starting position
              with no units ahead and no diagonal captures' do
-      xit 'has 1 move or 2 move ahead options' do
+      it 'has 1 move or 2 move ahead options' do
         start_pos = [1, 1]
         end_pos = [1, 3]
         w_pawn = pawn.white_pawn(start_pos, end_pos, pawn)
@@ -53,15 +52,15 @@ describe Pawn do
       before do
         x = 3
         y = 2
-        pawn.board[y][x] = 'p'
-        pawn.board[y][x - 2] = 'p'
+        pawn.board.data[y][x] = 'p'
+        pawn.board.data[y][x - 2] = 'p'
       end
 
-      xit 'has all move options' do
+      it 'has all move options' do
         start_pos = [2, 1]
         end_pos = [3, 2]
-        pawn = pawn.white_pawn(start_pos, end_pos)
-        expect(pawn.moves).to eq [[0, 1], [0, 2], [1, 1], [-1, 1]]
+        w_pawn = pawn.white_pawn(start_pos, end_pos, pawn)
+        expect(w_pawn.moves).to eq [[0, 1], [0, 2], [1, 1], [-1, 1]]
       end
     end
 
@@ -70,14 +69,14 @@ describe Pawn do
       before do
         x = 1
         y = 3
-        pawn.board[y][x] = 'p'
+        pawn.board.data[y][x] = 'p'
       end
 
-      xit 'should have one move ahead' do
+      it 'should have one move ahead' do
         start_pos = [1, 1]
         end_pos = [1, 3]
-        pawn = pawn.white_pawn(start_pos, end_pos)
-        expect(pawn.moves).to eq [[0, 1]]
+        w_pawn = pawn.white_pawn(start_pos, end_pos, pawn)
+        expect(w_pawn.moves).to eq [[0, 1]]
       end
     end
 
@@ -86,14 +85,14 @@ describe Pawn do
       before do
         x = 1
         y = 2
-        pawn.board[y][x] = 'p'
+        pawn.board.data[y][x] = 'p'
       end
 
-      xit 'should have no legal moves' do
+      it 'should have no legal moves' do
         start_pos = [1, 1]
         end_pos = [1, 2]
-        pawn = pawn.white_pawn(start_pos, end_pos)
-        expect(pawn.moves).to eq []
+        w_pawn = pawn.white_pawn(start_pos, end_pos, pawn)
+        expect(w_pawn.moves).to eq []
       end
     end
 
@@ -102,15 +101,15 @@ describe Pawn do
       before do
         x = 1
         y = 2
-        pawn.board[y][x] = 'p'
-        pawn.board[y][x + 1] = 'p'
-        pawn.board[y][x - 1] = 'p'
+        pawn.board.data[y][x] = 'p'
+        pawn.board.data[y][x + 1] = 'p'
+        pawn.board.data[y][x - 1] = 'p'
       end
 
-      xit 'should have diagonal moves' do
+      it 'should have diagonal moves' do
         start_pos = [1, 1]
         end_pos = [1, 2]
-        w_pawn = pawn.white_pawn(start_pos, end_pos)
+        w_pawn = pawn.white_pawn(start_pos, end_pos, pawn)
         expect(w_pawn.moves).to eq [[1, 1], [-1, 1]]
       end
     end

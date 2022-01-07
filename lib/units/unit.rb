@@ -32,23 +32,23 @@ class Unit
     white_pieces = %w[P R N B Q K]
     black_pieces = white_pieces.map(&:downcase)
 
-    return true if @turn.zero? && black_pieces.any?(piece)
+    return true if @board.turn.zero? && black_pieces.any?(piece)
 
-    return true if @turn.positive? && white_pieces.any?(piece)
+    return true if @board.turn.positive? && white_pieces.any?(piece)
 
     false
   end
 
   def get_piece(square)
-    @board[y_pos(square)][x_pos(square)]
+    @board.data[y_pos(square)][x_pos(square)]
   end
 
   def one_ahead(start_pos)
-    @board[y_pos(start_pos) + 1][x_pos(start_pos)]
+    @board.data[y_pos(start_pos) + 1][x_pos(start_pos)]
   end
 
   def two_ahead(start_pos)
-    @board[y_pos(start_pos) + 2][x_pos(start_pos)]
+    @board.data[y_pos(start_pos) + 2][x_pos(start_pos)]
   end
 
   def r_diag(start_pos)
@@ -56,7 +56,7 @@ class Unit
   end
 
   def l_diag(start_pos)
-    @board[y_pos(start_pos) + 1][x_pos(start_pos) - 1]
+    @board.data[y_pos(start_pos) + 1][x_pos(start_pos) - 1]
   end
 end
 
