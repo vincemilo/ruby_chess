@@ -1,11 +1,12 @@
 # frozen_string_literal: true
 
 class Board
-  attr_accessor :data, :turn
+  attr_accessor :data, :turn, :captured
 
   def initialize
     @data = Array.new(8) { Array.new(8, '0') }
     @turn = 0
+    @captured = [[], []]
     place_pawns
   end
 

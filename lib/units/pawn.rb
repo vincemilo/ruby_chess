@@ -7,7 +7,6 @@ class Pawn < Unit
 
   def initialize(start_pos = nil, end_pos = nil)
     super
-    @moves = [[0, 1]]
   end
 
   def starting_line(start_pos, pawn)
@@ -29,10 +28,10 @@ class Pawn < Unit
   end
 
   def white_pawn(start_pos, end_pos, pawn)
-
-    if start_pos[1] == 1
+    pawn.moves << [0, 1]
+    if start_pos[1] == 1 || start_pos[1] == 6
       starting_line(start_pos, pawn)
-    elsif end_pos[1] == 7
+    elsif end_pos[1] == 7 || end_pos[1].zero?
       promote(end_pos)
     end
 
@@ -40,10 +39,27 @@ class Pawn < Unit
 
     pawn
   end
+
+  def black_pawn(start_pos, end_pos, pawn)
+    b_pawn = white_pawn(end_pos, start_pos, pawn)
+    b_pawn.moves.each do |set|
+      set.map! { |move| move * -1 }
+    end
+    b_pawn
+  end
+
+  def promote(end_pos)
+    promotion = 0
+    while promotion < 1 || promotion > 4
+      puts 'Enter promotion number: 1 - Queen, 2 - Rook, 3 - Bishop, 4 - Knight'
+      promotion = gets.chomp.to_i
+      puts 'Invalid entry, please try again.' if promotion < 1 || promotion > 4
+    end
+    # temp
+    @board.data[y_pos(end_pos)][x_pos(end_pos)] = promotion.to_s
+  end
 end
 
-# pawn = Pawn.new
-# p pawn
-# pawn.board.display_board
-# pawn2 = Pawn.new([1, 1], [1, 3])
-# p pawn2
+pawn = Pawn.new
+pawn.black_pawn([0, 6], [0, 4], pawn)
+p pawn.moves

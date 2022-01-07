@@ -114,4 +114,8 @@ describe Pawn do
       end
     end
   end
+
+  describe '#black_pawn' do
+    
+  end
 end
