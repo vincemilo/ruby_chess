@@ -89,9 +89,41 @@ class Pawn < Unit
     # temp
     @board.data[y_pos(end_pos)][x_pos(end_pos)] = promotion.to_s
   end
+
+  def double_move?(start_pos, end_pos)
+    return true if (y_pos(start_pos) - y_pos(end_pos)).abs == 2
+
+    false
+  end
+
+  def l_adj(start_pos)
+    @board.data[y_pos(start_pos)][x_pos(start_pos) - 1]
+  end
+
+  def r_adj
+    @board.data[y_pos(start_pos)][x_pos(start_pos) + 1]
+  end
+
+  def enemy_pawn?(square)
+    return true if enemy_occupied?(square) == true && square.downcase == 'p'
+
+    false
+  end
+
+  def en_passant(pawn, end_pos)
+    return unless double_move?(pawn.start_pos, end_pos) == true &&
+                  enemy_pawn?(l_adj) == true ||
+                  enemy_pawn?(r_adj) == true
+
+    pawn.moves << if enemy_pawn?(l_adj)
+                    [-1, 1]
+                  else
+                    [1, 1]
+                  end
+    pawn
+  end
 end
 
 # pawn = Pawn.new
-# pawn.board.turn = 1
-# pawn.assign_moves([1, 6], pawn)
-# p pawn
+# p pawn.double_move?([0, 1], [0, 3])
+# p pawn.double_move?([0, 3], [0, 9])

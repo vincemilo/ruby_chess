@@ -6,7 +6,5 @@ require_relative 'units/pawn'
 class Game
   attr_accessor
 
-  def initialize
-  end
-
+  def initialize; end
 end

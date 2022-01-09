@@ -3,7 +3,6 @@
 # rubocop:disable Metrics/BlockLength
 
 require_relative '../../lib/units/pawn'
-require_relative '../../lib/board'
 
 describe Pawn do
   subject(:pawn) { described_class.new }
@@ -185,6 +184,29 @@ describe Pawn do
         start_pos = [1, 6]
         b_pawn = pawn.black_pawn(start_pos, pawn)
         expect(b_pawn.moves).to eq [[-1, -1], [1, -1]]
+      end
+    end
+  end
+
+  describe '#promote' do
+    context 'when a white pawn reaches the last row' do
+      xit '' do
+      end
+    end
+  end
+
+  describe '#en_passant' do
+    context 'when a black pawn moves two squares past a white pawn' do
+      subject(:b_pawn) { described_class.new([1, 6]) }
+      before do
+        x = 1
+        y = 4
+        b_pawn.board.data[y][x + 1] = 'P'
+        b_pawn.board.display_board
+      end
+
+      it 'allows a capture' do
+        p b_pawn.start_pos
       end
     end
   end
