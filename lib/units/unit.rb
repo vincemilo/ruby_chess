@@ -3,12 +3,11 @@
 require_relative '../board'
 
 class Unit
-  attr_reader :board, :start_pos, :end_pos, :moves
+  attr_reader :board, :start_pos, :moves
 
-  def initialize(start_pos = nil, end_pos = nil)
+  def initialize(start_pos = nil)
     @board = Board.new
     @start_pos = start_pos
-    @end_pos = end_pos
     @moves = []
   end
 
@@ -41,22 +40,6 @@ class Unit
 
   def get_piece(square)
     @board.data[y_pos(square)][x_pos(square)]
-  end
-
-  def one_ahead(start_pos)
-    @board.data[y_pos(start_pos) + 1][x_pos(start_pos)]
-  end
-
-  def two_ahead(start_pos)
-    @board.data[y_pos(start_pos) + 2][x_pos(start_pos)]
-  end
-
-  def r_diag(start_pos)
-    @board.data[y_pos(start_pos) + 1][x_pos(start_pos) + 1]
-  end
-
-  def l_diag(start_pos)
-    @board.data[y_pos(start_pos) + 1][x_pos(start_pos) - 1]
   end
 end
 

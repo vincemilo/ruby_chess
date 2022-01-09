@@ -3,10 +3,43 @@
 require_relative 'unit'
 
 class Pawn < Unit
-  attr_accessor :start_pos, :end_pos, :board, :moves
+  attr_accessor :start_pos, :board, :moves
 
-  def initialize(start_pos = nil, end_pos = nil)
+  def initialize(start_pos = nil)
     super
+    @moves = [[0, 1]]
+  end
+
+  def one_ahead(start_pos)
+    if @board.turn.zero?
+      @board.data[y_pos(start_pos) + 1][x_pos(start_pos)]
+    else
+      @board.data[y_pos(start_pos) - 1][x_pos(start_pos)]
+    end
+  end
+
+  def two_ahead(start_pos)
+    if @board.turn.zero?
+      @board.data[y_pos(start_pos) + 2][x_pos(start_pos)]
+    else
+      @board.data[y_pos(start_pos) - 2][x_pos(start_pos)]
+    end
+  end
+
+  def r_diag(start_pos)
+    if @board.turn.zero?
+      @board.data[y_pos(start_pos) + 1][x_pos(start_pos) + 1]
+    else
+      @board.data[y_pos(start_pos) - 1][x_pos(start_pos) + 1]
+    end
+  end
+
+  def l_diag(start_pos)
+    if @board.turn.zero?
+      @board.data[y_pos(start_pos) + 1][x_pos(start_pos) - 1]
+    else
+      @board.data[y_pos(start_pos) - 1][x_pos(start_pos) - 1]
+    end
   end
 
   def starting_line(start_pos, pawn)
@@ -27,25 +60,23 @@ class Pawn < Unit
     end
   end
 
-  def white_pawn(start_pos, end_pos, pawn)
-    pawn.moves << [0, 1]
-    if start_pos[1] == 1 || start_pos[1] == 6
-      starting_line(start_pos, pawn)
-    elsif end_pos[1] == 7 || end_pos[1].zero?
-      promote(end_pos)
-    end
+  def assign_moves(start_pos, pawn)
+    @board.turn.zero? ? white_pawn(start_pos, pawn) : black_pawn(start_pos, pawn)
+  end
 
+  def white_pawn(start_pos, pawn)
+    starting_line(start_pos, pawn) if start_pos[1] == 1
     check_diags(start_pos, pawn)
-
     pawn
   end
 
-  def black_pawn(start_pos, end_pos, pawn)
-    b_pawn = white_pawn(end_pos, start_pos, pawn)
-    b_pawn.moves.each do |set|
+  def black_pawn(start_pos, pawn)
+    starting_line(start_pos, pawn) if start_pos[1] == 6
+    check_diags(start_pos, pawn)
+    pawn.moves.each do |set|
       set.map! { |move| move * -1 }
     end
-    b_pawn
+    pawn
   end
 
   def promote(end_pos)
@@ -60,6 +91,7 @@ class Pawn < Unit
   end
 end
 
-pawn = Pawn.new
-pawn.black_pawn([0, 6], [0, 4], pawn)
-p pawn.moves
+# pawn = Pawn.new
+# pawn.board.turn = 1
+# pawn.assign_moves([1, 6], pawn)
+# p pawn
