@@ -1,12 +1,13 @@
 # frozen_string_literal: true
 
 class Board
-  attr_accessor :data, :turn, :captured
+  attr_accessor :data, :turn, :captured, :en_passant
 
   def initialize
     @data = Array.new(8) { Array.new(8, '0') }
     @turn = 0
     @captured = [[], []]
+    @en_passant = []
     place_pawns
   end
 
@@ -22,19 +23,6 @@ class Board
     @data[1].map! { 'P' }
     @data[6].map! { 'p' }
   end
-
- 
-
-  # def capture(pos)
-  #   piece = @board[x_pos(pos)][y_pos(pos)]
-  #   if @turn.zero?
-  #     @captured[0] << piece
-  #   else
-  #     @captured[1] << piece
-  #   end
-  #   puts "Captured pieces: #{@captured}"
-  # end
-
 end
 
 # board = Board.new

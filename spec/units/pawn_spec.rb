@@ -188,26 +188,32 @@ describe Pawn do
     end
   end
 
-  describe '#promote' do
-    context 'when a white pawn reaches the last row' do
-      xit '' do
+  # describe '#promote' do
+  #   context 'when a white pawn reaches the last row' do
+  #     xit '' do
+  #     end
+  #   end
+  # end
+
+  describe '#en_passant?' do
+    context 'when a black pawn moves two squares past a white pawn' do
+      before do
+        pawn.board.turn = 1
+      end
+
+      it 'returns true' do
+        x = 1
+        y = 4
+        pawn.board.data[y][x] = 'p'
+        pawn.board.data[y][x + 1] = 'P'
+        expect(pawn.en_passant?([y, x])).to be true
       end
     end
   end
 
-  describe '#en_passant' do
+  describe '#store_en_passant' do
     context 'when a black pawn moves two squares past a white pawn' do
-      subject(:b_pawn) { described_class.new([1, 6]) }
-      before do
-        x = 1
-        y = 4
-        b_pawn.board.data[y][x + 1] = 'P'
-        b_pawn.board.display_board
-      end
-
-      it 'allows a capture' do
-        p b_pawn.start_pos
-      end
+      # tbd 
     end
   end
 end

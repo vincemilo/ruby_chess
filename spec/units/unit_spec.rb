@@ -25,9 +25,23 @@ describe Unit do
     end
   end
 
-  describe '#get_piece' do
+  describe '#get_unit' do
     it 'returns the piece at the given coordinates' do
-      expect(unit.get_piece([2, 1])).to eq('P')
+      expect(unit.get_unit([2, 1])).to eq('P')
+    end
+  end
+
+  describe '#move_unit' do
+    before do
+      unit.move_unit([4, 1], [4, 3])
+    end
+
+    context 'when it\'s white\'s turn' do
+      it 'moves a unit from one location to another' do
+        x = 4
+        y = 3
+        expect(unit.board.data[y][x]).to eq('P')
+      end
     end
   end
 

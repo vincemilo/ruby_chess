@@ -38,18 +38,19 @@ class Unit
     false
   end
 
-  def get_piece(square)
+  def get_unit(square)
     @board.data[y_pos(square)][x_pos(square)]
   end
 
-  def move_unit(start_pos, end_pos, piece)
-    return unless valid_move?(start_pos, end_pos, piece)
+  def move_unit(start_pos, end_pos)
+    piece = get_unit(start_pos)
+    return unless valid_move?(end_pos)
 
-    @board[x_pos(start_pos)][y_pos(start_pos)] = '0'
-    capture(end_pos) if @board[x_pos(end_pos)][y_pos(end_pos)] != '0'
-    @board[x_pos(end_pos)][y_pos(end_pos)] = piece
-    @turn += 1
-    @turn %= 2
+    @board.data[y_pos(start_pos)][x_pos(start_pos)] = '0'
+    # capture(end_pos) if @board[x_pos(end_pos)][y_pos(end_pos)] != '0'
+    @board.data[y_pos(end_pos)][x_pos(end_pos)] = piece
+    @board.turn += 1
+    @board.turn %= 2
   end
 
   def valid_move?(end_pos)
@@ -58,7 +59,16 @@ class Unit
 
     true
   end
+
+  # def capture(pos)
+  #   piece = @board[x_pos(pos)][y_pos(pos)]
+  #   if @turn.zero?
+  #     @captured[0] << piece
+  #   else
+  #     @captured[1] << piece
+  #   end
+  #   puts "Captured pieces: #{@captured}"
+  # end
 end
 
 # unit = Unit.new
-# unit.board.display_board
