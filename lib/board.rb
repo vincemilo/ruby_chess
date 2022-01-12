@@ -8,7 +8,7 @@ class Board
     @turn = 0
     @captured = [[], []]
     @en_passant = []
-    place_pawns
+    # place_pawns
   end
 
   def display_board

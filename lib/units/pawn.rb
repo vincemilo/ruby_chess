@@ -118,8 +118,8 @@ class Pawn < Unit
   end
 
   def store_en_passant(end_pos)
-    l_square = [y_pos(end_pos)][x_pos(end_pos) - 1]
-    r_square = [y_pos(end_pos)][x_pos(end_pos) + 1]
+    l_square = [y_pos(end_pos), x_pos(end_pos) - 1]
+    r_square = [y_pos(end_pos), x_pos(end_pos) + 1]
     if enemy_pawn?(l_adj(end_pos)) && enemy_pawn?(r_adj(end_pos))
       @board.en_passant << l_square
       @board.en_passant << r_square

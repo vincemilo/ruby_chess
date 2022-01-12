@@ -52,7 +52,6 @@ describe Pawn do
         y = 2
         pawn.board.data[y][x] = 'p'
         pawn.board.data[y][x - 2] = 'p'
-        pawn.board.display_board
       end
 
       it 'has all move options' do
@@ -206,14 +205,115 @@ describe Pawn do
         y = 4
         pawn.board.data[y][x] = 'p'
         pawn.board.data[y][x + 1] = 'P'
-        expect(pawn.en_passant?([y, x])).to be true
+        expect(pawn.en_passant?([x, y])).to be true
+      end
+    end
+
+    context 'when a white pawn moves two squares past a black pawn' do
+      it 'returns true' do
+        x = 1
+        y = 3
+        pawn.board.data[y][x] = 'p'
+        pawn.board.data[y][x + 1] = 'p'
+        expect(pawn.en_passant?([x, y])).to be true
       end
     end
   end
 
   describe '#store_en_passant' do
-    context 'when a black pawn moves two squares past a white pawn' do
-      # tbd 
+    context 'when it\'s black\'s turn and two pawns
+             are adjacent to a 2 step pawn' do
+      before do
+        pawn.board.turn = 1
+        x = 1
+        y = 4
+        pawn.board.data[y][x] = 'p'
+        pawn.board.data[y][x + 1] = 'P'
+        pawn.board.data[y][x - 1] = 'P'
+        pawn.store_en_passant([x, y])
+      end
+
+      it 'stores the coords on either side of the 2 step pawn' do
+        expect(pawn.board.en_passant).to eq [[4, 0], [4, 2]]
+      end
+    end
+
+    context 'when it\'s black\'s turn and one pawn
+             is right adjacent to a 2 step pawn' do
+      before do
+        pawn.board.turn = 1
+        x = 1
+        y = 4
+        pawn.board.data[y][x] = 'p'
+        pawn.board.data[y][x + 1] = 'P'
+        pawn.store_en_passant([x, y])
+      end
+
+      it 'stores the coords on the right side of the 2 step pawn' do
+        expect(pawn.board.en_passant).to eq [[4, 2]]
+      end
+    end
+
+    context 'when it\'s black\'s turn and one pawn
+             is left adjacent to a 2 step pawn' do
+      before do
+        pawn.board.turn = 1
+        x = 1
+        y = 4
+        pawn.board.data[y][x] = 'p'
+        pawn.board.data[y][x - 1] = 'P'
+        pawn.store_en_passant([x, y])
+      end
+
+      it 'stores the coords on the left side of the 2 step pawn' do
+        expect(pawn.board.en_passant).to eq [[4, 0]]
+      end
+    end
+
+    context 'when it\'s white\'s turn and two pawns
+             are adjacent to a 2 step pawn' do
+      before do
+        x = 1
+        y = 3
+        pawn.board.data[y][x] = 'P'
+        pawn.board.data[y][x + 1] = 'p'
+        pawn.board.data[y][x - 1] = 'p'
+        pawn.store_en_passant([x, y])
+      end
+
+      it 'stores the coords on either side of the 2 step pawn' do
+        expect(pawn.board.en_passant).to eq [[3, 0], [3, 2]]
+      end
+    end
+
+    context 'when it\'s white\'s turn and one pawn
+             is right adjacent to a 2 step pawn' do
+      before do
+        x = 1
+        y = 3
+        pawn.board.data[y][x] = 'P'
+        pawn.board.data[y][x + 1] = 'p'
+        pawn.store_en_passant([x, y])
+      end
+
+      it 'stores the coords on the right side of the 2 step pawn' do
+        expect(pawn.board.en_passant).to eq [[3, 2]]
+      end
+    end
+
+    context 'when it\'s white\'s turn and one pawn
+             is left adjacent to a 2 step pawn' do
+      before do
+        x = 1
+        y = 3
+        pawn.board.data[y][x] = 'P'
+        pawn.board.data[y][x - 1] = 'p'
+        pawn.store_en_passant([x, y])
+      end
+
+      it 'stores the coords on the left side of the 2 step pawn' do
+        expect(pawn.board.en_passant).to eq [[3, 0]]
+      end
     end
   end
 end
