@@ -7,7 +7,7 @@ class Board
     @data = Array.new(8) { Array.new(8, '0') }
     @turn = 0
     @captured = [[], []]
-    @en_passant = []
+    @en_passant = nil
     # place_pawns
   end
 

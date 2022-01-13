@@ -10,73 +10,12 @@ class Pawn < Unit
     @moves = [[0, 1]]
   end
 
-  def one_ahead(start_pos)
-    if @board.turn.zero?
-      @board.data[y_pos(start_pos) + 1][x_pos(start_pos)]
-    else
-      @board.data[y_pos(start_pos) - 1][x_pos(start_pos)]
-    end
-  end
-
-  def two_ahead(start_pos)
-    if @board.turn.zero?
-      @board.data[y_pos(start_pos) + 2][x_pos(start_pos)]
-    else
-      @board.data[y_pos(start_pos) - 2][x_pos(start_pos)]
-    end
-  end
-
-  def r_diag(start_pos)
-    if @board.turn.zero?
-      @board.data[y_pos(start_pos) + 1][x_pos(start_pos) + 1]
-    else
-      @board.data[y_pos(start_pos) - 1][x_pos(start_pos) + 1]
-    end
-  end
-
-  def l_diag(start_pos)
-    if @board.turn.zero?
-      @board.data[y_pos(start_pos) + 1][x_pos(start_pos) - 1]
-    else
-      @board.data[y_pos(start_pos) - 1][x_pos(start_pos) - 1]
-    end
-  end
-
   def starting_line(start_pos, pawn)
     if !occupied?(one_ahead(start_pos)) && !occupied?(two_ahead(start_pos))
       pawn.moves << [0, 2]
     elsif occupied?(one_ahead(start_pos))
       pawn.moves = []
     end
-  end
-
-  def check_diags(start_pos, pawn)
-    if enemy_occupied?(r_diag(start_pos)) && enemy_occupied?(l_diag(start_pos))
-      [[1, 1], [-1, 1]].each { |move| pawn.moves << move }
-    elsif enemy_occupied?(r_diag(start_pos))
-      pawn.moves << [1, 1]
-    elsif enemy_occupied?(l_diag(start_pos))
-      pawn.moves << [-1, 1]
-    end
-  end
-
-  def assign_moves(start_pos, pawn)
-    @board.turn.zero? ? white_pawn(start_pos, pawn) : black_pawn(start_pos, pawn)
-  end
-
-  def white_pawn(start_pos, pawn)
-    starting_line(start_pos, pawn) if start_pos[1] == 1
-    check_diags(start_pos, pawn)
-    pawn
-  end
-
-  def black_pawn(start_pos, pawn)
-    starting_line(start_pos, pawn) if start_pos[1] == 6
-    check_diags(start_pos, pawn)
-    pawn.moves.each do |set|
-      set.map! { |move| move * -1 }
-    end
-    pawn
   end
 
   def promote(end_pos)
@@ -96,14 +35,6 @@ class Pawn < Unit
     false
   end
 
-  def l_adj(start_pos)
-    @board.data[y_pos(start_pos)][x_pos(start_pos) - 1]
-  end
-
-  def r_adj(start_pos)
-    @board.data[y_pos(start_pos)][x_pos(start_pos) + 1]
-  end
-
   def enemy_pawn?(square)
     return true if enemy_occupied?(square) && square.downcase == 'p'
 
@@ -118,30 +49,55 @@ class Pawn < Unit
   end
 
   def store_en_passant(end_pos)
-    l_square = [y_pos(end_pos), x_pos(end_pos) - 1]
-    r_square = [y_pos(end_pos), x_pos(end_pos) + 1]
-    if enemy_pawn?(l_adj(end_pos)) && enemy_pawn?(r_adj(end_pos))
-      @board.en_passant << l_square
-      @board.en_passant << r_square
-    elsif enemy_pawn?(l_adj(end_pos))
-      @board.en_passant << l_square
-    elsif enemy_pawn?(r_adj(end_pos))
-      @board.en_passant << r_square
-    end
+    l_square = [x_pos(end_pos) - 1, y_pos(end_pos)]
+    r_square = [x_pos(end_pos) + 1, y_pos(end_pos)]
+    l_enemy_pawn = enemy_pawn?(l_adj(end_pos))
+    r_enemy_pawn = enemy_pawn?(r_adj(end_pos))
+
+    @board.en_passant = if l_enemy_pawn
+                          l_square
+                        elsif r_enemy_pawn
+                          r_square
+                        end
   end
 
   def en_passant?(end_pos)
     return true if enemy_pawn?(l_adj(end_pos)) || enemy_pawn?(r_adj(end_pos))
 
-    # pawn.moves << if enemy_pawn?(l_adj)
-    #                 [-1, 1]
-    #               else
-    #                 [1, 1]
-    #               end
-    # pawn
     false
+  end
+
+  def first_move?(start_pos)
+    return true if @board.turn.zero? && start_pos[1] == 1 ||
+                   @board.turn.positive? && start_pos[1] == 6
+
+    false
+  end
+
+  def assign_en_passant(start_pos, pawn)
+    x_factor = @board.en_passant[0] - start_pos[0]
+    pawn.moves << if x_factor == -1
+                    [-1, 1]
+                  else
+                    [1, 1]
+                  end
+    @board.en_passant = nil
+    pawn
+  end
+
+  def assign_moves(start_pos, pawn)
+    starting_line(start_pos, pawn) if first_move?(start_pos)
+    check_diags(start_pos, pawn)
+    assign_en_passant(start_pos, pawn) unless @board.en_passant.nil?
+
+    if @board.turn.positive? # inverse moves for black
+      pawn.moves.each do |set|
+        set.map! { |move| move * -1 }
+      end
+    end
+    pawn
   end
 end
 
 # pawn = Pawn.new
-# pawn.move_unit([0, 1], [0, 3])
+# pawn.store_en_passant([0, 3])

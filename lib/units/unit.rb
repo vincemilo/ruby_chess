@@ -42,6 +42,58 @@ class Unit
     @board.data[y_pos(square)][x_pos(square)]
   end
 
+  def one_ahead(start_pos)
+    if @board.turn.zero?
+      @board.data[y_pos(start_pos) + 1][x_pos(start_pos)]
+    else
+      @board.data[y_pos(start_pos) - 1][x_pos(start_pos)]
+    end
+  end
+
+  def two_ahead(start_pos)
+    if @board.turn.zero?
+      @board.data[y_pos(start_pos) + 2][x_pos(start_pos)]
+    else
+      @board.data[y_pos(start_pos) - 2][x_pos(start_pos)]
+    end
+  end
+
+  def r_diag(start_pos)
+    if @board.turn.zero?
+      @board.data[y_pos(start_pos) + 1][x_pos(start_pos) + 1]
+    else
+      @board.data[y_pos(start_pos) - 1][x_pos(start_pos) + 1]
+    end
+  end
+
+  def l_diag(start_pos)
+    if @board.turn.zero?
+      @board.data[y_pos(start_pos) + 1][x_pos(start_pos) - 1]
+    else
+      @board.data[y_pos(start_pos) - 1][x_pos(start_pos) - 1]
+    end
+  end
+
+  def check_diags(start_pos, pawn)
+    right = r_diag(start_pos)
+    left = l_diag(start_pos)
+    if enemy_occupied?(right) && enemy_occupied?(left)
+      [[1, 1], [-1, 1]].each { |move| pawn.moves << move }
+    elsif enemy_occupied?(right)
+      pawn.moves << [1, 1]
+    elsif enemy_occupied?(left)
+      pawn.moves << [-1, 1]
+    end
+  end
+
+  def l_adj(start_pos)
+    @board.data[y_pos(start_pos)][x_pos(start_pos) - 1]
+  end
+
+  def r_adj(start_pos)
+    @board.data[y_pos(start_pos)][x_pos(start_pos) + 1]
+  end
+
   def move_unit(start_pos, end_pos)
     piece = get_unit(start_pos)
     return unless valid_move?(end_pos)

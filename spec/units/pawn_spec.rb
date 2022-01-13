@@ -33,14 +33,12 @@ describe Pawn do
     end
   end
 
-  describe '#white_pawn' do
-    # subject(:w_pawn) { described_class.new(board) }
-
+  describe '#assign_moves' do
     context 'when a white pawn is in its starting position
              with no units ahead and no diagonal captures' do
       it 'has 1 move or 2 move ahead options' do
         start_pos = [1, 1]
-        w_pawn = pawn.white_pawn(start_pos, pawn)
+        w_pawn = pawn.assign_moves(start_pos, pawn)
         expect(w_pawn.moves).to eq [[0, 1], [0, 2]]
       end
     end
@@ -56,12 +54,12 @@ describe Pawn do
 
       it 'has all move options' do
         start_pos = [2, 1]
-        w_pawn = pawn.white_pawn(start_pos, pawn)
+        w_pawn = pawn.assign_moves(start_pos, pawn)
         expect(w_pawn.moves).to eq [[0, 1], [0, 2], [1, 1], [-1, 1]]
       end
     end
 
-    context 'when a unit is two spaces in front and no diagonal
+    context 'when a white pawn is two spaces in front and no diagonal
              captures available' do
       before do
         x = 1
@@ -71,12 +69,12 @@ describe Pawn do
 
       it 'should have one move ahead' do
         start_pos = [1, 1]
-        w_pawn = pawn.white_pawn(start_pos, pawn)
+        w_pawn = pawn.assign_moves(start_pos, pawn)
         expect(w_pawn.moves).to eq [[0, 1]]
       end
     end
 
-    context 'when a unit is one space in front and no diagonal
+    context 'when a white pawn is one space in front and no diagonal
              captures available' do
       before do
         x = 1
@@ -86,12 +84,12 @@ describe Pawn do
 
       it 'should have no legal moves' do
         start_pos = [1, 1]
-        w_pawn = pawn.white_pawn(start_pos, pawn)
+        w_pawn = pawn.assign_moves(start_pos, pawn)
         expect(w_pawn.moves).to eq []
       end
     end
 
-    context 'when a unit is one space in front but pawn has diagonal
+    context 'when a white pawn is one space in front but pawn has diagonal
              captures available' do
       before do
         x = 1
@@ -103,22 +101,20 @@ describe Pawn do
 
       it 'should have diagonal moves' do
         start_pos = [1, 1]
-        w_pawn = pawn.white_pawn(start_pos, pawn)
+        w_pawn = pawn.assign_moves(start_pos, pawn)
         expect(w_pawn.moves).to eq [[1, 1], [-1, 1]]
       end
-    end
-  end
-
-  describe '#black_pawn' do
-    before do
-      pawn.board.turn = 1
     end
 
     context 'when a black pawn is in its starting position
              with no units ahead and no diagonal captures' do
+      before do
+        pawn.board.turn = 1
+      end
+
       it 'has 1 move or 2 move ahead options' do
         start_pos = [1, 6]
-        b_pawn = pawn.black_pawn(start_pos, pawn)
+        b_pawn = pawn.assign_moves(start_pos, pawn)
         expect(b_pawn.moves).to eq [[0, -1], [0, -2]]
       end
     end
@@ -126,6 +122,7 @@ describe Pawn do
     context 'when a black pawn is in its starting position
              with no units ahead and has two diagonal captures' do
       before do
+        pawn.board.turn = 1
         x = 3
         y = 5
         pawn.board.data[y][x] = 'P'
@@ -134,14 +131,15 @@ describe Pawn do
 
       it 'has all move options' do
         start_pos = [2, 6]
-        b_pawn = pawn.black_pawn(start_pos, pawn)
+        b_pawn = pawn.assign_moves(start_pos, pawn)
         expect(b_pawn.moves).to eq [[0, -1], [0, -2], [-1, -1], [1, -1]]
       end
     end
 
-    context 'when a unit is two spaces in front and no diagonal
+    context 'when a black pawn is two spaces in front and no diagonal
              captures available' do
       before do
+        pawn.board.turn = 1
         x = 1
         y = 4
         pawn.board.data[y][x] = 'P'
@@ -149,14 +147,15 @@ describe Pawn do
 
       it 'should have one move ahead' do
         start_pos = [1, 6]
-        b_pawn = pawn.black_pawn(start_pos, pawn)
+        b_pawn = pawn.assign_moves(start_pos, pawn)
         expect(b_pawn.moves).to eq [[0, -1]]
       end
     end
 
-    context 'when a unit is one space in front and no diagonal
+    context 'when a black pawn is one space in front and no diagonal
              captures available' do
       before do
+        pawn.board.turn = 1
         x = 1
         y = 5
         pawn.board.data[y][x] = 'P'
@@ -164,14 +163,15 @@ describe Pawn do
 
       it 'should have no legal moves' do
         start_pos = [1, 6]
-        b_pawn = pawn.black_pawn(start_pos, pawn)
+        b_pawn = pawn.assign_moves(start_pos, pawn)
         expect(b_pawn.moves).to eq []
       end
     end
 
-    context 'when a unit is one space in front but pawn has diagonal
+    context 'when a black pawn is one space in front but pawn has diagonal
              captures available' do
       before do
+        pawn.board.turn = 1
         x = 1
         y = 5
         pawn.board.data[y][x] = 'P'
@@ -181,18 +181,11 @@ describe Pawn do
 
       it 'should have diagonal moves' do
         start_pos = [1, 6]
-        b_pawn = pawn.black_pawn(start_pos, pawn)
+        b_pawn = pawn.assign_moves(start_pos, pawn)
         expect(b_pawn.moves).to eq [[-1, -1], [1, -1]]
       end
     end
   end
-
-  # describe '#promote' do
-  #   context 'when a white pawn reaches the last row' do
-  #     xit '' do
-  #     end
-  #   end
-  # end
 
   describe '#en_passant?' do
     context 'when a black pawn moves two squares past a white pawn' do
@@ -221,23 +214,6 @@ describe Pawn do
   end
 
   describe '#store_en_passant' do
-    context 'when it\'s black\'s turn and two pawns
-             are adjacent to a 2 step pawn' do
-      before do
-        pawn.board.turn = 1
-        x = 1
-        y = 4
-        pawn.board.data[y][x] = 'p'
-        pawn.board.data[y][x + 1] = 'P'
-        pawn.board.data[y][x - 1] = 'P'
-        pawn.store_en_passant([x, y])
-      end
-
-      it 'stores the coords on either side of the 2 step pawn' do
-        expect(pawn.board.en_passant).to eq [[4, 0], [4, 2]]
-      end
-    end
-
     context 'when it\'s black\'s turn and one pawn
              is right adjacent to a 2 step pawn' do
       before do
@@ -250,7 +226,7 @@ describe Pawn do
       end
 
       it 'stores the coords on the right side of the 2 step pawn' do
-        expect(pawn.board.en_passant).to eq [[4, 2]]
+        expect(pawn.board.en_passant).to eq [2, 4]
       end
     end
 
@@ -266,23 +242,7 @@ describe Pawn do
       end
 
       it 'stores the coords on the left side of the 2 step pawn' do
-        expect(pawn.board.en_passant).to eq [[4, 0]]
-      end
-    end
-
-    context 'when it\'s white\'s turn and two pawns
-             are adjacent to a 2 step pawn' do
-      before do
-        x = 1
-        y = 3
-        pawn.board.data[y][x] = 'P'
-        pawn.board.data[y][x + 1] = 'p'
-        pawn.board.data[y][x - 1] = 'p'
-        pawn.store_en_passant([x, y])
-      end
-
-      it 'stores the coords on either side of the 2 step pawn' do
-        expect(pawn.board.en_passant).to eq [[3, 0], [3, 2]]
+        expect(pawn.board.en_passant).to eq [0, 4]
       end
     end
 
@@ -297,7 +257,7 @@ describe Pawn do
       end
 
       it 'stores the coords on the right side of the 2 step pawn' do
-        expect(pawn.board.en_passant).to eq [[3, 2]]
+        expect(pawn.board.en_passant).to eq [2, 3]
       end
     end
 
@@ -312,8 +272,33 @@ describe Pawn do
       end
 
       it 'stores the coords on the left side of the 2 step pawn' do
-        expect(pawn.board.en_passant).to eq [[3, 0]]
+        expect(pawn.board.en_passant).to eq [0, 3]
       end
     end
   end
+
+  describe '#assign_en_passant' do
+    context 'when there are is a valid en_passant target on the left' do
+      before do
+        pawn.board.en_passant = [0, 4]
+        x = 1
+        y = 4
+        pawn.board.data[y][x] = 'P'
+        pawn.board.data[y][x - 1] = 'p'
+        pawn.board.display_board
+      end
+
+      it 'assigns the correct number of moves' do
+        w_pawn = pawn.assign_en_passant([1, 4], pawn)
+        p w_pawn.moves
+      end
+    end
+  end
+
+  # describe '#promote' do
+  #   context 'when a white pawn reaches the last row' do
+  #     xit '' do
+  #     end
+  #   end
+  # end
 end
