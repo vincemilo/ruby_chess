@@ -43,23 +43,23 @@ class Pawn < Unit
 
   def move_pawn(start_pos, end_pos)
     if double_step?(start_pos, end_pos) && en_passant?(end_pos)
-      store_en_passant(end_pos)
+      @board.en_passant = end_pos
     end
     move_unit(start_pos, end_pos)
   end
 
-  def store_en_passant(end_pos)
-    l_square = [x_pos(end_pos) - 1, y_pos(end_pos)]
-    r_square = [x_pos(end_pos) + 1, y_pos(end_pos)]
-    l_enemy_pawn = enemy_pawn?(l_adj(end_pos))
-    r_enemy_pawn = enemy_pawn?(r_adj(end_pos))
+  # def store_en_passant(end_pos)
+  #   l_square = [x_pos(end_pos) - 1, y_pos(end_pos)]
+  #   r_square = [x_pos(end_pos) + 1, y_pos(end_pos)]
+  #   l_enemy_pawn = enemy_pawn?(l_adj(end_pos))
+  #   r_enemy_pawn = enemy_pawn?(r_adj(end_pos))
 
-    @board.en_passant = if l_enemy_pawn
-                          l_square
-                        elsif r_enemy_pawn
-                          r_square
-                        end
-  end
+  #   @board.en_passant = if l_enemy_pawn
+  #                         l_square
+  #                       elsif r_enemy_pawn
+  #                         r_square
+  #                       end
+  # end
 
   def en_passant?(end_pos)
     return true if enemy_pawn?(l_adj(end_pos)) || enemy_pawn?(r_adj(end_pos))
@@ -74,8 +74,17 @@ class Pawn < Unit
     false
   end
 
+  def get_x_factor(start_pos)
+    if @board.turn.zero?
+      @board.en_passant[0] - start_pos[0]
+    else
+      start_pos[0] - @board.en_passant[0]
+    end
+  end
+
   def assign_en_passant(start_pos, pawn)
-    x_factor = @board.en_passant[0] - start_pos[0]
+    x_factor = get_x_factor(start_pos)
+
     pawn.moves << if x_factor == -1
                     [-1, 1]
                   else

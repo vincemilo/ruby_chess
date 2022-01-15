@@ -7,32 +7,6 @@ require_relative '../../lib/units/pawn'
 describe Pawn do
   subject(:pawn) { described_class.new }
 
-  describe '#r_diag' do
-    before do
-      x = 3
-      y = 2
-      pawn.board.data[y][x] = 'p' # coords must be entered reverse due to array
-    end
-
-    it 'returns the square 1 up and 1 right of the selected piece' do
-      start_pos = [2, 1]
-      expect(pawn.r_diag(start_pos)).to eq('p')
-    end
-  end
-
-  describe '#l_diag' do
-    before do
-      x = 1
-      y = 2
-      pawn.board.data[y][x] = 'p'
-    end
-
-    it 'returns the square 1 up and 1 left of the selected piece' do
-      start_pos = [2, 1]
-      expect(pawn.l_diag(start_pos)).to eq('p')
-    end
-  end
-
   describe '#assign_moves' do
     context 'when a white pawn is in its starting position
              with no units ahead and no diagonal captures' do
@@ -213,84 +187,140 @@ describe Pawn do
     end
   end
 
-  describe '#store_en_passant' do
-    context 'when it\'s black\'s turn and one pawn
-             is right adjacent to a 2 step pawn' do
-      before do
-        pawn.board.turn = 1
-        x = 1
-        y = 4
-        pawn.board.data[y][x] = 'p'
-        pawn.board.data[y][x + 1] = 'P'
-        pawn.store_en_passant([x, y])
-      end
+  # describe '#store_en_passant' do
+  #   context 'when it\'s black\'s turn and one pawn
+  #            is right adjacent to a 2 step pawn' do
+  #     before do
+  #       pawn.board.turn = 1
+  #       x = 1
+  #       y = 4
+  #       pawn.board.data[y][x] = 'p'
+  #       pawn.board.data[y][x + 1] = 'P'
+  #       pawn.store_en_passant([x, y])
+  #     end
 
-      it 'stores the coords on the right side of the 2 step pawn' do
-        expect(pawn.board.en_passant).to eq [2, 4]
-      end
-    end
+  #     it 'stores the coords on the right side of the 2 step pawn' do
+  #       expect(pawn.board.en_passant).to eq [2, 4]
+  #     end
+  #   end
 
-    context 'when it\'s black\'s turn and one pawn
-             is left adjacent to a 2 step pawn' do
-      before do
-        pawn.board.turn = 1
-        x = 1
-        y = 4
-        pawn.board.data[y][x] = 'p'
-        pawn.board.data[y][x - 1] = 'P'
-        pawn.store_en_passant([x, y])
-      end
+  #   context 'when it\'s black\'s turn and one pawn
+  #            is left adjacent to a 2 step pawn' do
+  #     before do
+  #       pawn.board.turn = 1
+  #       x = 1
+  #       y = 4
+  #       pawn.board.data[y][x] = 'p'
+  #       pawn.board.data[y][x - 1] = 'P'
+  #       pawn.store_en_passant([x, y])
+  #     end
 
-      it 'stores the coords on the left side of the 2 step pawn' do
-        expect(pawn.board.en_passant).to eq [0, 4]
-      end
-    end
+  #     it 'stores the coords on the left side of the 2 step pawn' do
+  #       expect(pawn.board.en_passant).to eq [0, 4]
+  #     end
+  #   end
 
-    context 'when it\'s white\'s turn and one pawn
-             is right adjacent to a 2 step pawn' do
-      before do
-        x = 1
-        y = 3
-        pawn.board.data[y][x] = 'P'
-        pawn.board.data[y][x + 1] = 'p'
-        pawn.store_en_passant([x, y])
-      end
+  #   context 'when it\'s white\'s turn and one pawn
+  #            is right adjacent to a 2 step pawn' do
+  #     before do
+  #       x = 1
+  #       y = 3
+  #       pawn.board.data[y][x] = 'P'
+  #       pawn.board.data[y][x + 1] = 'p'
+  #       pawn.store_en_passant([x, y])
+  #     end
 
-      it 'stores the coords on the right side of the 2 step pawn' do
-        expect(pawn.board.en_passant).to eq [2, 3]
-      end
-    end
+  #     it 'stores the coords on the right side of the 2 step pawn' do
+  #       expect(pawn.board.en_passant).to eq [2, 3]
+  #     end
+  #   end
 
-    context 'when it\'s white\'s turn and one pawn
-             is left adjacent to a 2 step pawn' do
-      before do
-        x = 1
-        y = 3
-        pawn.board.data[y][x] = 'P'
-        pawn.board.data[y][x - 1] = 'p'
-        pawn.store_en_passant([x, y])
-      end
+  #   context 'when it\'s white\'s turn and one pawn
+  #            is left adjacent to a 2 step pawn' do
+  #     before do
+  #       x = 1
+  #       y = 3
+  #       pawn.board.data[y][x] = 'P'
+  #       pawn.board.data[y][x - 1] = 'p'
+  #       pawn.store_en_passant([x, y])
+  #     end
 
-      it 'stores the coords on the left side of the 2 step pawn' do
-        expect(pawn.board.en_passant).to eq [0, 3]
-      end
-    end
-  end
+  #     it 'stores the coords on the left side of the 2 step pawn' do
+  #       expect(pawn.board.en_passant).to eq [0, 3]
+  #     end
+  #   end
+  # end
 
   describe '#assign_en_passant' do
-    context 'when there are is a valid en_passant target on the left' do
+    context 'when it\'s white\'s turn and there is a valid en_passant
+             target on the left' do
       before do
         pawn.board.en_passant = [0, 4]
         x = 1
         y = 4
         pawn.board.data[y][x] = 'P'
         pawn.board.data[y][x - 1] = 'p'
-        pawn.board.display_board
       end
 
       it 'assigns the correct number of moves' do
         w_pawn = pawn.assign_en_passant([1, 4], pawn)
-        p w_pawn.moves
+        expect(w_pawn.moves).to eq [[0, 1], [-1, 1]]
+      end
+    end
+
+    context 'when it\'s white\'s turn and there is a valid en_passant
+             target on the right' do
+      before do
+        pawn.board.en_passant = [2, 4]
+        x = 1
+        y = 4
+        pawn.board.data[y][x] = 'P'
+        pawn.board.data[y][x + 1] = 'p'
+      end
+
+      it 'assigns the correct number of moves' do
+        w_pawn = pawn.assign_en_passant([1, 4], pawn)
+        expect(w_pawn.moves).to eq [[0, 1], [1, 1]]
+      end
+    end
+
+    context 'when it\'s black\'s turn and there is a valid en_passant
+             target on the left' do
+      before do
+        pawn.board.turn = 1
+        pawn.board.en_passant = [0, 3]
+        x = 1
+        y = 3
+        pawn.board.data[y][x] = 'p'
+        pawn.board.data[y][x - 1] = 'P'
+      end
+
+      it 'assigns the correct number of moves' do
+        b_pawn = pawn.assign_en_passant([1, 3], pawn)
+        b_pawn.moves.each do |set|
+          set.map! { |move| move * -1 }
+        end
+        expect(b_pawn.moves).to eq [[0, -1], [-1, -1]]
+      end
+    end
+
+    context 'when it\'s black\'s turn and there is a valid en_passant
+             target on the right' do
+      before do
+        pawn.board.turn = 1
+        pawn.board.en_passant = [2, 3]
+        x = 1
+        y = 3
+        pawn.board.data[y][x] = 'p'
+        pawn.board.data[y][x + 1] = 'P'
+      end
+
+      it 'assigns the correct number of moves' do
+        b_pawn = pawn.assign_en_passant([1, 3], pawn)
+        b_pawn.moves.each do |set|
+          set.map! { |move| move * -1 }
+        end
+        expect(b_pawn.moves).to eq [[0, -1], [1, -1]]
       end
     end
   end

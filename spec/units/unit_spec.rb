@@ -7,6 +7,32 @@ require_relative '../../lib/units/unit'
 describe Unit do
   subject(:unit) { described_class.new }
 
+  describe '#r_diag' do
+    before do
+      x = 3
+      y = 2
+      unit.board.data[y][x] = 'p' # coords must be entered reverse due to array
+    end
+
+    it 'returns the square 1 up and 1 right of the selected piece' do
+      start_pos = [2, 1]
+      expect(unit.r_diag(start_pos)).to eq('p')
+    end
+  end
+
+  describe '#l_diag' do
+    before do
+      x = 1
+      y = 2
+      unit.board.data[y][x] = 'p'
+    end
+
+    it 'returns the square 1 up and 1 left of the selected piece' do
+      start_pos = [2, 1]
+      expect(unit.l_diag(start_pos)).to eq('p')
+    end
+  end
+
   describe '#enemy_occupied?' do
     context 'when it\'s white\'s turn' do
       it 'returns true if black pieces are found' do
@@ -26,13 +52,22 @@ describe Unit do
   end
 
   describe '#get_unit' do
+    before do
+      x = 1
+      y = 2
+      unit.board.data[y][x] = 'P'
+    end
+
     it 'returns the piece at the given coordinates' do
-      expect(unit.get_unit([2, 1])).to eq('P')
+      expect(unit.get_unit([1, 2])).to eq('P')
     end
   end
 
   describe '#move_unit' do
     before do
+      x = 4
+      y = 1
+      unit.board.data[y][x] = 'P'
       unit.move_unit([4, 1], [4, 3])
     end
 

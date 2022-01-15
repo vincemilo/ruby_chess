@@ -96,6 +96,7 @@ class Unit
 
   def move_unit(start_pos, end_pos)
     piece = get_unit(start_pos)
+    p piece
     return unless valid_move?(end_pos)
 
     @board.data[y_pos(start_pos)][x_pos(start_pos)] = '0'
