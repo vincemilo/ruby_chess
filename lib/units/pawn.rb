@@ -48,19 +48,6 @@ class Pawn < Unit
     move_unit(start_pos, end_pos)
   end
 
-  # def store_en_passant(end_pos)
-  #   l_square = [x_pos(end_pos) - 1, y_pos(end_pos)]
-  #   r_square = [x_pos(end_pos) + 1, y_pos(end_pos)]
-  #   l_enemy_pawn = enemy_pawn?(l_adj(end_pos))
-  #   r_enemy_pawn = enemy_pawn?(r_adj(end_pos))
-
-  #   @board.en_passant = if l_enemy_pawn
-  #                         l_square
-  #                       elsif r_enemy_pawn
-  #                         r_square
-  #                       end
-  # end
-
   def en_passant?(end_pos)
     return true if enemy_pawn?(l_adj(end_pos)) || enemy_pawn?(r_adj(end_pos))
 
