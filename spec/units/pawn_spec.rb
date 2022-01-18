@@ -325,10 +325,27 @@ describe Pawn do
     end
   end
 
-  # describe '#promote' do
-  #   context 'when a white pawn reaches the last row' do
-  #     xit '' do
-  #     end
-  #   end
-  # end
+  describe '#promote?' do
+    context 'when a white pawn reaches the last row' do
+      it 'returns true' do
+        x = 1
+        y = 7
+        pawn.board.data[y][x] = 'P'
+        expect(pawn.promote?([x, y])).to be true
+      end
+    end
+
+    context 'when a black pawn reaches the last row' do
+      before do
+        pawn.board.turn = 1
+      end
+
+      it 'returns true' do
+        x = 1
+        y = 0
+        pawn.board.data[y][x] = 'p'
+        expect(pawn.promote?([x, y])).to be true
+      end
+    end
+  end
 end

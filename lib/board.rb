@@ -19,6 +19,15 @@ class Board
     print "#{('a'..'h').to_a} \n"
   end
 
+  def update_board(x_val, y_val, value)
+    @data[y_val][x_val] = value
+  end
+
+  def update_turn
+    @turn += 1
+    @turn %= 2
+  end
+
   def place_pawns
     @data[1].map! { 'P' }
     @data[6].map! { 'p' }

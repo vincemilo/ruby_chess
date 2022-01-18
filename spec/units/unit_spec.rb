@@ -3,9 +3,13 @@
 # rubocop:disable Metrics/BlockLength
 
 require_relative '../../lib/units/unit'
+require_relative '../../lib/board'
+require_relative '../../lib/units/pawn'
 
 describe Unit do
-  subject(:unit) { described_class.new }
+  arr = Array.new(8) { Array.new(8, '0') }
+  let(:board) { instance_double(Board, data: arr, turn: 0) }
+  subject(:unit) { described_class.new(board) }
 
   describe '#r_diag' do
     before do
@@ -36,15 +40,18 @@ describe Unit do
   describe '#enemy_occupied?' do
     context 'when it\'s white\'s turn' do
       it 'returns true if black pieces are found' do
-        unit.board.turn = 0
         black_piece = 'p'
         expect(unit.enemy_occupied?(black_piece)).to eq(true)
       end
     end
 
     context 'when it\'s black\'s turn' do
+      before do
+        b_turn = 1
+        allow(unit.board).to receive(:turn).and_return(b_turn)
+      end
+
       it 'returns true if white pieces are found' do
-        unit.board.turn = 1
         white_piece = 'P'
         expect(unit.enemy_occupied?(white_piece)).to eq(true)
       end
@@ -65,25 +72,47 @@ describe Unit do
 
   describe '#move_unit' do
     before do
-      x = 4
-      y = 1
-      unit.board.data[y][x] = 'P'
-      unit.move_unit([4, 1], [4, 3])
+      allow(board).to receive(:update_turn)
+      allow(unit).to receive(:get_unit).and_return('P')
+      allow(unit).to receive(:valid_move?).and_return(true)
     end
 
     context 'when it\'s white\'s turn' do
       it 'moves a unit from one location to another' do
         x = 4
-        y = 3
-        expect(unit.board.data[y][x]).to eq('P')
+        y = 1
+        unit.board.data[y][x] = 'P'
+        unit.move_unit([4, 1], [4, 3])
+        expect(unit.board.data[y + 2][x]).to eq('P')
       end
     end
   end
 
-  describe '#valid_move?' do
+  describe '#off_the_board?' do
     context 'when a piece is moved off the board' do
-      it 'returns false' do
-        expect(unit.valid_move?([-1, 1])).to eq(false)
+      it 'returns true' do
+        expect(unit.off_the_board?([-1, 1])).to be true
+        expect(unit.off_the_board?([1, -1])).to be true
+        expect(unit.off_the_board?([1, 8])).to be true
+        expect(unit.off_the_board?([8, 1])).to be true
+      end
+    end
+  end
+
+  describe '#move_validator' do
+    context 'when it\'s white\'s turn and a move entered is valid' do
+      let(:w_pawn) { instance_double(Pawn, moves: [[0, 1], [0, 2]]) }
+
+      it 'returns true' do
+        expect(unit.move_validator([1, 1], [1, 3], w_pawn)).to be true
+      end
+    end
+
+    context 'when it\'s black\'s turn and a move entered is valid' do
+      let(:b_pawn) { instance_double(Pawn, moves: [[0, -1], [0, -2]]) }
+
+      it 'returns true' do
+        expect(unit.move_validator([1, 6], [1, 4], b_pawn)).to be true
       end
     end
   end

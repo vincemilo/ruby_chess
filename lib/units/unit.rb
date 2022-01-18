@@ -5,8 +5,8 @@ require_relative '../board'
 class Unit
   attr_reader :board, :start_pos, :moves
 
-  def initialize(start_pos = nil)
-    @board = Board.new
+  def initialize(board = Board.new, start_pos = nil)
+    @board = board
     @start_pos = start_pos
     @moves = []
   end
@@ -96,21 +96,33 @@ class Unit
 
   def move_unit(start_pos, end_pos)
     piece = get_unit(start_pos)
-    p piece
     return unless valid_move?(end_pos)
 
     @board.data[y_pos(start_pos)][x_pos(start_pos)] = '0'
     # capture(end_pos) if @board[x_pos(end_pos)][y_pos(end_pos)] != '0'
     @board.data[y_pos(end_pos)][x_pos(end_pos)] = piece
-    @board.turn += 1
-    @board.turn %= 2
+    @board.update_turn
   end
 
   def valid_move?(end_pos)
-    return false if end_pos[0].negative? || end_pos[0] > 7 ||
-                    end_pos[1].negative? || end_pos[1] > 7
+    return false if off_the_board?(end_pos)
 
     true
+  end
+
+  def off_the_board?(end_pos)
+    return true if end_pos[0].negative? || end_pos[0] > 7 ||
+                   end_pos[1].negative? || end_pos[1] > 7
+
+    false
+  end
+
+  def move_validator(start_pos, end_pos, piece)
+    x = end_pos[0] - start_pos[0]
+    y = end_pos[1] - start_pos[1]
+    return true if piece.moves.any? { |move| move == [x, y] }
+
+    false
   end
 
   # def capture(pos)

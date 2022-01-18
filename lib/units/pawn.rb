@@ -18,17 +18,6 @@ class Pawn < Unit
     end
   end
 
-  def promote(end_pos)
-    promotion = 0
-    while promotion < 1 || promotion > 4
-      puts 'Enter promotion number: 1 - Queen, 2 - Rook, 3 - Bishop, 4 - Knight'
-      promotion = gets.chomp.to_i
-      puts 'Invalid entry, please try again.' if promotion < 1 || promotion > 4
-    end
-    # temp
-    @board.data[y_pos(end_pos)][x_pos(end_pos)] = promotion.to_s
-  end
-
   def double_step?(start_pos, end_pos)
     return true if (y_pos(start_pos) - y_pos(end_pos)).abs == 2
 
@@ -46,6 +35,7 @@ class Pawn < Unit
       @board.en_passant = end_pos
     end
     move_unit(start_pos, end_pos)
+    promote(end_pos) if promote?(end_pos)
   end
 
   def en_passant?(end_pos)
@@ -93,7 +83,25 @@ class Pawn < Unit
     end
     pawn
   end
+
+  def promote?(end_pos)
+    return true if @board.turn.zero? && end_pos[1] == 7 ||
+                   @board.turn.positive? && end_pos[1].zero?
+
+    false
+  end
+
+  def promote(end_pos)
+    promotion = 0
+    while promotion < 1 || promotion > 4
+      puts 'Enter promotion number: 1 - Queen, 2 - Rook, 3 - Bishop, 4 - Knight'
+      promotion = gets.chomp.to_i
+      puts 'Invalid entry, please try again.' if promotion < 1 || promotion > 4
+    end
+    # temp
+    @board.data[y_pos(end_pos)][x_pos(end_pos)] = promotion.to_s
+  end
 end
 
 # pawn = Pawn.new
-# pawn.store_en_passant([0, 3])
+# pawn.promote([0, 3])
