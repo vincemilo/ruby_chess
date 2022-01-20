@@ -36,6 +36,20 @@ class Board
     @data[1].map! { 'P' }
     @data[6].map! { 'p' }
   end
+
+    def x_pos(pos)
+    # extracts x coordinate
+    pos[0]
+  end
+
+  def y_pos(pos)
+    # extracts y coordinate
+    pos[1]
+  end
+
+  def get_unit(square)
+    @data[y_pos(square)][x_pos(square)]
+  end
 end
 
 # board = Board.new

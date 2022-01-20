@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require_relative 'unit'
+require_relative '../../lib/board'
 
 class Pawn < Unit
   attr_reader :board, :start_pos, :moves
@@ -109,6 +110,6 @@ class Pawn < Unit
   end
 end
 
-# arr = Array.new(8) { Array.new(8, '0') }
-# pawn = Pawn.new(arr)
+# pawn = Pawn.new(Board.new, [0, 1])
+# pawn.assign_moves([0, 1], pawn)
 # p pawn
