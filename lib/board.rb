@@ -6,8 +6,8 @@ class Board
   def initialize
     @data = Array.new(8) { Array.new(8, '0') }
     @turn = 0
-    @captured = [[], []]
     @en_passant = nil
+    @captured = [[], []]
     # place_pawns
   end
 
@@ -26,6 +26,10 @@ class Board
   def update_turn
     @turn += 1
     @turn %= 2
+  end
+
+  def update_en_passant(coords)
+    @en_passant = coords
   end
 
   def place_pawns

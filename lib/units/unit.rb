@@ -5,10 +5,10 @@ require_relative '../board'
 class Unit
   attr_reader :board, :start_pos, :moves
 
-  def initialize(board = Board.new, start_pos = nil)
+  def initialize(board = Board.new, start_pos = [], moves = [])
     @board = board
     @start_pos = start_pos
-    @moves = []
+    @moves = moves
   end
 
   def x_pos(pos)

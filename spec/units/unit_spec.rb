@@ -73,17 +73,34 @@ describe Unit do
   describe '#move_unit' do
     before do
       allow(board).to receive(:update_turn)
-      allow(unit).to receive(:get_unit).and_return('P')
       allow(unit).to receive(:valid_move?).and_return(true)
     end
 
     context 'when it\'s white\'s turn' do
+      before do
+        allow(unit).to receive(:get_unit).and_return('P')
+      end
+
       it 'moves a unit from one location to another' do
         x = 4
         y = 1
         unit.board.data[y][x] = 'P'
-        unit.move_unit([4, 1], [4, 3])
+        unit.move_unit([x, y], [x, y + 2])
         expect(unit.board.data[y + 2][x]).to eq('P')
+      end
+    end
+
+    context 'when it\'s black\'s turn' do
+      before do
+        allow(unit).to receive(:get_unit).and_return('p')
+      end
+
+      it 'moves a unit from one location to another' do
+        x = 4
+        y = 6
+        unit.board.data[y][x] = 'p'
+        unit.move_unit([x, y], [x, y - 2])
+        expect(unit.board.data[y - 2][x]).to eq('p')
       end
     end
   end

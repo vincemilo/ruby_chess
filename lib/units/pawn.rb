@@ -3,19 +3,23 @@
 require_relative 'unit'
 
 class Pawn < Unit
-  attr_accessor :moves
+  attr_reader :board, :start_pos, :moves
 
-  def initialize
+  def initialize(board, start_pos = [], moves = [])
     super
-    @moves = [[0, 1]]
   end
 
   def starting_line(start_pos, pawn)
     if !occupied?(one_ahead(start_pos)) && !occupied?(two_ahead(start_pos))
-      pawn.moves << [0, 2]
+      update_moves([0, 2])
     elsif occupied?(one_ahead(start_pos))
-      pawn.moves = []
+      @moves = []
     end
+    pawn
+  end
+
+  def update_moves(*moves)
+    @moves += moves
   end
 
   def double_step?(start_pos, end_pos)
@@ -32,7 +36,7 @@ class Pawn < Unit
 
   def move_pawn(start_pos, end_pos)
     if double_step?(start_pos, end_pos) && en_passant?(end_pos)
-      @board.en_passant = end_pos
+      @board.update_en_passant(end_pos)
     end
     move_unit(start_pos, end_pos)
     promote(end_pos) if promote?(end_pos)
@@ -62,16 +66,18 @@ class Pawn < Unit
   def assign_en_passant(start_pos, pawn)
     x_factor = get_x_factor(start_pos)
 
-    pawn.moves << if x_factor == -1
-                    [-1, 1]
-                  else
-                    [1, 1]
-                  end
-    @board.en_passant = nil
+    if x_factor == -1
+      update_moves([-1, 1])
+    else
+      update_moves([1, 1])
+    end
+
+    @board.update_en_passant(nil)
     pawn
   end
 
   def assign_moves(start_pos, pawn)
+    @moves << [0, 1]
     starting_line(start_pos, pawn) if first_move?(start_pos)
     check_diags(start_pos, pawn)
     assign_en_passant(start_pos, pawn) unless @board.en_passant.nil?
@@ -103,5 +109,6 @@ class Pawn < Unit
   end
 end
 
-# pawn = Pawn.new
-# pawn.promote([0, 3])
+# arr = Array.new(8) { Array.new(8, '0') }
+# pawn = Pawn.new(arr)
+# p pawn
