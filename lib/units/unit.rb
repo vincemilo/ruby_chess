@@ -27,17 +27,6 @@ class Unit
     false
   end
 
-  def enemy_occupied?(piece)
-    white_pieces = %w[P R N B Q K]
-    black_pieces = white_pieces.map(&:downcase)
-
-    return true if @board.turn.zero? && black_pieces.any?(piece)
-
-    return true if @board.turn.positive? && white_pieces.any?(piece)
-
-    false
-  end
-
   def get_unit(square)
     @board.data[y_pos(square)][x_pos(square)]
   end
@@ -77,11 +66,11 @@ class Unit
   def check_diags(start_pos, pawn)
     right = r_diag(start_pos)
     left = l_diag(start_pos)
-    if enemy_occupied?(right) && enemy_occupied?(left)
+    if @board.enemy_occupied?(right) && @board.enemy_occupied?(left)
       [[1, 1], [-1, 1]].each { |move| pawn.moves << move }
-    elsif enemy_occupied?(right)
+    elsif @board.enemy_occupied?(right)
       pawn.moves << [1, 1]
-    elsif enemy_occupied?(left)
+    elsif @board.enemy_occupied?(left)
       pawn.moves << [-1, 1]
     end
   end
@@ -105,16 +94,9 @@ class Unit
   end
 
   def valid_move?(end_pos)
-    return false if off_the_board?(end_pos)
+    return false if @board.off_the_board?(end_pos)
 
     true
-  end
-
-  def off_the_board?(end_pos)
-    return true if end_pos[0].negative? || end_pos[0] > 7 ||
-                   end_pos[1].negative? || end_pos[1] > 7
-
-    false
   end
 
   def move_validator(start_pos, end_pos, piece)

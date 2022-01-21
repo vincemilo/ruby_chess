@@ -52,6 +52,24 @@ class Board
   def get_unit(square)
     @data[y_pos(square)][x_pos(square)]
   end
+
+  def off_the_board?(end_pos)
+    return true if end_pos[0].negative? || end_pos[0] > 7 ||
+                   end_pos[1].negative? || end_pos[1] > 7
+
+    false
+  end
+
+  def enemy_occupied?(piece)
+    white_pieces = %w[P R N B Q K]
+    black_pieces = white_pieces.map(&:downcase)
+
+    return true if @turn.zero? && black_pieces.any?(piece)
+
+    return true if @turn.positive? && white_pieces.any?(piece)
+
+    false
+  end
 end
 
 # board = Board.new

@@ -25,6 +25,10 @@ describe Pawn do
       let(:board) { instance_double(Board, data: arr, turn: 0) }
       subject(:pawn) { described_class.new(board) }
 
+      before do
+        allow(board).to receive(:enemy_occupied?).and_return(false)
+      end
+
       it 'has 1 move or 2 move ahead options' do
         start_pos = [1, 1]
         w_pawn = pawn.assign_moves(start_pos, pawn)
@@ -39,6 +43,7 @@ describe Pawn do
       subject(:pawn) { described_class.new(board) }
 
       before do
+        allow(board).to receive(:enemy_occupied?).and_return(true)
         row = 3
         col = 2
         pawn.board.data[col][row] = 'p'
@@ -59,6 +64,7 @@ describe Pawn do
       subject(:pawn) { described_class.new(board) }
 
       before do
+        allow(board).to receive(:enemy_occupied?).and_return(false)
         row = 3
         col = 1
         pawn.board.data[row][col] = 'p'
@@ -78,6 +84,7 @@ describe Pawn do
       subject(:pawn) { described_class.new(board) }
 
       before do
+        allow(board).to receive(:enemy_occupied?).and_return(false)
         row = 1
         col = 2
         pawn.board.data[col][row] = 'p'
@@ -97,6 +104,7 @@ describe Pawn do
       subject(:pawn) { described_class.new(board) }
 
       before do
+        allow(board).to receive(:enemy_occupied?).and_return(true)
         row = 1
         col = 2
         pawn.board.data[col][row] = 'p'
@@ -117,6 +125,10 @@ describe Pawn do
       let(:board) { instance_double(Board, data: arr, turn: 1) }
       subject(:pawn) { described_class.new(board) }
 
+      before do
+        allow(board).to receive(:enemy_occupied?).and_return(false)
+      end
+
       it 'has 1 move or 2 move ahead options' do
         start_pos = [1, 6]
         b_pawn = pawn.assign_moves(start_pos, pawn)
@@ -131,6 +143,7 @@ describe Pawn do
       subject(:pawn) { described_class.new(board) }
 
       before do
+        allow(board).to receive(:enemy_occupied?).and_return(true)
         row = 3
         col = 5
         pawn.board.data[col][row] = 'P'
@@ -151,6 +164,7 @@ describe Pawn do
       subject(:pawn) { described_class.new(board) }
 
       before do
+        allow(board).to receive(:enemy_occupied?).and_return(false)
         row = 1
         col = 4
         pawn.board.data[col][row] = 'P'
@@ -170,6 +184,7 @@ describe Pawn do
       subject(:pawn) { described_class.new(board) }
 
       before do
+        allow(board).to receive(:enemy_occupied?).and_return(false)
         row = 1
         col = 5
         pawn.board.data[col][row] = 'P'
@@ -189,6 +204,7 @@ describe Pawn do
       subject(:pawn) { described_class.new(board) }
 
       before do
+        allow(board).to receive(:enemy_occupied?).and_return(true)
         row = 1
         col = 5
         pawn.board.data[col][row] = 'P'
@@ -211,6 +227,7 @@ describe Pawn do
       subject(:pawn) { described_class.new(board) }
 
       it 'returns true' do
+        allow(board).to receive(:enemy_occupied?).and_return(true)
         row = 1
         col = 4
         pawn.board.data[col][row] = 'p'
@@ -225,6 +242,7 @@ describe Pawn do
       subject(:pawn) { described_class.new(board) }
 
       it 'returns true' do
+        allow(board).to receive(:enemy_occupied?).and_return(true)
         row = 1
         col = 3
         pawn.board.data[col][row] = 'p'
@@ -238,8 +256,6 @@ describe Pawn do
     before do
       allow(board).to receive(:update_en_passant)
       allow(pawn).to receive(:move_unit)
-      allow(pawn).to receive(:promote)
-      allow(pawn).to receive(:promote?)
     end
 
     context 'when it\'s black\'s turn and a white pawn
@@ -247,6 +263,10 @@ describe Pawn do
       arr = Array.new(8) { Array.new(8, '0') }
       let(:board) { instance_double(Board, data: arr, turn: 1, en_passant: [1, 4]) }
       subject(:pawn) { described_class.new(board) }
+
+      before do
+        allow(board).to receive(:enemy_occupied?).and_return(true)
+      end
 
       it 'stores the coords of the 2 step pawn' do
         row = 1
@@ -264,6 +284,10 @@ describe Pawn do
       let(:board) { instance_double(Board, data: arr, turn: 1, en_passant: [1, 4]) }
       subject(:pawn) { described_class.new(board) }
 
+      before do
+        allow(board).to receive(:enemy_occupied?).and_return(true)
+      end
+
       it 'stores the coords of the 2 step pawn' do
         row = 1
         col = 6
@@ -280,6 +304,10 @@ describe Pawn do
       let(:board) { instance_double(Board, data: arr, turn: 0, en_passant: [1, 3]) }
       subject(:pawn) { described_class.new(board) }
 
+      before do
+        allow(board).to receive(:enemy_occupied?).and_return(true)
+      end
+
       it 'stores the coords on the right side of the 2 step pawn' do
         row = 1
         col = 1
@@ -295,6 +323,10 @@ describe Pawn do
       arr = Array.new(8) { Array.new(8, '0') }
       let(:board) { instance_double(Board, data: arr, turn: 0, en_passant: [1, 3]) }
       subject(:pawn) { described_class.new(board) }
+
+      before do
+        allow(board).to receive(:enemy_occupied?).and_return(true)
+      end
 
       it 'stores the coords on the left side of the 2 step pawn' do
         row = 1

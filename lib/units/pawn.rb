@@ -30,7 +30,7 @@ class Pawn < Unit
   end
 
   def enemy_pawn?(square)
-    return true if enemy_occupied?(square) && square.downcase == 'p'
+    return true if @board.enemy_occupied?(square) && square.downcase == 'p'
 
     false
   end
@@ -78,7 +78,7 @@ class Pawn < Unit
   end
 
   def assign_moves(start_pos, pawn)
-    @moves << [0, 1]
+    @moves << [0, 1] # unless @board.enemy_occupied?(one_ahead(start_pos))
     starting_line(start_pos, pawn) if first_move?(start_pos)
     check_diags(start_pos, pawn)
     assign_en_passant(start_pos, pawn) unless @board.en_passant.nil?

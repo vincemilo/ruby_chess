@@ -17,12 +17,43 @@ class Game
       @board.display_board
       puts "Player #{@board.turn + 1} please select your piece (i.e. e2):"
       start_pos = move_translator(gets.chomp)
-      unit = select_unit(start_pos)
+      piece = @board.get_unit(start_pos)
+
+      next unless valid_start?(start_pos, piece)
+
+      unit = select_unit(start_pos, piece)
       options = display_moves(start_pos, unit.moves)
       puts 'Please select their destination (i.e. e4):'
       end_pos = move_translator(gets.chomp)
+
+      next unless valid_end?(end_pos, options)
+
       select_dest(end_pos, start_pos, unit, options)
     end
+  end
+
+  def valid_start?(start_pos, piece)
+    return true if valid_selection?(start_pos) && piece != '0' &&
+                   !@board.enemy_occupied?(piece)
+
+    invalid_selection
+  end
+
+  def invalid_selection
+    puts 'Invalid selection, please try again.'
+    false
+  end
+
+  def valid_end?(end_pos, options)
+    return true if valid_selection?(end_pos) && !options.empty?
+
+    invalid_selection
+  end
+
+  def valid_selection?(coords)
+    return false if coords.length != 2 || @board.off_the_board?(coords)
+
+    true
   end
 
   def move_translator(coords)
@@ -33,10 +64,7 @@ class Game
     [col_num - 1, row.to_i - 1]
   end
 
-  def select_unit(coords)
-    piece = @board.get_unit(coords)
-    return 'Invalid selection, please try again.' if piece == '0'
-
+  def select_unit(coords, piece)
     unit = get_unit_obj(piece)
     unit.assign_moves(coords, unit)
     unit
@@ -48,7 +76,7 @@ class Game
       options << [coords[0] + set[0], coords[1] + set[1]]
     end
     options.each do |set|
-      @board.data[set[1]][set[0]] = '1'
+      @board.data[set[1]][set[0]] += '*'
     end
     @board.display_board
     options
@@ -65,7 +93,9 @@ class Game
   end
 
   def select_dest(end_pos, start_pos, unit, options)
-    options.each { |option| @board.update_board(option, '0') }
+    options.each do |option|
+      @board.update_board(option, @board.get_unit(option)[0])
+    end
     if unit.class == Pawn
       unit.move_pawn(start_pos, end_pos)
     else
@@ -81,7 +111,3 @@ end
 # game.board.data[row][col] = 'P'
 # game.select_unit([col, row])
 # game.board.display_board
-# board = Board.new
-# board.display_board
-# board.update_turn
-# p board.turn
