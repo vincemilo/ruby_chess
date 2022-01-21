@@ -1,14 +1,14 @@
 # frozen_string_literal: true
 
 class Board
-  attr_accessor :data, :turn, :captured, :en_passant
+  attr_reader :data, :turn, :captured, :en_passant
 
   def initialize
     @data = Array.new(8) { Array.new(8, '0') }
     @turn = 0
     @en_passant = nil
     @captured = [[], []]
-    # place_pawns
+    place_pawns
   end
 
   def display_board
@@ -19,8 +19,10 @@ class Board
     print "#{('a'..'h').to_a} \n"
   end
 
-  def update_board(x_val, y_val, value)
-    @data[y_val][x_val] = value
+  def update_board(coords, value)
+    row = coords[0]
+    col = coords[1]
+    @data[col][row] = value
   end
 
   def update_turn
@@ -37,7 +39,7 @@ class Board
     @data[6].map! { 'p' }
   end
 
-    def x_pos(pos)
+  def x_pos(pos)
     # extracts x coordinate
     pos[0]
   end
@@ -54,3 +56,5 @@ end
 
 # board = Board.new
 # board.display_board
+# board.update_turn
+# p board.turn

@@ -22,7 +22,7 @@ describe Game do
     end
 
     it 'returns the coords for the board' do
-      expect(game.move_translator('e4')).to eq([5, 4])
+      expect(game.move_translator('e2')).to eq([4, 1])
     end
   end
 
