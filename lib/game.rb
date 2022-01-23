@@ -4,7 +4,7 @@ require_relative 'board'
 require_relative 'units/pawn'
 
 class Game
-  attr_reader :turn, :board, :game_over
+  attr_reader :board, :game_over
 
   def initialize(board = Board.new)
     @board = board
@@ -22,6 +22,7 @@ class Game
       next unless valid_start?(start_pos, piece)
 
       unit = select_unit(start_pos, piece)
+      p unit.moves
       options = display_moves(start_pos, unit.moves)
       puts 'Please select their destination (i.e. e4):'
       end_pos = move_translator(gets.chomp)

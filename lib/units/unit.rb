@@ -63,16 +63,30 @@ class Unit
     end
   end
 
-  def check_diags(start_pos, pawn)
-    right = r_diag(start_pos)
-    left = l_diag(start_pos)
-    if @board.enemy_occupied?(right) && @board.enemy_occupied?(left)
-      [[1, 1], [-1, 1]].each { |move| pawn.moves << move }
-    elsif @board.enemy_occupied?(right)
-      pawn.moves << [1, 1]
-    elsif @board.enemy_occupied?(left)
-      pawn.moves << [-1, 1]
+  def check_diags(start_pos, unit)
+    right = @board.enemy_occupied?(r_diag(start_pos))
+    left = @board.enemy_occupied?(l_diag(start_pos))
+
+    if right && left
+      [[1, 1], [-1, 1]].each { |move| unit.moves << move }
+    elsif r_diag_occupied?(right, left)
+      unit.moves << [1, 1]
+    elsif l_diag_occupied?(right, left)
+      unit.moves << [-1, 1]
     end
+    unit
+  end
+
+  def r_diag_occupied?(right, left)
+    return true if right && @board.turn.zero? || left && @board.turn.positive?
+
+    false
+  end
+
+  def l_diag_occupied?(right, left)
+    return true if left && turn.zero? || right && turn.positive?
+
+    false
   end
 
   def l_adj(start_pos)

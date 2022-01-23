@@ -157,7 +157,7 @@ describe Pawn do
       end
     end
 
-    context 'when a black pawn is two spaces in front and no diagonal
+    context 'when a white pawn is two spaces in front and no diagonal
              captures available' do
       arr = Array.new(8) { Array.new(8, '0') }
       let(:board) { instance_double(Board, data: arr, turn: 1) }
@@ -177,7 +177,7 @@ describe Pawn do
       end
     end
 
-    context 'when a black pawn is one space in front and no diagonal
+    context 'when a white pawn is one space in front and no diagonal
              captures available' do
       arr = Array.new(8) { Array.new(8, '0') }
       let(:board) { instance_double(Board, data: arr, turn: 1) }
@@ -197,8 +197,8 @@ describe Pawn do
       end
     end
 
-    context 'when a black pawn is one space in front but pawn has diagonal
-             captures available' do
+    context 'when a white pawn is one space in front but diagonal
+             captures are available' do
       arr = Array.new(8) { Array.new(8, '0') }
       let(:board) { instance_double(Board, data: arr, turn: 1) }
       subject(:pawn) { described_class.new(board) }
@@ -216,6 +216,31 @@ describe Pawn do
         start_pos = [1, 6]
         b_pawn = pawn.assign_moves(start_pos, pawn)
         expect(b_pawn.moves).to eq [[-1, -1], [1, -1]]
+      end
+    end
+
+    context 'when a white pawn is one space in front but a diagonal
+             capture is available' do
+      arr = Array.new(8) { Array.new(8, '0') }
+      # let(:board) { instance_double(Board, data: arr, turn: 1) }
+      let(:board) { Board.new }
+      subject(:pawn) { described_class.new(board) }
+
+      before do
+        board.update_turn
+        #allow(board).to receive(:enemy_occupied?).and_return(true)
+      end
+
+      it 'should have diagonal moves' do
+        row = 4
+        col = 4
+        pawn.board.data[row][col] = 'p'
+        pawn.board.data[row - 1][col] = 'P'
+        pawn.board.data[row - 1][col - 1] = 'P'
+        display_board
+        start_pos = [row, col]
+        b_pawn = pawn.assign_moves(start_pos, pawn)
+        expect(b_pawn.moves).to eq [[-1, -1]]
       end
     end
   end

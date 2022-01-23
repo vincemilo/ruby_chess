@@ -13,8 +13,6 @@ class Pawn < Unit
   def starting_line(start_pos, pawn)
     if !occupied?(one_ahead(start_pos)) && !occupied?(two_ahead(start_pos))
       update_moves([0, 2])
-    elsif occupied?(one_ahead(start_pos))
-      @moves = []
     end
     pawn
   end
@@ -77,10 +75,18 @@ class Pawn < Unit
     pawn
   end
 
+  def check_one_ahead(start_pos, pawn)
+    unless occupied?(one_ahead(start_pos))
+      update_moves([0, 1])
+      starting_line(start_pos, pawn) if first_move?(start_pos)
+    end
+    pawn
+  end
+
   def assign_moves(start_pos, pawn)
-    @moves << [0, 1] # unless @board.enemy_occupied?(one_ahead(start_pos))
-    starting_line(start_pos, pawn) if first_move?(start_pos)
+    check_one_ahead(start_pos, pawn)
     check_diags(start_pos, pawn)
+    p pawn.moves
     assign_en_passant(start_pos, pawn) unless @board.en_passant.nil?
 
     if @board.turn.positive? # inverse moves for black

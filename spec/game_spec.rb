@@ -63,9 +63,28 @@ describe Game do
         game.board.data[row][col] = 'P'
         game.board.data[row + 1][col + 1] = 'p'
         game.display_moves([col, row], [[0, 1], [1, 1]])
-        display_board
         expect(game.board.data[row + 1][col + 1]).to eq('p*')
         expect(game.board.data[row + 1][col]).to eq('0*')
+      end
+    end
+
+    context 'when a black pawn with capture options is selected' do
+      arr = Array.new(8) { Array.new(8, '0') }
+      let(:board) { instance_double(Board, data: arr, turn: 1) }
+      subject(:game) { described_class.new(board) }
+
+      before do
+        allow(board).to receive(:display_board)
+      end
+
+      it 'displays the correct move options' do
+        row = 4
+        col = 4
+        game.board.data[row][col] = 'p'
+        game.board.data[row - 1][col - 1] = 'P'
+        game.display_moves([col, row], [[0, -1], [-1, -1]])
+        expect(game.board.data[row - 1][col - 1]).to eq('P*')
+        expect(game.board.data[row - 1][col]).to eq('0*')
       end
     end
   end
