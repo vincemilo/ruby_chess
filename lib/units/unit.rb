@@ -27,10 +27,6 @@ class Unit
     false
   end
 
-  def get_unit(square)
-    @board.data[y_pos(square)][x_pos(square)]
-  end
-
   def one_ahead(start_pos)
     if @board.turn.zero?
       @board.data[y_pos(start_pos) + 1][x_pos(start_pos)]
@@ -97,22 +93,6 @@ class Unit
     @board.data[y_pos(start_pos)][x_pos(start_pos) + 1]
   end
 
-  def move_unit(start_pos, end_pos)
-    piece = get_unit(start_pos)
-    return unless valid_move?(end_pos)
-
-    @board.data[y_pos(start_pos)][x_pos(start_pos)] = '0'
-    # capture(end_pos) if @board[x_pos(end_pos)][y_pos(end_pos)] != '0'
-    @board.data[y_pos(end_pos)][x_pos(end_pos)] = piece
-    @board.update_turn
-  end
-
-  def valid_move?(end_pos)
-    return false if @board.off_the_board?(end_pos)
-
-    true
-  end
-
   def move_validator(start_pos, end_pos, piece)
     x = end_pos[0] - start_pos[0]
     y = end_pos[1] - start_pos[1]
@@ -120,16 +100,6 @@ class Unit
 
     false
   end
-
-  # def capture(pos)
-  #   piece = @board[x_pos(pos)][y_pos(pos)]
-  #   if @turn.zero?
-  #     @captured[0] << piece
-  #   else
-  #     @captured[1] << piece
-  #   end
-  #   puts "Captured pieces: #{@captured}"
-  # end
 end
 
 # unit = Unit.new

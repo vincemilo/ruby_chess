@@ -8,7 +8,6 @@ class Board
     @turn = 0
     @en_passant = nil
     @captured = [[], []]
-    place_pawns
   end
 
   def display_board
@@ -49,8 +48,8 @@ class Board
     pos[1]
   end
 
-  def get_unit(square)
-    @data[y_pos(square)][x_pos(square)]
+  def get_unit(coords)
+    @data[y_pos(coords)][x_pos(coords)]
   end
 
   def off_the_board?(end_pos)
@@ -69,6 +68,26 @@ class Board
     return true if @turn.positive? && white_pieces.any?(piece)
 
     false
+  end
+
+  def move_unit(start_pos, end_pos)
+    return if off_the_board?(end_pos)
+
+    piece = get_unit(start_pos)
+    @data[y_pos(start_pos)][x_pos(start_pos)] = '0'
+    capture(end_pos) if get_unit(end_pos) != '0'
+    @data[y_pos(end_pos)][x_pos(end_pos)] = piece
+    update_turn
+  end
+
+  def capture(coords)
+    piece = get_unit(coords)
+    if @turn.zero?
+      @captured[0] << piece
+    else
+      @captured[1] << piece
+    end
+    puts "Captured pieces: #{@captured}"
   end
 end
 

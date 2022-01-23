@@ -1,9 +1,24 @@
 # frozen_string_literal: true
 
+# rubocop:disable Metrics/BlockLength
+
 require_relative '../lib/board'
+require_relative '../lib/units/pawn'
 
 describe Board do
   subject(:board) { described_class.new }
+
+  describe '#get_unit' do
+    before do
+      row = 2
+      col = 1
+      board.data[row][col] = 'P'
+    end
+
+    it 'returns the piece at the given coordinates' do
+      expect(board.get_unit([1, 2])).to eq('P')
+    end
+  end
 
   describe '#enemy_occupied?' do
     context 'when it\'s white\'s turn' do
@@ -32,6 +47,48 @@ describe Board do
         expect(board.off_the_board?([1, -1])).to be true
         expect(board.off_the_board?([1, 8])).to be true
         expect(board.off_the_board?([8, 1])).to be true
+      end
+    end
+  end
+
+  describe '#move_unit' do
+    context 'when it\'s white\'s turn' do
+      it 'moves a unit from one location to another' do
+        x = 4
+        y = 1
+        board.data[y][x] = 'P'
+        board.move_unit([x, y], [x, y + 2])
+        expect(board.data[y + 2][x]).to eq('P')
+      end
+    end
+
+    context 'when it\'s black\'s turn' do
+      it 'moves a unit from one location to another' do
+        x = 4
+        y = 6
+        board.data[y][x] = 'p'
+        board.move_unit([x, y], [x, y - 2])
+        expect(board.data[y - 2][x]).to eq('p')
+      end
+    end
+  end
+
+  describe '#capture' do
+    context 'when it\'s white\'s turn and a valid capture is entered' do
+      subject(:board) { described_class.new }
+      let(:w_pawn) { instance_double(Pawn, moves: [[1, 1]]) }
+
+      before do
+        allow(board).to receive(:puts)
+      end
+
+      it 'captures the piece and adds it to the list' do
+        row = 3
+        col = 4
+        board.data[row][col] = 'P'
+        board.data[row + 1][col + 1] = 'p'
+        board.capture([col + 1, row + 1])
+        expect(board.captured).to eq([['p'], []])
       end
     end
   end

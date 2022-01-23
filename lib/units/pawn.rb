@@ -37,7 +37,7 @@ class Pawn < Unit
     if double_step?(start_pos, end_pos) && en_passant?(end_pos)
       @board.update_en_passant(end_pos)
     end
-    move_unit(start_pos, end_pos)
+    @board.move_unit(start_pos, end_pos)
     promote(end_pos) if promote?(end_pos)
   end
 
@@ -86,7 +86,6 @@ class Pawn < Unit
   def assign_moves(start_pos, pawn)
     check_one_ahead(start_pos, pawn)
     check_diags(start_pos, pawn)
-    p pawn.moves
     assign_en_passant(start_pos, pawn) unless @board.en_passant.nil?
 
     if @board.turn.positive? # inverse moves for black

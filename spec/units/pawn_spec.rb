@@ -222,13 +222,12 @@ describe Pawn do
     context 'when a white pawn is one space in front but a diagonal
              capture is available' do
       arr = Array.new(8) { Array.new(8, '0') }
-      # let(:board) { instance_double(Board, data: arr, turn: 1) }
-      let(:board) { Board.new }
+      let(:board) { instance_double(Board, data: arr, turn: 1) }
       subject(:pawn) { described_class.new(board) }
 
       before do
-        board.update_turn
-        #allow(board).to receive(:enemy_occupied?).and_return(true)
+        allow(board).to receive(:enemy_occupied?).with('0').and_return(false)
+        allow(board).to receive(:enemy_occupied?).with('P').and_return(true)
       end
 
       it 'should have diagonal moves' do
@@ -237,7 +236,6 @@ describe Pawn do
         pawn.board.data[row][col] = 'p'
         pawn.board.data[row - 1][col] = 'P'
         pawn.board.data[row - 1][col - 1] = 'P'
-        display_board
         start_pos = [row, col]
         b_pawn = pawn.assign_moves(start_pos, pawn)
         expect(b_pawn.moves).to eq [[-1, -1]]
@@ -280,7 +278,7 @@ describe Pawn do
   describe '#move_pawn' do
     before do
       allow(board).to receive(:update_en_passant)
-      allow(pawn).to receive(:move_unit)
+      allow(board).to receive(:move_unit)
     end
 
     context 'when it\'s black\'s turn and a white pawn
