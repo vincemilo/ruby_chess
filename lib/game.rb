@@ -115,6 +115,7 @@ class Game
     else
       unit.move_unit(start_pos, end_pos)
     end
+    @board.update_turn
   end
 end
 

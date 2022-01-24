@@ -379,6 +379,7 @@ describe Pawn do
         col = 4
         pawn.board.data[col][row] = 'P'
         pawn.board.data[col][row - 1] = 'p'
+        display_board
         w_pawn = pawn.assign_en_passant([row, col], pawn)
         expect(w_pawn.moves).to eq [[-1, 1]]
       end
@@ -461,10 +462,10 @@ describe Pawn do
       subject(:pawn) { described_class.new(board) }
 
       it 'returns true' do
-        row = 1
-        col = 7
-        pawn.board.data[col][row] = 'P'
-        expect(pawn.promote?([row, col])).to be true
+        row = 7
+        col = 1
+        pawn.board.data[row][col] = 'P'
+        expect(pawn.promote?([col, row])).to be true
       end
     end
 
@@ -474,10 +475,10 @@ describe Pawn do
       subject(:pawn) { described_class.new(board) }
 
       it 'returns true' do
-        row = 1
-        col = 0
-        pawn.board.data[col][row] = 'p'
-        expect(pawn.promote?([row, col])).to be true
+        row = 0
+        col = 1
+        pawn.board.data[row][col] = 'p'
+        expect(pawn.promote?([col, row])).to be true
       end
     end
   end

@@ -77,7 +77,6 @@ class Board
     @data[y_pos(start_pos)][x_pos(start_pos)] = '0'
     capture(end_pos) if get_unit(end_pos) != '0'
     @data[y_pos(end_pos)][x_pos(end_pos)] = piece
-    update_turn
   end
 
   def capture(coords)
@@ -88,6 +87,12 @@ class Board
       @captured[1] << piece
     end
     puts "Captured pieces: #{@captured}"
+  end
+
+  def en_passant_capture
+    capture(@en_passant)
+    @data[y_pos(@en_passant)][x_pos(@en_passant)] = '0'
+    update_en_passant(nil)
   end
 end
 

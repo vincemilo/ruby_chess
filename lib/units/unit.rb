@@ -80,7 +80,7 @@ class Unit
   end
 
   def l_diag_occupied?(right, left)
-    return true if left && turn.zero? || right && turn.positive?
+    return true if left && @board.turn.zero? || right && @board.turn.positive?
 
     false
   end

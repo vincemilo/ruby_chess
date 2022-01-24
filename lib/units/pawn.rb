@@ -38,6 +38,7 @@ class Pawn < Unit
       @board.update_en_passant(end_pos)
     end
     @board.move_unit(start_pos, end_pos)
+    en_passant_capture?(end_pos) unless @board.en_passant.nil?
     promote(end_pos) if promote?(end_pos)
   end
 
@@ -71,8 +72,20 @@ class Pawn < Unit
       update_moves([1, 1])
     end
 
-    @board.update_en_passant(nil)
     pawn
+  end
+
+  def en_passant_capture?(end_pos)
+    row = @board.en_passant[0] - end_pos[0]
+    col = @board.en_passant[1] - end_pos[1]
+
+    unless row.zero? && col.abs == 1
+      @board.update_en_passant(nil)
+      return false
+    end
+
+    @board.en_passant_capture
+    true
   end
 
   def check_one_ahead(start_pos, pawn)
@@ -115,6 +128,6 @@ class Pawn < Unit
   end
 end
 
-# pawn = Pawn.new(Board.new, [0, 1])
-# pawn.assign_moves([0, 1], pawn)
-# p pawn
+# pawn = Pawn.new(Board.new, [0, 5])
+# pawn.move_pawn([0, 6], [0, 7])
+# pawn.board.display_board

@@ -92,4 +92,44 @@ describe Board do
       end
     end
   end
+
+  describe '#en_passant_capture' do
+    context 'when it\'s white\'s turn and a valid capture is entered' do
+      subject(:board) { described_class.new }
+
+      before do
+        allow(board).to receive(:puts)
+        board.update_en_passant([5, 4])
+      end
+
+      it 'captures the piece and adds it to the list' do
+        row = 4
+        col = 4
+        board.data[row][col] = 'P'
+        board.data[row][col + 1] = 'p'
+        board.en_passant_capture
+        expect(board.captured).to eq([['p'], []])
+      end
+    end
+
+    context 'when it\'s black\'s turn and a valid capture is entered' do
+      subject(:board) { described_class.new }
+
+      before do
+        #allow(board).to receive(:puts)
+        board.update_turn
+        board.update_en_passant([1, 3])
+      end
+
+      it 'captures the piece and adds it to the list' do
+        row = 3
+        col = 2
+        board.data[row][col] = 'p'
+        board.data[row][col - 1] = 'P'
+        board.en_passant_capture
+        board.display_board
+        expect(board.captured).to eq([[], ['P']])
+      end
+    end
+  end
 end
