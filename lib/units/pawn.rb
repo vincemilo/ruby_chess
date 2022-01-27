@@ -4,9 +4,9 @@ require_relative 'unit'
 require_relative '../../lib/board'
 
 class Pawn < Unit
-  attr_reader :board, :start_pos, :moves
+  attr_reader :board
 
-  def initialize(board, start_pos = [], moves = [])
+  def initialize(board)
     super
   end
 
@@ -15,10 +15,6 @@ class Pawn < Unit
       update_moves([0, 2])
     end
     pawn
-  end
-
-  def update_moves(*moves)
-    @moves += moves
   end
 
   def double_step?(start_pos, end_pos)

@@ -11,11 +11,22 @@ class Board
   end
 
   def display_board
-    print "#{('a'..'h').to_a} \n"
+    display_cols
+    display_rows
+    display_cols
+  end
+
+  def display_cols
+    cols = ('a'..'h').to_a.to_s
+    puts ' ' + cols
+  end
+
+  def display_rows
+    nums = (1..8).to_a.reverse
     @data.reverse.each do |row|
-      puts row.to_s
+      letter = nums.shift.to_s
+      puts letter + row.to_s + letter
     end
-    print "#{('a'..'h').to_a} \n"
   end
 
   def update_board(coords, value)

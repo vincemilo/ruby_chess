@@ -11,6 +11,10 @@ class Unit
     @moves = moves
   end
 
+  def update_moves(*moves)
+    @moves += moves
+  end
+
   def x_pos(pos)
     # extracts x coordinate
     pos[0]

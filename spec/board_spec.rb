@@ -116,7 +116,7 @@ describe Board do
       subject(:board) { described_class.new }
 
       before do
-        #allow(board).to receive(:puts)
+        # allow(board).to receive(:puts)
         board.update_turn
         board.update_en_passant([1, 3])
       end

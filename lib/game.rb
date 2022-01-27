@@ -9,7 +9,7 @@ class Game
   def initialize(board = Board.new)
     @board = board
     @game_over = false
-    @board.place_pawns
+    # @board.place_pawns
   end
 
   def intro
@@ -119,8 +119,8 @@ class Game
   end
 end
 
-game = Game.new
-game.intro
+# game = Game.new
+# game.intro
 # row = 1
 # col = 4
 # game.board.data[row][col] = 'P'
