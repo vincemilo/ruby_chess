@@ -2,6 +2,7 @@
 
 require_relative 'board'
 require_relative 'units/pawn'
+require_relative 'units/rook'
 
 class Game
   attr_reader :board, :game_over
@@ -9,7 +10,8 @@ class Game
   def initialize(board = Board.new)
     @board = board
     @game_over = false
-    # @board.place_pawns
+    @board.place_pawns
+    @board.place_rooks
   end
 
   def intro
@@ -87,6 +89,7 @@ class Game
   end
 
   def mark_options(options)
+    p options
     options.each do |set|
       @board.data[set[1]][set[0]] += '*'
     end
@@ -101,6 +104,8 @@ class Game
   def get_unit_obj(unit)
     if unit.downcase == 'p'
       unit = Pawn.new(@board)
+    elsif unit.downcase == 'r'
+      unit = Rook.new(@board)
     else
       p 'no'
       @board.display_board
@@ -113,14 +118,14 @@ class Game
     if unit.class == Pawn
       unit.move_pawn(start_pos, end_pos)
     else
-      unit.move_unit(start_pos, end_pos)
+      @board.move_unit(start_pos, end_pos)
     end
     @board.update_turn
   end
 end
 
-# game = Game.new
-# game.intro
+game = Game.new
+game.intro
 # row = 1
 # col = 4
 # game.board.data[row][col] = 'P'

@@ -49,6 +49,13 @@ class Board
     @data[6].map! { 'p' }
   end
 
+  def place_rooks
+    @data[0][0] = 'R'
+    @data[0][7] = 'R'
+    @data[7][0] = 'r'
+    @data[7][7] = 'r'
+  end
+
   def x_pos(pos)
     # extracts x coordinate
     pos[0]
@@ -108,6 +115,7 @@ class Board
 end
 
 # board = Board.new
+# board.place_rooks
 # board.display_board
 # board.update_turn
 # p board.turn
