@@ -87,6 +87,7 @@ class Rook < Unit
   end
 
   def assign_moves(start_pos, rook)
+    start_pos = start_pos.reverse
     check_vert(start_pos, rook)
     check_horiz(start_pos, rook)
     rook

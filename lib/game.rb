@@ -69,7 +69,7 @@ class Game
     col = coords[0]
     col_num = col.ord - 96
     # subtract nums to accomodate array
-    [col_num - 1, row.to_i - 1]
+    p [col_num - 1, row.to_i - 1]
   end
 
   def select_unit(coords, piece)
@@ -89,7 +89,6 @@ class Game
   end
 
   def mark_options(options)
-    p options
     options.each do |set|
       @board.data[set[1]][set[0]] += '*'
     end

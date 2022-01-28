@@ -155,7 +155,7 @@ describe Rook do
         row = 4
         col = 3
         board.data[row][col] = 'R'
-        w_rook = rook.assign_moves([row, col], rook)
+        w_rook = rook.assign_moves([col, row], rook)
         rook_moves = [[0, 1], [0, 2], [0, 3], [0, -1], [0, -2], [0, -3], [0, -4],
                       [1, 0], [2, 0], [3, 0], [4, 0], [-1, 0], [-2, 0], [-3, 0]]
         expect(w_rook.moves).to eq(rook_moves)
@@ -176,10 +176,10 @@ describe Rook do
         board.data[row][col + 7] = 'R'
         board.data[row + 6][col] = 'p'
         board.data[row + 7][col + 7] = 'r'
-        w_rook = rook.assign_moves([row, col], rook)
+        w_rook = rook.assign_moves([col, row], rook)
         rook_moves = [[0, 1], [1, 0], [2, 0], [3, 0], [4, 0], [5, 0], [6, 0]]
         expect(w_rook.moves).to eq(rook_moves)
-        w_rook2 = rook2.assign_moves([row, col + 7], rook2)
+        w_rook2 = rook2.assign_moves([col + 7, row], rook2)
         rook2_moves = [[0, 1], [0, 2], [0, 3], [0, 4], [0, 5], [0, 6], [0, 7],
                        [-1, 0], [-2, 0], [-3, 0], [-4, 0], [-5, 0], [-6, 0]]
         expect(w_rook2.moves).to eq(rook2_moves)
