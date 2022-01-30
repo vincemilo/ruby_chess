@@ -56,6 +56,13 @@ class Board
     @data[7][7] = 'r'
   end
 
+  def place_knights
+    @data[0][1] = 'K'
+    @data[0][6] = 'K'
+    @data[7][1] = 'k'
+    @data[7][6] = 'k'
+  end
+
   def x_pos(pos)
     # extracts x coordinate
     pos[0]
@@ -115,7 +122,7 @@ class Board
 end
 
 # board = Board.new
-# board.place_rooks
+# board.place_knights
 # board.display_board
 # board.update_turn
 # p board.turn
