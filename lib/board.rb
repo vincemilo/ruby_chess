@@ -63,6 +63,18 @@ class Board
     @data[7][6] = 'n'
   end
 
+  def place_bishops
+    @data[0][2] = 'B'
+    @data[0][5] = 'B'
+    @data[7][2] = 'b'
+    @data[7][5] = 'b'
+  end
+
+  def place_queens
+    @data[0][3] = 'Q'
+    @data[7][3] = 'q'
+  end
+
   def x_pos(pos)
     # extracts x coordinate
     pos[0]
@@ -122,7 +134,7 @@ class Board
 end
 
 # board = Board.new
-# board.place_knights
+# board.place_queens
 # board.display_board
 # board.update_turn
 # p board.turn

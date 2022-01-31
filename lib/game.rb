@@ -4,6 +4,7 @@ require_relative 'board'
 require_relative 'units/pawn'
 require_relative 'units/rook'
 require_relative 'units/knight'
+require_relative 'units/bishop'
 
 class Game
   attr_reader :board, :game_over
@@ -12,8 +13,9 @@ class Game
     @board = board
     @game_over = false
     @board.place_pawns
-    # @board.place_rooks
+    @board.place_rooks
     @board.place_knights
+    @board.place_bishops
   end
 
   def intro
@@ -109,6 +111,8 @@ class Game
       unit = Rook.new(@board)
     elsif unit.downcase == 'n'
       unit = Knight.new(@board)
+    elsif unit.downcase == 'b'
+      unit = Bishop.new(@board)
     else
       p 'no'
       @board.display_board
