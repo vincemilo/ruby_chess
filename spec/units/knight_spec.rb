@@ -27,7 +27,7 @@ describe Knight do
       it 'has the correct move options' do
         row = 4
         col = 3
-        board.data[row][col] = 'K'
+        board.data[row][col] = 'N'
         w_knight = knight.check_1(row, col, knight)
         knight_moves = [[2, 1]]
         expect(w_knight.moves).to eq(knight_moves)
@@ -40,8 +40,8 @@ describe Knight do
       it 'has the correct move options' do
         row = 1
         col = 1
-        board.data[row][col] = 'K'
-        board.data[row + 2][col + 1] = 'k'
+        board.data[row][col] = 'N'
+        board.data[row + 2][col + 1] = 'n'
         w_knight = knight.check_1(row, col, knight)
         knight_moves = [[2, 1]]
         expect(w_knight.moves).to eq(knight_moves)
@@ -56,7 +56,7 @@ describe Knight do
       it 'has the correct move options' do
         row = 6
         col = 6
-        board.data[row][col] = 'K'
+        board.data[row][col] = 'N'
         w_knight = knight.check_1(row, col, knight)
         knight_moves = []
         expect(w_knight.moves).to eq(knight_moves)
@@ -77,7 +77,7 @@ describe Knight do
       it 'has the correct move options' do
         row = 4
         col = 3
-        board.data[row][col] = 'K'
+        board.data[row][col] = 'N'
         w_knight = knight.check_2(row, col, knight)
         knight_moves = [[1, 2]]
         expect(w_knight.moves).to eq(knight_moves)
@@ -90,8 +90,8 @@ describe Knight do
       it 'has the correct move options' do
         row = 1
         col = 1
-        board.data[row][col] = 'K'
-        board.data[row + 2][col + 1] = 'k'
+        board.data[row][col] = 'N'
+        board.data[row + 2][col + 1] = 'n'
         w_knight = knight.check_2(row, col, knight)
         knight_moves = [[1, 2]]
         expect(w_knight.moves).to eq(knight_moves)
@@ -113,7 +113,7 @@ describe Knight do
       it 'displays the correct move options' do
         row = 0
         col = 1
-        knight.board.data[row][col] = 'K'
+        knight.board.data[row][col] = 'N'
         knight.board.data[row + 1][col + 2] = 'P'
         display_board
         w_knight = knight.check_moves(row, col, knight)

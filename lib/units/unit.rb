@@ -104,6 +104,13 @@ class Unit
 
     false
   end
+
+  def off_the_board?(end_pos)
+    return true if end_pos[0].negative? || end_pos[0] > 7 ||
+                   end_pos[1].negative? || end_pos[1] > 7
+
+    false
+  end
 end
 
 # unit = Unit.new

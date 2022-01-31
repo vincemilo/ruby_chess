@@ -107,7 +107,7 @@ class Game
       unit = Pawn.new(@board)
     elsif unit.downcase == 'r'
       unit = Rook.new(@board)
-    elsif unit.downcase == 'k'
+    elsif unit.downcase == 'n'
       unit = Knight.new(@board)
     else
       p 'no'

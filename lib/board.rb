@@ -57,10 +57,10 @@ class Board
   end
 
   def place_knights
-    @data[0][1] = 'K'
-    @data[0][6] = 'K'
-    @data[7][1] = 'k'
-    @data[7][6] = 'k'
+    @data[0][1] = 'N'
+    @data[0][6] = 'N'
+    @data[7][1] = 'n'
+    @data[7][6] = 'n'
   end
 
   def x_pos(pos)

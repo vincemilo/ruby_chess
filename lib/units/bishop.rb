@@ -1,12 +1,41 @@
 # frozen_string_literal: true
 
-class Bishop
-  attr_reader :moves
+require_relative 'unit'
+require_relative '../../lib/board'
 
-  def initialize
-    @moves = [-1, 1].repeated_permutation(2).to_a
+class Bishop < Unit
+  attr_reader :board
+
+  def initialize(board)
+    super
   end
+
+  def check_1(row, col, bishop)
+    i = 1
+
+    while !off_the_board?([row + i, col + i]) &&
+          (@board.data[row + i][col + i] == '0' ||
+           @board.enemy_occupied?(@board.data[row + i][col + i]))
+      @moves << [i, i]
+      return bishop if @board.enemy_occupied?(@board.data[row + i][col + i])
+
+      i += 1
+    end
+    bishop
+  end
+
+  def assign_moves(start_pos, bishop)
+    start_pos = start_pos.reverse # temp until Pawn coords are fixed
+    row = start_pos[0]
+    col = start_pos[1]
+    check_1(row, col, bishop)
+    check_2(row, col, bishop)
+    check_3(row, col, bishop)
+    check_4(row, col, bishop)
+    bishop
+  end
+
 end
 
-bishop = Bishop.new
-p bishop.moves
+# bishop = Bishop.new
+# p bishop.moves
