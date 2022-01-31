@@ -25,8 +25,8 @@ class Unit
     pos[1]
   end
 
-  def occupied?(square)
-    return true unless square == '0'
+  def occupied?(coords)
+    return true unless coords == '0'
 
     false
   end
@@ -44,6 +44,58 @@ class Unit
                    end_pos[1].negative? || end_pos[1] > 7
 
     false
+  end
+
+  def one_ahead(start_pos)
+    if @board.turn.zero?
+      @board.data[y_pos(start_pos) + 1][x_pos(start_pos)]
+    else
+      @board.data[y_pos(start_pos) - 1][x_pos(start_pos)]
+    end
+  end
+
+  def two_ahead(start_pos)
+    if @board.turn.zero?
+      @board.data[y_pos(start_pos) + 2][x_pos(start_pos)]
+    else
+      @board.data[y_pos(start_pos) - 2][x_pos(start_pos)]
+    end
+  end
+
+  def r_diag(start_pos)
+    if @board.turn.zero?
+      @board.data[y_pos(start_pos) + 1][x_pos(start_pos) + 1]
+    else
+      @board.data[y_pos(start_pos) - 1][x_pos(start_pos) + 1]
+    end
+  end
+
+  def l_diag(start_pos)
+    if @board.turn.zero?
+      @board.data[y_pos(start_pos) + 1][x_pos(start_pos) - 1]
+    else
+      @board.data[y_pos(start_pos) - 1][x_pos(start_pos) - 1]
+    end
+  end
+
+  def r_diag_occupied?(right, left)
+    return true if right && @board.turn.zero? || left && @board.turn.positive?
+
+    false
+  end
+
+  def l_diag_occupied?(right, left)
+    return true if left && @board.turn.zero? || right && @board.turn.positive?
+
+    false
+  end
+
+  def l_adj(start_pos)
+    @board.data[y_pos(start_pos)][x_pos(start_pos) - 1]
+  end
+
+  def r_adj(start_pos)
+    @board.data[y_pos(start_pos)][x_pos(start_pos) + 1]
   end
 end
 

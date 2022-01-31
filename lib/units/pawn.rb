@@ -10,38 +10,6 @@ class Pawn < Unit
     super
   end
 
-  def one_ahead(start_pos)
-    if @board.turn.zero?
-      @board.data[y_pos(start_pos) + 1][x_pos(start_pos)]
-    else
-      @board.data[y_pos(start_pos) - 1][x_pos(start_pos)]
-    end
-  end
-
-  def two_ahead(start_pos)
-    if @board.turn.zero?
-      @board.data[y_pos(start_pos) + 2][x_pos(start_pos)]
-    else
-      @board.data[y_pos(start_pos) - 2][x_pos(start_pos)]
-    end
-  end
-
-  def r_diag(start_pos)
-    if @board.turn.zero?
-      @board.data[y_pos(start_pos) + 1][x_pos(start_pos) + 1]
-    else
-      @board.data[y_pos(start_pos) - 1][x_pos(start_pos) + 1]
-    end
-  end
-
-  def l_diag(start_pos)
-    if @board.turn.zero?
-      @board.data[y_pos(start_pos) + 1][x_pos(start_pos) - 1]
-    else
-      @board.data[y_pos(start_pos) - 1][x_pos(start_pos) - 1]
-    end
-  end
-
   def check_diags(start_pos, unit)
     right = @board.enemy_occupied?(r_diag(start_pos))
     left = @board.enemy_occupied?(l_diag(start_pos))
@@ -54,26 +22,6 @@ class Pawn < Unit
       unit.moves << [-1, 1]
     end
     unit
-  end
-
-  def r_diag_occupied?(right, left)
-    return true if right && @board.turn.zero? || left && @board.turn.positive?
-
-    false
-  end
-
-  def l_diag_occupied?(right, left)
-    return true if left && @board.turn.zero? || right && @board.turn.positive?
-
-    false
-  end
-
-  def l_adj(start_pos)
-    @board.data[y_pos(start_pos)][x_pos(start_pos) - 1]
-  end
-
-  def r_adj(start_pos)
-    @board.data[y_pos(start_pos)][x_pos(start_pos) + 1]
   end
 
   def starting_line(start_pos, pawn)
