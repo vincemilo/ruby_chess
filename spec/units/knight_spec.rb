@@ -105,10 +105,9 @@ describe Knight do
     subject(:knight) { described_class.new(board) }
 
     context 'when a knight is selected' do
-
-    #   before do
-    #     allow(board).to receive(:enemy_occupied?).and_return(false)
-    #   end
+      #   before do
+      #     allow(board).to receive(:enemy_occupied?).and_return(false)
+      #   end
 
       it 'displays the correct move options' do
         row = 0

@@ -15,13 +15,79 @@ class Bishop < Unit
 
     while !off_the_board?([row + i, col + i]) &&
           (@board.data[row + i][col + i] == '0' ||
-           @board.enemy_occupied?(@board.data[row + i][col + i]))
+           enemy_check_1?(row, col, i))
       @moves << [i, i]
-      return bishop if @board.enemy_occupied?(@board.data[row + i][col + i])
+      return bishop if enemy_check_1?(row, col, i)
 
       i += 1
     end
     bishop
+  end
+
+  def enemy_check_1?(row, col, i)
+    return true if @board.enemy_occupied?(@board.data[row + i][col + i])
+
+    false
+  end
+
+  def check_2(row, col, bishop)
+    i = 1
+
+    while !off_the_board?([row - i, col + i]) &&
+          (@board.data[row - i][col + i] == '0' ||
+           enemy_check_2?(row, col, i))
+      @moves << [i, -i]
+      return bishop if enemy_check_2?(row, col, i)
+
+      i += 1
+    end
+    bishop
+  end
+
+  def enemy_check_2?(row, col, i)
+    return true if @board.enemy_occupied?(@board.data[row - i][col + i])
+
+    false
+  end
+
+  def check_3(row, col, bishop)
+    i = 1
+
+    while !off_the_board?([row - i, col - i]) &&
+          (@board.data[row - i][col - i] == '0' ||
+           enemy_check_3?(row, col, i))
+      @moves << [-i, -i]
+      return bishop if enemy_check_3?(row, col, i)
+
+      i += 1
+    end
+    bishop
+  end
+
+  def enemy_check_3?(row, col, i)
+    return true if @board.enemy_occupied?(@board.data[row - i][col - i])
+
+    false
+  end
+
+  def check_4(row, col, bishop)
+    i = 1
+
+    while !off_the_board?([row + i, col - i]) &&
+          (@board.data[row + i][col - i] == '0' ||
+           enemy_check_4?(row, col, i))
+      @moves << [-i, i]
+      return bishop if enemy_check_4?(row, col, i)
+
+      i += 1
+    end
+    bishop
+  end
+
+  def enemy_check_4?(row, col, i)
+    return true if @board.enemy_occupied?(@board.data[row + i][col - i])
+
+    false
   end
 
   def assign_moves(start_pos, bishop)
@@ -34,7 +100,6 @@ class Bishop < Unit
     check_4(row, col, bishop)
     bishop
   end
-
 end
 
 # bishop = Bishop.new
