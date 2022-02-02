@@ -124,6 +124,8 @@ class Game
     unmark_options(options)
     if unit.class == Pawn
       unit.move_pawn(start_pos, end_pos)
+    elsif unit.class == King
+      unit.move_king(start_pos, end_pos)
     else
       @board.move_unit(start_pos, end_pos)
     end

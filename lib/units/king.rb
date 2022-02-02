@@ -113,13 +113,15 @@ class King < Unit
   end
 
   def w_king_moved?
-    return true if @board.turn.zero? && @board.w_king.positive?
+    return true if @board.data[0][4] != 'K' ||
+                   (@board.turn.zero? && @board.w_king.positive?)
 
     false
   end
 
   def b_king_moved?
-    return true if @board.turn.zero? && @board.b_king.positive?
+    return true if @board.data[7][4] != 'k' ||
+                   (@board.turn.zero? && @board.b_king.positive?)
 
     false
   end
@@ -131,19 +133,19 @@ class King < Unit
   end
 
   def w_rooks_moved?
-    return true if @board.turn.zero && w_r_rook_moved? && w_l_rook_moved?
+    return true if @board.turn.zero? && w_r_rook_moved? && w_l_rook_moved?
 
     false
   end
 
   def w_r_rook_moved?
-    return true if @board.w_r_rook.positive?
+    return true if @board.data[0][7] != 'R' || @board.w_r_rook.positive?
 
     false
   end
 
   def w_l_rook_moved?
-    return true if @board.w_l_rook.positive?
+    return true if @board.data[0][0] != 'R' || @board.w_l_rook.positive?
 
     false
   end
@@ -155,25 +157,32 @@ class King < Unit
   end
 
   def b_r_rook_moved?
-    return true if @board.b_r_rook.positive?
+    return true if @board.data[7][7] != 'r' || @board.b_r_rook.positive?
 
     false
   end
 
   def b_l_rook_moved?
-    return true if @board.b_l_rook.positive?
+    return true if @board.data[7][0] != 'r' || @board.b_l_rook.positive?
 
     false
   end
 
   def castle?
-    if @board.turn.zero?
-      return true if w_r_castle? || w_l_castle?
+    return true if w_valid_castle? || b_valid_castle?
 
-    elsif @board.turn.positive?
-      return true if b_r_castle? || b_l_castle?
+    false
+  end
 
-    end
+  def w_valid_castle?
+    return true if @board.turn.zero? && (w_r_castle? || w_l_castle?)
+
+    false
+  end
+
+  def b_valid_castle?
+    return true if @board.turn.positive? && (b_r_castle? || b_l_castle?)
+
     false
   end
 
@@ -201,6 +210,49 @@ class King < Unit
                    @board.data[7][3] == '0'
 
     false
+  end
+
+  def move_king(start_pos, end_pos)
+    first_move(1) unless w_king_moved?
+    first_move(2) unless b_king_moved?
+    @board.move_unit(start_pos, end_pos)
+    castle(end_pos) if (start_pos[0] - end_pos[0]).abs == 2
+  end
+
+  def first_move(turn)
+    turn == 1 ? @board.update_w_king : @board.update_b_king
+  end
+
+  def castle(end_pos)
+    if end_pos == [6, 0]
+      w_r_castle
+    elsif end_pos == [2, 0]
+      w_l_castle
+    elsif end_pos == [2, 7]
+      b_l_castle
+    elsif end_pos == [6, 7]
+      b_r_castle
+    end
+  end
+
+  def w_r_castle
+    @board.data[0][5] = 'R'
+    @board.data[0][7] = '0'
+  end
+
+  def w_l_castle
+    @board.data[0][3] = 'R'
+    @board.data[0][0] = '0'
+  end
+
+  def b_l_castle
+    @board.data[7][3] = 'r'
+    @board.data[7][0] = '0'
+  end
+
+  def b_r_castle
+    @board.data[7][5] = 'r'
+    @board.data[7][7] = '0'
   end
 
   def assign_castle_moves

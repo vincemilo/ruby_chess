@@ -1,13 +1,20 @@
 # frozen_string_literal: true
 
 class Board
-  attr_reader :data, :turn, :captured, :en_passant
+  attr_reader :data, :turn, :captured, :en_passant, :w_king,
+              :b_king, :w_r_rook, :w_l_rook, :b_r_rook, :b_l_rook
 
   def initialize
     @data = Array.new(8) { Array.new(8, '0') }
     @turn = 0
     @en_passant = nil
     @captured = [[], []]
+    @w_king = 0
+    @b_king = 0
+    @w_r_rook = 0
+    @w_l_rook = 0
+    @b_r_rook = 0
+    @b_l_rook = 0
   end
 
   def display_board
@@ -75,6 +82,11 @@ class Board
     @data[7][3] = 'q'
   end
 
+  def place_kings
+    @data[0][4] = 'K'
+    @data[7][4] = 'k'
+  end
+
   def x_pos(pos)
     # extracts x coordinate
     pos[0]
@@ -130,6 +142,42 @@ class Board
     capture(@en_passant)
     @data[y_pos(@en_passant)][x_pos(@en_passant)] = '0'
     update_en_passant(nil)
+  end
+
+  def update_w_king
+    return if @w_king.positive?
+
+    @w_king = 1
+  end
+
+  def update_b_king
+    return if @b_king.positive?
+
+    @b_king = 1
+  end
+
+  def update_w_rook(rook)
+    if rook == 1
+      return if @w_l_rook.positive?
+
+      @w_l_rook = 1
+    elsif rook == 2
+      return if @w_r_rook.positive?
+
+      @w_r_rook = 1
+    end
+  end
+
+  def update_b_rook(rook)
+    if rook == 1
+      return if @b_l_rook.positive?
+
+      @w_l_rook = 1
+    elsif rook == 2
+      return if @b_r_rook.positive?
+
+      @w_r_rook = 1
+    end
   end
 end
 
