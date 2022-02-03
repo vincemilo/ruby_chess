@@ -97,6 +97,48 @@ class Unit
   def r_adj(start_pos)
     @board.data[y_pos(start_pos)][x_pos(start_pos) + 1]
   end
+
+  def rooks_moved?
+    return true if w_rooks_moved? && b_rooks_moved?
+
+    false
+  end
+
+  def w_rooks_moved?
+    return true if @board.turn.zero? && w_r_rook_moved? && w_l_rook_moved?
+
+    false
+  end
+
+  def w_r_rook_moved?
+    return true if @board.data[0][7] != 'R' || @board.w_r_rook.positive?
+
+    false
+  end
+
+  def w_l_rook_moved?
+    return true if @board.data[0][0] != 'R' || @board.w_l_rook.positive?
+
+    false
+  end
+
+  def b_rooks_moved?
+    return true if @board.turn.positive && b_r_rook_moved? && b_l_rook_moved?
+
+    false
+  end
+
+  def b_r_rook_moved?
+    return true if @board.data[7][7] != 'r' || @board.b_r_rook.positive?
+
+    false
+  end
+
+  def b_l_rook_moved?
+    return true if @board.data[7][0] != 'r' || @board.b_l_rook.positive?
+
+    false
+  end
 end
 
 # unit = Unit.new

@@ -115,5 +115,61 @@ describe King do
         expect(board.data[row][col + 1]).to eq('R')
       end
     end
+
+    context 'when a black king castles right' do
+        # arr = Array.new(8) { Array.new(8, '0') }
+        let(:board) { Board.new } # { instance_double(Board, data: arr) }
+        subject(:king) { described_class.new(board) }
+
+        before do
+          board.update_turn
+        end
+
+        it 'displays the correct results' do
+          row = 7
+          col = 4
+          board.data[row][col] = 'k'
+          board.data[row][col + 3] = 'r'
+          king.move_king([col, row], [col + 2, row])
+          expect(board.data[row][col + 2]).to eq('k')
+          expect(board.data[row][col + 1]).to eq('r')
+        end
+    end
+  end
+
+  describe '#assign_castle_moves' do
+    context 'when a white king castles right' do
+      # arr = Array.new(8) { Array.new(8, '0') }
+      let(:board) { Board.new } # { instance_double(Board, data: arr) }
+      subject(:king) { described_class.new(board) }
+
+      it 'displays the correct results' do
+        row = 0
+        col = 4
+        board.data[row][col] = 'K'
+        board.data[row][col + 3] = 'R'
+        king.assign_castle_moves
+        expect(king.moves).to eq([[2, 0], [-2, 0]])
+      end
+    end
+
+    context 'when a black king castles right' do
+        # arr = Array.new(8) { Array.new(8, '0') }
+        let(:board) { Board.new } # { instance_double(Board, data: arr) }
+        subject(:king) { described_class.new(board) }
+
+        before do
+          board.update_turn
+        end
+
+        it 'displays the correct results' do
+          row = 7
+          col = 4
+          board.data[row][col] = 'k'
+          board.data[row][col + 3] = 'r'
+          king.assign_castle_moves
+          expect(king.moves).to eq([[2, 0], [-2, 0]])
+        end
+    end
   end
 end

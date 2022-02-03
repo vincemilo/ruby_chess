@@ -17,7 +17,7 @@ class King < Unit
     check_diags(row, col, king)
     check_horiz(row, col, king)
     check_vert(row, col, king)
-    check_castle(king)
+    check_castle(king) if first_move?
     king
   end
 
@@ -106,64 +106,22 @@ class King < Unit
   end
 
   def check_castle(king)
-    return king if w_king_moved? || b_king_moved? || rooks_moved?
+    return king if rooks_moved?
 
     assign_castle_moves if castle?
     king
   end
 
   def w_king_moved?
-    return true if @board.data[0][4] != 'K' ||
-                   (@board.turn.zero? && @board.w_king.positive?)
+    return true if @board.data[0][4] != 'K' || @board.w_king.positive?
 
     false
   end
 
   def b_king_moved?
-    return true if @board.data[7][4] != 'k' ||
-                   (@board.turn.zero? && @board.b_king.positive?)
-
-    false
-  end
-
-  def rooks_moved?
-    return true if w_rooks_moved? && b_rooks_moved?
-
-    false
-  end
-
-  def w_rooks_moved?
-    return true if @board.turn.zero? && w_r_rook_moved? && w_l_rook_moved?
-
-    false
-  end
-
-  def w_r_rook_moved?
-    return true if @board.data[0][7] != 'R' || @board.w_r_rook.positive?
-
-    false
-  end
-
-  def w_l_rook_moved?
-    return true if @board.data[0][0] != 'R' || @board.w_l_rook.positive?
-
-    false
-  end
-
-  def b_rooks_moved?
-    return true if @board.turn.zero && w_r_rook_moved? && w_l_rook_moved?
-
-    false
-  end
-
-  def b_r_rook_moved?
-    return true if @board.data[7][7] != 'r' || @board.b_r_rook.positive?
-
-    false
-  end
-
-  def b_l_rook_moved?
-    return true if @board.data[7][0] != 'r' || @board.b_l_rook.positive?
+    p @board.data[7][4] != 'k'
+    p @board.b_king.positive?
+    return true if @board.data[7][4] != 'k' || @board.b_king.positive?
 
     false
   end
@@ -205,7 +163,7 @@ class King < Unit
     false
   end
 
-  def l_castle?
+  def b_l_castle?
     return true if @board.data[7][1] == '0' && @board.data[7][2] == '0' &&
                    @board.data[7][3] == '0'
 
@@ -213,14 +171,21 @@ class King < Unit
   end
 
   def move_king(start_pos, end_pos)
-    first_move(1) unless w_king_moved?
-    first_move(2) unless b_king_moved?
+    first_move if first_move?
     @board.move_unit(start_pos, end_pos)
     castle(end_pos) if (start_pos[0] - end_pos[0]).abs == 2
   end
 
-  def first_move(turn)
-    turn == 1 ? @board.update_w_king : @board.update_b_king
+  def first_move?
+    return true if (@board.turn.zero? && !w_king_moved?) ||
+                   (@board.turn.positive? && !b_king_moved?)
+
+    false
+  end
+
+  def first_move
+    @board.update_w_king if @board.turn.zero?
+    @board.update_b_king if @board.turn.positive?
   end
 
   def castle(end_pos)

@@ -5,6 +5,8 @@ require_relative 'units/pawn'
 require_relative 'units/rook'
 require_relative 'units/knight'
 require_relative 'units/bishop'
+require_relative 'units/queen'
+require_relative 'units/king'
 
 class Game
   attr_reader :board, :game_over
@@ -12,10 +14,12 @@ class Game
   def initialize(board = Board.new)
     @board = board
     @game_over = false
-    @board.place_pawns
+    #@board.place_pawns
     @board.place_rooks
-    @board.place_knights
-    @board.place_bishops
+    #@board.place_knights
+    #@board.place_bishops
+    #@board.place_queens
+    @board.place_kings
   end
 
   def intro
@@ -73,7 +77,7 @@ class Game
     col = coords[0]
     col_num = col.ord - 96
     # subtract nums to accomodate array
-    p [col_num - 1, row.to_i - 1]
+    [col_num - 1, row.to_i - 1]
   end
 
   def select_unit(coords, piece)
@@ -113,6 +117,10 @@ class Game
       unit = Knight.new(@board)
     elsif unit.downcase == 'b'
       unit = Bishop.new(@board)
+    elsif unit.downcase == 'q'
+      unit = Queen.new(@board)
+    elsif unit.downcase == 'k'
+      unit = King.new(@board)
     else
       p 'no'
       @board.display_board
@@ -126,6 +134,8 @@ class Game
       unit.move_pawn(start_pos, end_pos)
     elsif unit.class == King
       unit.move_king(start_pos, end_pos)
+    elsif unit.class == Rook
+      unit.move_rook(start_pos, end_pos)
     else
       @board.move_unit(start_pos, end_pos)
     end

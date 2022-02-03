@@ -94,51 +94,23 @@ class Rook < Unit
   end
 
   def move_rook(start_pos, end_pos)
+    first_move if first_move?
+    @board.move_unit(start_pos, end_pos)
+  end
+
+  def first_move?
+    return true unless w_rooks_moved? && b_rooks_moved?
+
+    false
+  end
+
+  def first_move
     rook = 0
-    if start_pos == [7, 0] || [7, 7]
+    if start_pos == ([7, 0] || [7, 7])
       rook = 1
-    elsif start_pos == [0, 0] || [0, 7]
+    elsif start_pos == ([0, 0] || [0, 7])
       rook = 2
     end
     @board.turn.zero? ? @board.update_w_rook(rook) : @board.update_b_rook(rook)
-    @board.move_unit(start_pos, end_pos)
   end
 end
-
-def move_king(start_pos, end_pos)
-  first_move(1) unless w_king_moved?
-  first_move(2) unless b_king_moved?
-  @board.move_unit(start_pos, end_pos)
-  castle(end_pos) if (start_pos[0] - end_pos[0]).abs == 2
-end
-
-def first_move(turn)
-  turn == 1 ? @board.update_w_king : @board.update_b_king
-end
-
-def w_r_rook_moved?
-  return true if @board.data[0][7] != 'R' || @board.w_r_rook.positive?
-
-  false
-end
-
-def w_l_rook_moved?
-  return true if @board.data[0][0] != 'R' || @board.w_l_rook.positive?
-
-  false
-end
-
-def b_rooks_moved?
-  return true if @board.turn.zero && w_r_rook_moved? && w_l_rook_moved?
-
-  false
-end
-
-def b_r_rook_moved?
-  return true if @board.data[7][7] != 'r' || @board.b_r_rook.positive?
-
-  false
-end
-
-def b_l_rook_moved?
-  return true if @board.data[7][0] != 'r' || @board.b_l_rook.positive?
