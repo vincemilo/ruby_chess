@@ -15,11 +15,11 @@ class Game
     @board = board
     @game_over = false
     #@board.place_pawns
-    @board.place_rooks
+    #@board.place_rooks
     #@board.place_knights
     #@board.place_bishops
     #@board.place_queens
-    @board.place_kings
+    #@board.place_kings
   end
 
   def intro
@@ -139,12 +139,48 @@ class Game
     else
       @board.move_unit(start_pos, end_pos)
     end
+    check(end_pos, unit) if check?(end_pos, unit)
     @board.update_turn
+  end
+
+  def check?(end_pos, unit)
+    return true if (@board.turn.zero? && b_king_check?(end_pos, unit)) ||
+                   (@board.turn.positive? && w_king_check?(end_pos, unit))
+
+    false
+  end
+
+  def b_king_check?(end_pos, unit)
+    unit.assign_moves(end_pos, unit)
+    unit.moves.each do |set|
+      if @board.data[set[1] + end_pos[1]][set[0] + end_pos[0]] == 'k'
+        return true
+      end
+    end
+    false
+  end
+
+  def w_king_check?(end_pos, unit)
+    unit.assign_moves(end_pos, unit)
+    unit.moves.each do |set|
+      if @board.data[set[1] + end_pos[1]][set[0] + end_pos[0]] == 'K'
+        return true
+      end
+    end
+    false
+  end
+
+  def check(end_pos, unit)
+    if @board.turn.zero? && b_king_check?(end_pos, unit)
+      @board.update_b_king_check
+    elsif @board.turn.zero? && b_king_check?(end_pos, unit)
+      @board.update_w_king_check
+    end
   end
 end
 
-game = Game.new
-game.intro
+# game = Game.new
+# game.intro
 # row = 1
 # col = 4
 # game.board.data[row][col] = 'P'

@@ -1,18 +1,29 @@
-# frozen_string_literal: true
+def two_sum(nums, target)
+  checked = {}
 
-def check_d(row, col, _trans)
-  options = []
-  moves = -1
-  while row + moves >= 0
-    options << [row + moves, col]
-    # return options if enemy_check?(trans, row, moves)
+  nums.each_with_index do |val, i|
+    diff = target - val
+    return [checked[diff], i] if checked[diff]
 
-    moves -= 1
+    checked[val] = i
   end
-  options
 end
 
-row = 0
-col = 0
-trans = %w[R 0 P 0 0 0 p r]
-p check_d(col, row, trans)
+p two_sum([2, 11, 15, 7], 9)
+#p two_sum([3, 2, 4], 6)
+
+# Example 1:
+
+# Input: nums = [2,7,11,15], target = 9
+# Output: [0,1]
+# Explanation: Because nums[0] + nums[1] == 9, we return [0, 1].
+
+# Example 2:
+
+# Input: nums = [3,2,4], target = 6
+# Output: [1,2]
+
+# Example 3:
+
+# Input: nums = [3,3], target = 6
+# Output: [0,1]

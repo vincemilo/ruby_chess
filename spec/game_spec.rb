@@ -5,6 +5,7 @@
 require_relative '../lib/game'
 require_relative '../lib/board'
 require_relative '../lib/units/pawn'
+require_relative '../lib/units/rook'
 
 describe Game do
   def display_board
@@ -86,6 +87,24 @@ describe Game do
         expect(game.board.data[row - 1][col - 1]).to eq('P*')
         expect(game.board.data[row - 1][col]).to eq('0*')
       end
+    end
+  end
+
+  describe '#b_king_check?' do
+    # arr = Array.new(8) { Array.new(8, '0') }
+    let(:board) { Board.new } #{ instance_double(Board, data: arr, turn: 0) }
+    subject(:game) { described_class.new(board) }
+
+    it 'displays true if the black king is in check' do
+      row = 7
+      col = 4
+      board.data[row][col] = 'k'
+      board.data[row][col + 3] = 'r'
+      board.data[row - 7][col] = 'R'
+      board.data[row - 7][col - 1] = 'b'
+      board.data[row - 7][col + 1] = 'n'
+      rook = Rook.new(board)
+      expect(game.b_king_check?([col, row - 7], rook)).to eq(true)
     end
   end
 end

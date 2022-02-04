@@ -119,8 +119,6 @@ class King < Unit
   end
 
   def b_king_moved?
-    p @board.data[7][4] != 'k'
-    p @board.b_king.positive?
     return true if @board.data[7][4] != 'k' || @board.b_king.positive?
 
     false

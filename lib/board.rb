@@ -9,12 +9,10 @@ class Board
     @turn = 0
     @en_passant = nil
     @captured = [[], []]
-    @w_king = 0
-    @b_king = 0
-    @w_r_rook = 0
-    @w_l_rook = 0
-    @b_r_rook = 0
-    @b_l_rook = 0
+    @castle = { w_king: 0, b_king: 0, w_r_rook: 0, w_l_rook: 0,
+               b_r_rook: 0, b_l_rook: 0 }
+    @w_king_check = 0
+    @b_king_check = 0
   end
 
   def display_board
@@ -145,39 +143,38 @@ class Board
   end
 
   def update_w_king
-    return if @w_king.positive?
-
-    @w_king = 1
+    @castle[w_king] = 1
   end
 
   def update_b_king
-    return if @b_king.positive?
-
-    @b_king = 1
+    @castle[b_king] = 1
   end
 
   def update_w_rook(rook)
     if rook == 1
-      return if @w_l_rook.positive?
-
-      @w_l_rook = 1
+      @castle[w_l_rook] = 1
     elsif rook == 2
-      return if @w_r_rook.positive?
-
-      @w_r_rook = 1
+      @castle[w_r_rook] = 1
     end
   end
 
   def update_b_rook(rook)
     if rook == 1
-      return if @b_l_rook.positive?
 
-      @w_l_rook = 1
+      @castle[w_l_rook] = 1
     elsif rook == 2
-      return if @b_r_rook.positive?
-
-      @w_r_rook = 1
+      @castle[w_r_rook] = 1
     end
+  end
+
+  def update_b_king_check
+    @b_king_check += 1
+    @b_king_check %= 2
+  end
+
+  def update_w_king_check
+    @w_king_check += 1
+    @w_king_check %= 2
   end
 end
 
