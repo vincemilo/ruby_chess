@@ -180,6 +180,7 @@ class Queen < Unit
     check_2(row, col, queen)
     check_3(row, col, queen)
     check_4(row, col, queen)
+    @start_pos = start_pos
     queen
   end
 end

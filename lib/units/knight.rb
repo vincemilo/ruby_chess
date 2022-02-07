@@ -92,6 +92,7 @@ class Knight < Unit
     col = start_pos[1]
     check_moves(row, col, knight)
     @moves.map!(&:reverse) # temp until Pawn coords are fixed
+    @start_pos = start_pos
     knight
   end
 end

@@ -116,6 +116,7 @@ class Pawn < Unit
         set.map! { |move| move * -1 }
       end
     end
+    @start_pos = start_pos
     pawn
   end
 

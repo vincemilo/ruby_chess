@@ -18,6 +18,7 @@ class King < Unit
     check_horiz(row, col, king)
     check_vert(row, col, king)
     check_castle(king) if first_move?
+    @start_pos = start_pos
     king
   end
 

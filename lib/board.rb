@@ -12,8 +12,8 @@ class Board
     @captured = [[], []]
     @castle = { w_king: 0, b_king: 0, w_r_rook: 0,
                 w_l_rook: 0, b_r_rook: 0, b_l_rook: 0 }
-    @w_king_check = [0, [], nil]
-    @b_king_check = [0, [], nil]
+    @w_king_check = { check: 0, coords: [], piece: nil }
+    @b_king_check = { check: 0, coords: [], piece: nil }
   end
 
   def display_board
@@ -169,17 +169,17 @@ class Board
   end
 
   def update_b_king_check(end_pos, unit)
-    @b_king_check[0] += 1
-    @b_king_check[0] %= 2
-    @b_king_check[1] = end_pos
-    @b_king_check[2] = unit
+    @b_king_check[check] += 1
+    @b_king_check[check] %= 2
+    @b_king_check[coords] = end_pos
+    @b_king_check[piece] = unit
   end
 
   def update_w_king_check(end_pos, unit)
-    @w_king_check[0] += 1
-    @w_king_check[0] %= 2
-    @w_king_check[1] = end_pos
-    @w_king_check[2] = unit
+    @w_king_check[check] += 1
+    @w_king_check[check] %= 2
+    @w_king_check[coords] = end_pos
+    @w_king_check[piece] = unit
   end
 end
 

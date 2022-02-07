@@ -202,16 +202,36 @@ class Game
     end
   end
 
-  def b_activate
+  def w_activate
+    white_pieces = %w[P R N B Q K]
 
+  end
+
+  def b_activate
+    black_pieces = %w[p r n b q k]
+    activate = activate(black_pieces)
+    pieces = pieces(activate)
+    pieces.each { |piece| p piece }
+  end
+
+  def activate(pieces)
+    activate = {}
     @board.data.each_with_index do |row, i|
-      p i
       row.each_with_index do |square, j|
-        p square
-        p j
+        pieces.any? do |piece|
+          activate[[i, j]] = piece if square == piece
+        end
       end
     end
+    activate
+  end
 
+  def pieces(activate)
+    pieces = []
+    activate.each do |coords, piece|
+      pieces << select_unit(coords, piece)
+    end
+    pieces
   end
 end
 

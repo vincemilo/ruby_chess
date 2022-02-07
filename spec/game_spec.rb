@@ -138,9 +138,10 @@ describe Game do
     let(:board) { Board.new } #{ instance_double(Board, data: arr, turn: 0) }
     subject(:game) { described_class.new(board) }
 
-    # before do
-    #   board.instance_variable_set(:@b_king_check, [1, [4, 0], 'R'])
-    # end
+    before do
+      board.instance_variable_set(:@b_king_check,
+                                  { check: 1, coords: [0, 4], piece: 'R' })
+    end
 
     it 'only allows moves that take the black king out of check' do
       row = 7
@@ -151,7 +152,7 @@ describe Game do
       board.data[row - 7][col - 1] = 'b'
       board.data[row - 7][col + 1] = 'n'
       rook = Rook.new(board)
-      #display_board
+      display_board
       game.b_activate
 
       # expect(game.b_king_check?([col, row - 7], rook)).to eq(true)

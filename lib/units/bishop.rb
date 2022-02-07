@@ -98,6 +98,7 @@ class Bishop < Unit
     check_2(row, col, bishop)
     check_3(row, col, bishop)
     check_4(row, col, bishop)
+    @start_pos = start_pos
     bishop
   end
 end
