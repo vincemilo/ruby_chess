@@ -9,8 +9,7 @@ def two_sum(nums, target)
   end
 end
 
-p two_sum([2, 11, 15, 7], 9)
-#p two_sum([3, 2, 4], 6)
+p two_sum([2, 7, 11, 15], 9)
 
 # Example 1:
 

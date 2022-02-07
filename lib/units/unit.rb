@@ -11,8 +11,8 @@ class Unit
     @moves = moves
   end
 
-  def update_moves(*moves)
-    @moves += moves
+  def update_moves(moves)
+    @moves = moves
   end
 
   def x_pos(pos)

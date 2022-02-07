@@ -107,4 +107,54 @@ describe Game do
       expect(game.b_king_check?([col, row - 7], rook)).to eq(true)
     end
   end
+
+  describe '#b_remove?' do
+    # arr = Array.new(8) { Array.new(8, '0') }
+    let(:board) { Board.new } #{ instance_double(Board, data: arr, turn: 0) }
+    subject(:game) { described_class.new(board) }
+
+    before do
+      board.instance_variable_set(:@b_king_check, [1, [4, 0], 'R'])
+    end
+
+    xit 'only allows moves that take the black king out of check' do
+      row = 7
+      col = 4
+      board.data[row][col] = 'k'
+      board.data[row][col + 3] = 'r'
+      board.data[row - 7][col] = 'R'
+      board.data[row - 7][col - 1] = 'b'
+      board.data[row - 7][col + 1] = 'n'
+      rook = Rook.new(board)
+      display_board
+      game.b_remove
+
+      # expect(game.b_king_check?([col, row - 7], rook)).to eq(true)
+    end
+  end
+
+  describe '#b_activate' do
+    # arr = Array.new(8) { Array.new(8, '0') }
+    let(:board) { Board.new } #{ instance_double(Board, data: arr, turn: 0) }
+    subject(:game) { described_class.new(board) }
+
+    # before do
+    #   board.instance_variable_set(:@b_king_check, [1, [4, 0], 'R'])
+    # end
+
+    it 'only allows moves that take the black king out of check' do
+      row = 7
+      col = 4
+      board.data[row][col] = 'k'
+      board.data[row][col + 3] = 'r'
+      board.data[row - 7][col] = 'R'
+      board.data[row - 7][col - 1] = 'b'
+      board.data[row - 7][col + 1] = 'n'
+      rook = Rook.new(board)
+      #display_board
+      game.b_activate
+
+      # expect(game.b_king_check?([col, row - 7], rook)).to eq(true)
+    end
+  end
 end

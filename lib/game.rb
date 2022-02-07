@@ -69,6 +69,8 @@ class Game
   def valid_selection?(coords)
     return false if coords.length != 2 || @board.off_the_board?(coords)
 
+    return false if in_check? && !remove_check?(coords)
+
     true
   end
 
@@ -121,9 +123,6 @@ class Game
       unit = Queen.new(@board)
     elsif unit.downcase == 'k'
       unit = King.new(@board)
-    else
-      p 'no'
-      @board.display_board
     end
     unit
   end
@@ -150,7 +149,15 @@ class Game
     false
   end
 
+  def in_check?
+    return true if (@board.turn.zero? && @board.w_king_check.positive?) ||
+                   (@board.turn.positive? && @board.w_king_check.positive?)
+
+    false
+  end
+
   def b_king_check?(end_pos, unit)
+    unit.update_moves([])
     unit.assign_moves(end_pos, unit)
     unit.moves.each do |set|
       if @board.data[set[1] + end_pos[1]][set[0] + end_pos[0]] == 'k'
@@ -161,6 +168,7 @@ class Game
   end
 
   def w_king_check?(end_pos, unit)
+    unit.update_moves([])
     unit.assign_moves(end_pos, unit)
     unit.moves.each do |set|
       if @board.data[set[1] + end_pos[1]][set[0] + end_pos[0]] == 'K'
@@ -172,10 +180,38 @@ class Game
 
   def check(end_pos, unit)
     if @board.turn.zero? && b_king_check?(end_pos, unit)
-      @board.update_b_king_check
+      @board.update_b_king_check(end_pos, unit)
     elsif @board.turn.zero? && b_king_check?(end_pos, unit)
-      @board.update_w_king_check
+      @board.update_w_king_check(end_pos, unit)
     end
+  end
+
+  def remove_check?(coords)
+    if @board.turn.zero? && @board.w_king_check.positive?
+      return true if w_remove?(coords)
+    end
+
+    return true if b_remove?(coords)
+
+    false
+  end
+
+  def b_remove?(coords)
+    while @board.b_king_check? == true
+      b_activate
+    end
+  end
+
+  def b_activate
+
+    @board.data.each_with_index do |row, i|
+      p i
+      row.each_with_index do |square, j|
+        p square
+        p j
+      end
+    end
+
   end
 end
 
