@@ -196,22 +196,25 @@ class Game
     false
   end
 
-  def b_remove?(coords)
-    while @board.b_king_check? == true
-      b_activate
-    end
-  end
-
   def w_activate
     white_pieces = %w[P R N B Q K]
-
+    white_pieces
   end
 
   def b_activate
     black_pieces = %w[p r n b q k]
     activate = activate(black_pieces)
+    p activate
     pieces = pieces(activate)
-    pieces.each { |piece| p piece }
+    block_check(pieces)
+  end
+
+  def block_check(pieces)
+    pieces.each do |piece|
+      p piece.class
+      p piece.moves
+    end
+    p @board.b_king_check
   end
 
   def activate(pieces)
@@ -226,9 +229,16 @@ class Game
     activate
   end
 
+  def b_remove?(coords)
+    while @board.b_king_check? == true
+      b_activate
+    end
+  end
+
   def pieces(activate)
     pieces = []
     activate.each do |coords, piece|
+      coords = coords.reverse # temp until pawns are fixed
       pieces << select_unit(coords, piece)
     end
     pieces

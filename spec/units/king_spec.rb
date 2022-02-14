@@ -15,7 +15,7 @@ describe King do
   end
 
   describe '#assign_moves' do
-    context 'when a king is selected' do
+    context 'when a surrounded king is selected' do
       # arr = Array.new(8) { Array.new(8, '0') }
       let(:board) { Board.new } # { instance_double(Board, data: arr) }
       subject(:king) { described_class.new(board) }
@@ -25,16 +25,39 @@ describe King do
         col = 3
         board.data[row][col] = 'K'
         board.data[row + 1][col + 1] = 'P'
-        board.data[row - 1][col + 1] = 'b'
+        board.data[row - 1][col + 1] = 'n'
         board.data[row][col + 1] = 'n'
         board.data[row][col - 1] = 'R'
         board.data[row + 1][col] = 'n'
         board.data[row - 1][col] = 'R'
         w_king = king.assign_moves([col, row], king)
-        king_moves = [[1, -1], [-1, -1], [-1, 1], [1, 0], [0, 1], [0, -1]]
+        king_moves = [[1, -1], [-1, -1], [-1, 1], [1, 0], [0, 1]]
         expect(w_king.moves).to eq(king_moves)
       end
     end
+
+    context 'when a black king on the edge is selected' do
+        # arr = Array.new(8) { Array.new(8, '0') }
+        let(:board) { Board.new } # { instance_double(Board, data: arr) }
+        subject(:king) { described_class.new(board) }
+
+        before do
+          board.update_turn
+        end
+  
+        it 'assigns the correct moves' do
+          row = 7
+          col = 4
+          board.data[row][col] = 'k'
+          board.data[row - 1][col + 1] = 'N'
+          board.data[row][col + 1] = 'N'
+          board.data[row][col - 1] = 'r'
+          board.data[row - 1][col] = 'r'
+          b_king = king.assign_moves([col, row], king)
+          king_moves = [[1, -1], [-1, -1], [1, 0]]
+          expect(b_king.moves).to eq(king_moves)
+        end
+      end
   end
 
   describe '#castle' do

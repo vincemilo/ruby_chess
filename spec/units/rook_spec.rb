@@ -142,7 +142,7 @@ describe Rook do
   end
 
   describe '#assign_moves' do
-    context 'when a rook has no units vertical or horizontal' do
+    context 'when a white rook has no units vertical or horizontal' do
       arr = Array.new(8) { Array.new(8, '0') }
       let(:board) { instance_double(Board, data: arr) }
       subject(:rook) { described_class.new(board) }
@@ -162,6 +162,27 @@ describe Rook do
       end
     end
 
+    context 'when a black rook has no units vertical or horizontal' do
+      arr = Array.new(8) { Array.new(8, '0') }
+      let(:board) { instance_double(Board, data: arr, turn: 1) }
+      subject(:rook) { described_class.new(board) }
+
+      before do
+        allow(board).to receive(:enemy_occupied?).and_return(false)
+      end
+
+      it 'displays the correct available moves' do
+        row = 6
+        col = 7
+        board.data[row][col] = 'r'
+        b_rook = rook.assign_moves([col, row], rook)
+        display_board
+        rook_moves = [[0, 1], [0, -1], [0, -2], [0, -3], [0, -4], [0, -5], [0, -6],
+                      [-1, 0], [-2, 0], [-3, 0], [-4, 0], [-5, 0], [-6, 0], [-7, 0]]
+        expect(b_rook.moves).to eq(rook_moves)
+      end
+    end
+
     context 'when a rook has various units on either side' do
       # arr = Array.new(8) { Array.new(8, '0') }
       let(:board) { Board.new }
@@ -174,8 +195,6 @@ describe Rook do
         board.data[row][col] = 'R'
         board.data[row + 2][col] = 'P'
         board.data[row][col + 7] = 'R'
-        board.data[row + 6][col] = 'p'
-        board.data[row + 7][col + 7] = 'r'
         w_rook = rook.assign_moves([col, row], rook)
         rook_moves = [[0, 1], [1, 0], [2, 0], [3, 0], [4, 0], [5, 0], [6, 0]]
         expect(w_rook.moves).to eq(rook_moves)

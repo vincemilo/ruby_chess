@@ -2,8 +2,7 @@
 
 class Board
   attr_reader :data, :turn, :captured, :en_passant, :w_king,
-              :b_king, :w_r_rook, :w_l_rook, :b_r_rook, :b_l_rook,
-              :w_king_check, :b_king_check
+              :castle, :w_king_check, :b_king_check
 
   def initialize
     @data = Array.new(8) { Array.new(8, '0') }
@@ -144,42 +143,42 @@ class Board
   end
 
   def update_w_king
-    @castle[w_king] = 1
+    @castle[:w_king] = 1
   end
 
   def update_b_king
-    @castle[b_king] = 1
+    @castle[:b_king] = 1
   end
 
   def update_w_rook(rook)
     if rook == 1
-      @castle[w_l_rook] = 1
+      @castle[:w_l_rook] = 1
     elsif rook == 2
-      @castle[w_r_rook] = 1
+      @castle[:w_r_rook] = 1
     end
   end
 
   def update_b_rook(rook)
     if rook == 1
 
-      @castle[w_l_rook] = 1
+      @castle[:w_l_rook] = 1
     elsif rook == 2
-      @castle[w_r_rook] = 1
+      @castle[:w_r_rook] = 1
     end
   end
 
   def update_b_king_check(end_pos, unit)
-    @b_king_check[check] += 1
-    @b_king_check[check] %= 2
-    @b_king_check[coords] = end_pos
-    @b_king_check[piece] = unit
+    @b_king_check[:check] += 1
+    @b_king_check[:check] %= 2
+    @b_king_check[:coords] = end_pos
+    @b_king_check[:piece] = unit
   end
 
   def update_w_king_check(end_pos, unit)
-    @w_king_check[check] += 1
-    @w_king_check[check] %= 2
-    @w_king_check[coords] = end_pos
-    @w_king_check[piece] = unit
+    @w_king_check[:check] += 1
+    @w_king_check[:check] %= 2
+    @w_king_check[:coords] = end_pos
+    @w_king_check[:piece] = unit
   end
 end
 

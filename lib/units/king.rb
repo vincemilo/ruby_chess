@@ -57,7 +57,7 @@ class King < Unit
   def check_4(row, col, king)
     return king if off_the_board?([row + 1, col - 1])
 
-    dest = @board.data[row - 1][col - 1]
+    dest = @board.data[row + 1][col - 1]
     @moves << [-1, 1] if dest == '0' || @board.enemy_occupied?(dest)
     king
   end
@@ -101,7 +101,7 @@ class King < Unit
   def check_d(row, col, king)
     return king if off_the_board?([row - 1, col])
 
-    dest = @board.data[row][col + 1]
+    dest = @board.data[row - 1][col]
     @moves << [0, -1] if dest == '0' || @board.enemy_occupied?(dest)
     king
   end
@@ -114,13 +114,13 @@ class King < Unit
   end
 
   def w_king_moved?
-    return true if @board.data[0][4] != 'K' || @board.w_king.positive?
+    return true if @board.data[0][4] != 'K' || @board.castle[:w_king].positive?
 
     false
   end
 
   def b_king_moved?
-    return true if @board.data[7][4] != 'k' || @board.b_king.positive?
+    return true if @board.data[7][4] != 'k' || @board.castle[:b_king].positive?
 
     false
   end
