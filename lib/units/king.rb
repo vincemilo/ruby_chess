@@ -11,7 +11,7 @@ class King < Unit
   end
 
   def assign_moves(start_pos, king)
-    start_pos = start_pos.reverse # temp until Pawn coords are fixed
+    start_pos = start_pos.reverse # reversed for array
     row = start_pos[0]
     col = start_pos[1]
     check_diags(row, col, king)

@@ -171,7 +171,7 @@ class Queen < Unit
   end
 
   def assign_moves(start_pos, queen)
-    start_pos = start_pos.reverse # temp until Pawn coords are fixed
+    start_pos = start_pos.reverse # reversed for array
     check_vert(start_pos, queen)
     check_horiz(start_pos, queen)
     row = start_pos[0]

@@ -87,7 +87,7 @@ class Rook < Unit
   end
 
   def assign_moves(start_pos, rook)
-    start_pos = start_pos.reverse # temp until Pawn coords are fixed
+    start_pos = start_pos.reverse # reversed for array
     check_vert(start_pos, rook)
     check_horiz(start_pos, rook)
     @start_pos = start_pos

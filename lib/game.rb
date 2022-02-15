@@ -160,7 +160,10 @@ class Game
     unit.update_moves([])
     unit.assign_moves(end_pos, unit)
     unit.moves.each do |set|
-      if @board.data[set[1] + end_pos[1]][set[0] + end_pos[0]] == 'k'
+      row = set[1] + end_pos[1]
+      col = set[0] + end_pos[0]
+      if @board.data[row][col] == 'k'
+        @board.update_b_king_pos([col, row])
         return true
       end
     end
@@ -171,7 +174,10 @@ class Game
     unit.update_moves([])
     unit.assign_moves(end_pos, unit)
     unit.moves.each do |set|
-      if @board.data[set[1] + end_pos[1]][set[0] + end_pos[0]] == 'K'
+      row = set[1] + end_pos[1]
+      col = set[0] + end_pos[0]
+      if @board.data[row][col] == 'K'
+        @board.update_w_king_pos([col, row])
         return true
       end
     end
@@ -204,17 +210,23 @@ class Game
   def b_activate
     black_pieces = %w[p r n b q k]
     activate = activate(black_pieces)
-    p activate
     pieces = pieces(activate)
-    block_check(pieces)
+    block_check(pieces, @board.b_king_check)
   end
 
-  def block_check(pieces)
+  def block_check(pieces, check_data)
+    block_moves = attack_direction(check_data[:king_pos], check_data[:attk_pos])
     pieces.each do |piece|
       p piece.class
       p piece.moves
+      p block_moves
     end
-    p @board.b_king_check
+  end
+
+  def attack_direction(king_pos, attk_pos)
+    p king_pos
+    p attk_pos
+    p @board.get_unit(attk_pos)
   end
 
   def activate(pieces)

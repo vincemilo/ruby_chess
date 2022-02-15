@@ -138,10 +138,10 @@ describe Game do
     before do
       board.update_turn
       board.instance_variable_set(:@b_king_check,
-                                  { check: 1, coords: [0, 4], piece: 'R' })
+                                  { check: 1, king_pos: [4, 7], attk_pos: [4, 0] })
     end
 
-    it 'only allows moves that take the black king out of check' do
+    xit 'only allows moves that take the black king out of check' do
       row = 7
       col = 4
       board.data[row][col] = 'k'
@@ -177,6 +177,30 @@ describe Game do
       rook = Rook.new(board)
       display_board
       game.b_remove
+
+      # expect(game.b_king_check?([col, row - 7], rook)).to eq(true)
+    end
+  end
+
+  describe '#attack_direction' do
+    # arr = Array.new(8) { Array.new(8, '0') }
+    let(:board) { Board.new } #{ instance_double(Board, data: arr, turn: 0) }
+    subject(:game) { described_class.new(board) }
+
+    # before do
+    #   board.instance_variable_set(:@b_king_check, { check: 1, coords: [4, 0] })
+    # end
+
+    it 'displays the squares that need to be moved into to prevent check' do
+      row = 7
+      col = 4
+      board.data[row][col] = 'k'
+      board.data[row][col + 3] = 'r'
+      board.data[row - 7][col] = 'R'
+      board.data[row - 7][col - 1] = 'b'
+      board.data[row - 7][col + 1] = 'n'
+      display_board
+      game.attack_direction([col, row], [col, row - 7])
 
       # expect(game.b_king_check?([col, row - 7], rook)).to eq(true)
     end

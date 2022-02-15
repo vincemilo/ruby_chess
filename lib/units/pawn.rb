@@ -24,13 +24,6 @@ class Pawn < Unit
     unit
   end
 
-  def starting_line(start_pos, pawn)
-    if !occupied?(one_ahead(start_pos)) && !occupied?(two_ahead(start_pos))
-      update_moves([0, 2])
-    end
-    pawn
-  end
-
   def double_step?(start_pos, end_pos)
     return true if (y_pos(start_pos) - y_pos(end_pos)).abs == 2
 
@@ -76,12 +69,11 @@ class Pawn < Unit
   def assign_en_passant(start_pos, pawn)
     x_factor = get_x_factor(start_pos)
 
-    if x_factor == -1
-      update_moves([-1, 1])
-    else
-      update_moves([1, 1])
-    end
-
+    @moves << if x_factor == -1
+                [-1, 1]
+              else
+                [1, 1]
+              end
     pawn
   end
 
@@ -98,9 +90,16 @@ class Pawn < Unit
     true
   end
 
+  def starting_line(start_pos, pawn)
+    if !occupied?(one_ahead(start_pos)) && !occupied?(two_ahead(start_pos))
+      @moves << [0, 2]
+    end
+    pawn
+  end
+
   def check_one_ahead(start_pos, pawn)
     unless occupied?(one_ahead(start_pos))
-      update_moves([0, 1])
+      @moves << [0, 1]
       starting_line(start_pos, pawn) if first_move?(start_pos)
     end
     pawn

@@ -7,12 +7,12 @@ class Board
   def initialize
     @data = Array.new(8) { Array.new(8, '0') }
     @turn = 0
-    @en_passant = nil
+    @en_passant = []
     @captured = [[], []]
     @castle = { w_king: 0, b_king: 0, w_r_rook: 0,
                 w_l_rook: 0, b_r_rook: 0, b_l_rook: 0 }
-    @w_king_check = { check: 0, coords: [], piece: nil }
-    @b_king_check = { check: 0, coords: [], piece: nil }
+    @w_king_check = { check: 0, king_pos: [], attk_pos: [] }
+    @b_king_check = { check: 0, coords: [], attk_pos: [] }
   end
 
   def display_board
@@ -167,22 +167,29 @@ class Board
     end
   end
 
-  def update_b_king_check(end_pos, unit)
+  def update_b_king_check(end_pos)
     @b_king_check[:check] += 1
     @b_king_check[:check] %= 2
-    @b_king_check[:coords] = end_pos
-    @b_king_check[:piece] = unit
+    @b_king_check[:attk_pos] = end_pos
   end
 
-  def update_w_king_check(end_pos, unit)
+  def update_b_king_pos(coords)
+    @b_king_check[:king_pos] = coords
+  end
+
+  def update_w_king_check(end_pos)
     @w_king_check[:check] += 1
     @w_king_check[:check] %= 2
-    @w_king_check[:coords] = end_pos
-    @w_king_check[:piece] = unit
+    @w_king_check[:attk_pos] = end_pos
+  end
+
+  def update_w_king_pos(coords)
+    @w_king_check[:king_pos] = coords
   end
 end
 
 # board = Board.new
+# p board.b_king_check
 # board.place_queens
 # board.display_board
 # board.update_turn

@@ -8,8 +8,8 @@ require_relative '../../lib/board'
 describe Pawn do
   def display_board
     print "#{('a'..'h').to_a} \n"
-    board.data.reverse.each do |row|
-      puts row.to_s
+    board.data.reverse.each do |col|
+      puts col.to_s
     end
     print "#{('a'..'h').to_a} \n"
   end
@@ -30,7 +30,9 @@ describe Pawn do
       end
 
       it 'has 1 move or 2 move ahead options' do
-        start_pos = [1, 1]
+        board.data[1][2] = 'P'
+        display_board
+        start_pos = [2, 1]
         w_pawn = pawn.assign_moves(start_pos, pawn)
         expect(w_pawn.moves).to eq [[0, 1], [0, 2]]
       end
@@ -44,13 +46,14 @@ describe Pawn do
 
       before do
         allow(board).to receive(:enemy_occupied?).and_return(true)
-        row = 3
-        col = 2
-        pawn.board.data[col][row] = 'p'
-        pawn.board.data[col][row - 2] = 'p'
       end
 
       it 'has all move options' do
+        row = 2
+        col = 3
+        pawn.board.data[row][col] = 'p'
+        pawn.board.data[row][col - 2] = 'p'
+        board.data[1][2] = 'P'
         start_pos = [2, 1]
         w_pawn = pawn.assign_moves(start_pos, pawn)
         expect(w_pawn.moves).to eq [[0, 1], [0, 2], [1, 1], [-1, 1]]
@@ -65,13 +68,14 @@ describe Pawn do
 
       before do
         allow(board).to receive(:enemy_occupied?).and_return(false)
-        row = 3
-        col = 1
-        pawn.board.data[row][col] = 'p'
       end
 
       it 'should have one move ahead' do
-        start_pos = [1, 1]
+        row = 1
+        col = 2
+        pawn.board.data[row][col] = 'P'
+        pawn.board.data[row + 2][col] = 'p'
+        start_pos = [2, 1]
         w_pawn = pawn.assign_moves(start_pos, pawn)
         expect(w_pawn.moves).to eq [[0, 1]]
       end
@@ -85,9 +89,9 @@ describe Pawn do
 
       before do
         allow(board).to receive(:enemy_occupied?).and_return(false)
-        row = 1
-        col = 2
-        pawn.board.data[col][row] = 'p'
+        row = 2
+        col = 1
+        pawn.board.data[row][col] = 'p'
       end
 
       it 'should have no legal moves' do
@@ -105,11 +109,11 @@ describe Pawn do
 
       before do
         allow(board).to receive(:enemy_occupied?).and_return(true)
-        row = 1
-        col = 2
-        pawn.board.data[col][row] = 'p'
-        pawn.board.data[col][row + 1] = 'p'
-        pawn.board.data[col][row - 1] = 'p'
+        col = 1
+        row = 2
+        pawn.board.data[row][col] = 'p'
+        pawn.board.data[row][col + 1] = 'p'
+        pawn.board.data[row][col - 1] = 'p'
       end
 
       it 'should have diagonal moves' do
@@ -144,10 +148,10 @@ describe Pawn do
 
       before do
         allow(board).to receive(:enemy_occupied?).and_return(true)
-        row = 3
-        col = 5
-        pawn.board.data[col][row] = 'P'
-        pawn.board.data[col][row - 2] = 'P'
+        col = 3
+        row = 5
+        pawn.board.data[row][col] = 'P'
+        pawn.board.data[row][col - 2] = 'P'
       end
 
       it 'has all move options' do
@@ -165,9 +169,9 @@ describe Pawn do
 
       before do
         allow(board).to receive(:enemy_occupied?).and_return(false)
-        row = 1
-        col = 4
-        pawn.board.data[col][row] = 'P'
+        col = 1
+        row = 4
+        pawn.board.data[row][col] = 'P'
       end
 
       it 'should have one move ahead' do
@@ -185,9 +189,9 @@ describe Pawn do
 
       before do
         allow(board).to receive(:enemy_occupied?).and_return(false)
-        row = 1
-        col = 5
-        pawn.board.data[col][row] = 'P'
+        col = 1
+        row = 5
+        pawn.board.data[row][col] = 'P'
       end
 
       it 'should have no legal moves' do
@@ -205,11 +209,11 @@ describe Pawn do
 
       before do
         allow(board).to receive(:enemy_occupied?).and_return(true)
-        row = 1
-        col = 5
-        pawn.board.data[col][row] = 'P'
-        pawn.board.data[col][row + 1] = 'P'
-        pawn.board.data[col][row - 1] = 'P'
+        col = 1
+        row = 5
+        pawn.board.data[row][col] = 'P'
+        pawn.board.data[row][col + 1] = 'P'
+        pawn.board.data[row][col - 1] = 'P'
       end
 
       it 'should have diagonal moves' do
@@ -231,12 +235,12 @@ describe Pawn do
       end
 
       it 'should have diagonal moves' do
-        row = 4
         col = 4
-        pawn.board.data[row][col] = 'p'
-        pawn.board.data[row - 1][col] = 'P'
-        pawn.board.data[row - 1][col - 1] = 'P'
-        start_pos = [row, col]
+        row = 4
+        pawn.board.data[col][row] = 'p'
+        pawn.board.data[col - 1][row] = 'P'
+        pawn.board.data[col - 1][row - 1] = 'P'
+        start_pos = [col, row]
         b_pawn = pawn.assign_moves(start_pos, pawn)
         expect(b_pawn.moves).to eq [[-1, -1]]
       end
@@ -251,11 +255,11 @@ describe Pawn do
 
       it 'returns true' do
         allow(board).to receive(:enemy_occupied?).and_return(true)
-        row = 1
-        col = 4
-        pawn.board.data[col][row] = 'p'
-        pawn.board.data[col][row + 1] = 'P'
-        expect(pawn.en_passant?([row, col])).to be true
+        col = 1
+        row = 4
+        pawn.board.data[row][col] = 'p'
+        pawn.board.data[row][col + 1] = 'P'
+        expect(pawn.en_passant?([col, row])).to be true
       end
     end
 
@@ -266,11 +270,11 @@ describe Pawn do
 
       it 'returns true' do
         allow(board).to receive(:enemy_occupied?).and_return(true)
-        row = 1
-        col = 3
-        pawn.board.data[col][row] = 'p'
-        pawn.board.data[col][row + 1] = 'p'
-        expect(pawn.en_passant?([row, col])).to be true
+        col = 1
+        row = 3
+        pawn.board.data[row][col] = 'p'
+        pawn.board.data[row][col + 1] = 'p'
+        expect(pawn.en_passant?([col, row])).to be true
       end
     end
   end
@@ -292,12 +296,12 @@ describe Pawn do
       end
 
       it 'stores the coords of the 2 step pawn' do
-        row = 1
-        col = 6
-        pawn.board.data[col][row] = 'p'
-        pawn.board.data[col - 2][row + 1] = 'P'
-        pawn.move_pawn([row, col], [row, col - 2])
-        expect(pawn.board.en_passant).to eq [row, col - 2]
+        col = 1
+        row = 6
+        pawn.board.data[row][col] = 'p'
+        pawn.board.data[row - 2][col + 1] = 'P'
+        pawn.move_pawn([col, row], [col, row - 2])
+        expect(pawn.board.en_passant).to eq [col, row - 2]
       end
     end
 
@@ -312,12 +316,12 @@ describe Pawn do
       end
 
       it 'stores the coords of the 2 step pawn' do
-        row = 1
-        col = 6
-        pawn.board.data[col][row] = 'p'
-        pawn.board.data[col - 2][row - 1] = 'P'
-        pawn.move_pawn([row, col], [row, col - 2])
-        expect(pawn.board.en_passant).to eq [row, col - 2]
+        col = 1
+        row = 6
+        pawn.board.data[row][col] = 'p'
+        pawn.board.data[row - 2][col - 1] = 'P'
+        pawn.move_pawn([col, row], [col, row - 2])
+        expect(pawn.board.en_passant).to eq [col, row - 2]
       end
     end
 
@@ -332,11 +336,11 @@ describe Pawn do
       end
 
       it 'stores the coords on the right side of the 2 step pawn' do
-        row = 1
         col = 1
-        pawn.board.data[col][row] = 'P'
-        pawn.board.data[col + 2][row + 1] = 'p'
-        pawn.move_pawn([row, col], [row, col + 2])
+        row = 1
+        pawn.board.data[row][col] = 'P'
+        pawn.board.data[row + 2][col + 1] = 'p'
+        pawn.move_pawn([col, row], [col, row + 2])
         expect(pawn.board.en_passant).to eq [1, 3]
       end
     end
@@ -352,11 +356,11 @@ describe Pawn do
       end
 
       it 'stores the coords on the left side of the 2 step pawn' do
-        row = 1
         col = 1
-        pawn.board.data[col][row] = 'P'
-        pawn.board.data[col + 2][row - 1] = 'p'
-        pawn.move_pawn([row, col], [row, col + 2])
+        row = 1
+        pawn.board.data[row][col] = 'P'
+        pawn.board.data[row + 2][col - 1] = 'p'
+        pawn.move_pawn([col, row], [col, row + 2])
         expect(pawn.board.en_passant).to eq [1, 3]
       end
     end
@@ -375,12 +379,12 @@ describe Pawn do
       end
 
       it 'assigns the correct number of moves' do
-        row = 1
-        col = 4
-        pawn.board.data[col][row] = 'P'
-        pawn.board.data[col][row - 1] = 'p'
+        col = 1
+        row = 4
+        pawn.board.data[row][col] = 'P'
+        pawn.board.data[row][col - 1] = 'p'
         display_board
-        w_pawn = pawn.assign_en_passant([row, col], pawn)
+        w_pawn = pawn.assign_en_passant([col, row], pawn)
         expect(w_pawn.moves).to eq [[-1, 1]]
       end
     end
@@ -397,10 +401,10 @@ describe Pawn do
       end
 
       it 'assigns the correct number of moves' do
-        row = 1
-        col = 4
-        pawn.board.data[col][row] = 'P'
-        pawn.board.data[col][row + 1] = 'p'
+        col = 1
+        row = 4
+        pawn.board.data[row][col] = 'P'
+        pawn.board.data[row][col + 1] = 'p'
         w_pawn = pawn.assign_en_passant([1, 4], pawn)
         expect(w_pawn.moves).to eq [[1, 1]]
       end
@@ -418,10 +422,10 @@ describe Pawn do
       end
 
       it 'assigns the correct number of moves' do
-        row = 1
-        col = 3
-        pawn.board.data[col][row] = 'p'
-        pawn.board.data[col][row - 1] = 'P'
+        col = 1
+        row = 3
+        pawn.board.data[row][col] = 'p'
+        pawn.board.data[row][col - 1] = 'P'
         b_pawn = pawn.assign_en_passant([1, 3], pawn)
         b_pawn.moves.each do |set|
           set.map! { |move| move * -1 }
@@ -442,11 +446,11 @@ describe Pawn do
       end
 
       it 'assigns the correct number of moves' do
-        row = 1
-        col = 3
-        pawn.board.data[col][row] = 'p'
-        pawn.board.data[col][row + 1] = 'P'
-        b_pawn = pawn.assign_en_passant([row, col], pawn)
+        col = 1
+        row = 3
+        pawn.board.data[row][col] = 'p'
+        pawn.board.data[row][col + 1] = 'P'
+        b_pawn = pawn.assign_en_passant([col, row], pawn)
         b_pawn.moves.each do |set|
           set.map! { |move| move * -1 }
         end
@@ -456,29 +460,29 @@ describe Pawn do
   end
 
   describe '#promote?' do
-    context 'when a white pawn reaches the last row' do
+    context 'when a white pawn reaches the last col' do
       arr = Array.new(8) { Array.new(8, '0') }
       let(:board) { instance_double(Board, data: arr, turn: 0) }
       subject(:pawn) { described_class.new(board) }
 
       it 'returns true' do
-        row = 7
-        col = 1
-        pawn.board.data[row][col] = 'P'
-        expect(pawn.promote?([col, row])).to be true
+        col = 7
+        row = 1
+        pawn.board.data[col][row] = 'P'
+        expect(pawn.promote?([row, col])).to be true
       end
     end
 
-    context 'when a black pawn reaches the last row' do
+    context 'when a black pawn reaches the last col' do
       arr = Array.new(8) { Array.new(8, '0') }
       let(:board) { instance_double(Board, data: arr, turn: 1) }
       subject(:pawn) { described_class.new(board) }
 
       it 'returns true' do
-        row = 0
-        col = 1
-        pawn.board.data[row][col] = 'p'
-        expect(pawn.promote?([col, row])).to be true
+        col = 0
+        row = 1
+        pawn.board.data[col][row] = 'p'
+        expect(pawn.promote?([row, col])).to be true
       end
     end
   end
