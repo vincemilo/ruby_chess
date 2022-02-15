@@ -87,12 +87,12 @@ class Knight < Unit
   end
 
   def assign_moves(start_pos, knight)
+    @start_pos = start_pos
     start_pos = start_pos.reverse # reversed for array
     row = start_pos[0]
     col = start_pos[1]
     check_moves(row, col, knight)
     @moves.map!(&:reverse) # reversed for array
-    @start_pos = start_pos
     knight
   end
 end

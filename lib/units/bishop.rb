@@ -91,6 +91,7 @@ class Bishop < Unit
   end
 
   def assign_moves(start_pos, bishop)
+    @start_pos = start_pos
     start_pos = start_pos.reverse # reversed for array
     row = start_pos[0]
     col = start_pos[1]
@@ -98,7 +99,6 @@ class Bishop < Unit
     check_2(row, col, bishop)
     check_3(row, col, bishop)
     check_4(row, col, bishop)
-    @start_pos = start_pos
     bishop
   end
 end

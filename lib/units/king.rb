@@ -11,6 +11,7 @@ class King < Unit
   end
 
   def assign_moves(start_pos, king)
+    @start_pos = start_pos
     start_pos = start_pos.reverse # reversed for array
     row = start_pos[0]
     col = start_pos[1]
@@ -18,7 +19,6 @@ class King < Unit
     check_horiz(row, col, king)
     check_vert(row, col, king)
     check_castle(king) if first_move?
-    @start_pos = start_pos
     king
   end
 

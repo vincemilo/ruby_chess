@@ -141,7 +141,7 @@ describe Game do
                                   { check: 1, king_pos: [4, 7], attk_pos: [4, 0] })
     end
 
-    xit 'only allows moves that take the black king out of check' do
+    it 'only allows moves that take the black king out of check' do
       row = 7
       col = 4
       board.data[row][col] = 'k'
@@ -151,7 +151,7 @@ describe Game do
       board.data[row - 7][col + 1] = 'n'
       display_board
       game.b_activate
-      #game.select_unit([col + 3, row - 1])
+      
 
       # expect(game.b_king_check?([col, row - 7], rook)).to eq(true)
     end
@@ -187,10 +187,6 @@ describe Game do
     let(:board) { Board.new } #{ instance_double(Board, data: arr, turn: 0) }
     subject(:game) { described_class.new(board) }
 
-    # before do
-    #   board.instance_variable_set(:@b_king_check, { check: 1, coords: [4, 0] })
-    # end
-
     it 'displays the squares that need to be moved into to prevent check' do
       row = 7
       col = 4
@@ -199,10 +195,8 @@ describe Game do
       board.data[row - 7][col] = 'R'
       board.data[row - 7][col - 1] = 'b'
       board.data[row - 7][col + 1] = 'n'
-      display_board
-      game.attack_direction([col, row], [col, row - 7])
-
-      # expect(game.b_king_check?([col, row - 7], rook)).to eq(true)
+      block_moves = [[4, 0], [4, 1], [4, 2], [4, 3], [4, 4], [4, 5], [4, 6]]
+      expect(game.attack_direction([col, row], [col, row - 7])).to eq(block_moves)
     end
   end
 end

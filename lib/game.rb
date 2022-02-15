@@ -89,12 +89,17 @@ class Game
   end
 
   def display_moves(coords, moves)
+    options = create_options(coords, moves)
+    mark_options(options)
+    @board.display_board
+    options
+  end
+
+  def create_options(coords, moves)
     options = []
     moves.each do |set|
       options << [coords[0] + set[0], coords[1] + set[1]]
     end
-    mark_options(options)
-    @board.display_board
     options
   end
 
@@ -218,16 +223,33 @@ class Game
     block_moves = attack_direction(check_data[:king_pos], check_data[:attk_pos])
     pieces.each do |piece|
       p piece.class
+      p piece.start_pos
       p piece.moves
-      p block_moves
+      options = create_options(piece.start_pos, piece.moves)
+      p options
     end
+    p block_moves
   end
 
   def attack_direction(king_pos, attk_pos)
-    p king_pos
-    p attk_pos
-    p @board.get_unit(attk_pos)
+    col = (king_pos[0] - attk_pos[0]).abs
+    row = (king_pos[1] - attk_pos[1]).abs
+    return col_attk(king_pos, attk_pos) if col.zero?
+
+    return row_attk if row.zero?
+
+    #piece = @board.get_unit(attk_pos)
+    # unit = get_unit_obj(piece)
   end
+
+  def col_attk(king_pos, attk_pos)
+    block_moves = []
+    diff = [king_pos[1], attk_pos[1]].sort
+    block_range = (diff[0]...diff[1]).to_a
+    block_range.each { |coord| block_moves << [king_pos[0], coord] }
+    block_moves
+  end
+
 
   def activate(pieces)
     activate = {}
