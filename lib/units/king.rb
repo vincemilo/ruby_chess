@@ -113,6 +113,53 @@ class King < Unit
     king
   end
 
+  def rooks_moved?
+    return true if (@board.turn.zero? && w_rooks_moved?) ||
+                   (@board.turn.positive? && b_rooks_moved?)
+
+    false
+  end
+
+  def w_rooks_moved?
+    return true if w_r_rook_moved? && w_l_rook_moved?
+
+    false
+  end
+
+  def w_r_rook_moved?
+    return true if @board.data[0][7] != 'R' ||
+                   @board.castle[:w_r_rook].positive?
+
+    false
+  end
+
+  def w_l_rook_moved?
+    return true if @board.data[0][0] != 'R' ||
+                   @board.castle[:w_l_rook].positive?
+
+    false
+  end
+
+  def b_rooks_moved?
+    return true if b_r_rook_moved? && b_l_rook_moved?
+
+    false
+  end
+
+  def b_r_rook_moved?
+    return true if @board.data[7][7] != 'r' ||
+                   @board.castle[:b_r_rook].positive?
+
+    false
+  end
+
+  def b_l_rook_moved?
+    return true if @board.data[7][0] != 'r' ||
+                   @board.castle[:b_l_rook].positive?
+
+    false
+  end
+
   def w_king_moved?
     return true if @board.data[0][4] != 'K' || @board.castle[:w_king].positive?
 
@@ -224,6 +271,8 @@ class King < Unit
       @moves << [2, 0] if w_r_castle?
       @moves << [-2, 0] if w_l_castle?
     else
+      p b_r_castle?
+      p b_r_castle?
       @moves << [2, 0] if b_r_castle?
       @moves << [-2, 0] if b_l_castle?
     end

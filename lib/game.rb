@@ -216,19 +216,33 @@ class Game
     black_pieces = %w[p r n b q k]
     activate = activate(black_pieces)
     pieces = pieces(activate)
-    block_check(pieces, @board.b_king_check)
+    pieces.each { |piece| p piece.moves }
+    mod_units = block_check(pieces, @board.b_king_check)
+    mod_units.each { |piece| p piece.moves }
   end
 
   def block_check(pieces, check_data)
+    units = []
     block_moves = attack_direction(check_data[:king_pos], check_data[:attk_pos])
     pieces.each do |piece|
-      p piece.class
-      p piece.start_pos
-      p piece.moves
       options = create_options(piece.start_pos, piece.moves)
-      p options
+      piece.update_moves(block_match(piece, options, block_moves))
+      units << piece
     end
-    p block_moves
+    units
+  end
+
+  def block_match(piece, options, block_moves)
+    new_moves = []
+    options.each_with_index do |val, i|
+      if piece.class == King && block_moves.any?(val)
+        piece.moves.delete_at(i)
+        return piece.moves
+      end
+
+      new_moves << piece.moves[i] if block_moves.any?(val)
+    end
+    new_moves
   end
 
   def attack_direction(king_pos, attk_pos)
