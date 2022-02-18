@@ -14,12 +14,12 @@ class Game
   def initialize(board = Board.new)
     @board = board
     @game_over = false
-    #@board.place_pawns
-    #@board.place_rooks
-    #@board.place_knights
-    #@board.place_bishops
-    #@board.place_queens
-    #@board.place_kings
+    # @board.place_pawns
+    # @board.place_rooks
+    # @board.place_knights
+    # @board.place_bishops
+    # @board.place_queens
+    # @board.place_kings
   end
 
   def intro
@@ -148,40 +148,26 @@ class Game
   end
 
   def check?(end_pos, unit)
-    return true if (@board.turn.zero? && b_king_check?(end_pos, unit)) ||
-                   (@board.turn.positive? && w_king_check?(end_pos, unit))
+    return true if (@board.turn.zero? && king_check?(end_pos, unit, 'k')) ||
+                   (@board.turn.positive? && king_check?(end_pos, unit, 'K'))
 
     false
   end
 
   def in_check?
-    return true if (@board.turn.zero? && @board.w_king_check.positive?) ||
-                   (@board.turn.positive? && @board.w_king_check.positive?)
+    return true if (@board.turn.zero? && @board.w_king_check[:check].positive?) ||
+                   (@board.turn.positive? && @board.b_king_check[:check].positive?)
 
     false
   end
 
-  def b_king_check?(end_pos, unit)
+  def king_check?(end_pos, unit, king)
     unit.update_moves([])
     unit.assign_moves(end_pos, unit)
     unit.moves.each do |set|
       row = set[1] + end_pos[1]
       col = set[0] + end_pos[0]
-      if @board.data[row][col] == 'k'
-        @board.update_b_king_pos([col, row])
-        return true
-      end
-    end
-    false
-  end
-
-  def w_king_check?(end_pos, unit)
-    unit.update_moves([])
-    unit.assign_moves(end_pos, unit)
-    unit.moves.each do |set|
-      row = set[1] + end_pos[1]
-      col = set[0] + end_pos[0]
-      if @board.data[row][col] == 'K'
+      if @board.data[row][col] == king
         @board.update_w_king_pos([col, row])
         return true
       end
@@ -190,35 +176,53 @@ class Game
   end
 
   def check(end_pos, unit)
-    if @board.turn.zero? && b_king_check?(end_pos, unit)
+    if @board.turn.zero? && b_king_check?(end_pos, unit, 'k')
       @board.update_b_king_check(end_pos, unit)
-    elsif @board.turn.zero? && b_king_check?(end_pos, unit)
+    elsif @board.turn.positive? && king_check?(end_pos, unit, 'K')
       @board.update_w_king_check(end_pos, unit)
     end
   end
 
   def remove_check?(coords)
     if @board.turn.zero? && @board.w_king_check.positive?
-      return true if w_remove?(coords)
+      return true if remove?(coords, 0)
     end
 
-    return true if b_remove?(coords)
+    return true if remove?(coords, 1)
 
     false
   end
 
-  def w_activate
-    white_pieces = %w[P R N B Q K]
-    white_pieces
+  def remove?(coords, turn)
+    units = activation(turn)
+    piece = nil
+    units.any? do |unit|
+      piece = unit if unit.start_pos == coords
+    end
+    return true if piece
+
+    false
   end
 
-  def b_activate
+  def activation(turn)
+    white_pieces = %w[P R N B Q K]
     black_pieces = %w[p r n b q k]
-    activate = activate(black_pieces)
+    activate = if turn.zero?
+                 activate(white_pieces)
+               else
+                 activate(black_pieces)
+               end
     pieces = pieces(activate)
-    pieces.each { |piece| p piece.moves }
-    mod_units = block_check(pieces, @board.b_king_check)
-    mod_units.each { |piece| p piece.moves }
+    mod_units = filter_moves(turn, pieces)
+    mod_units
+  end
+
+  def filter_moves(turn, pieces)
+    if turn.zero?
+      block_check(pieces, @board.w_king_check)
+    else
+      block_check(pieces, @board.b_king_check)
+    end
   end
 
   def block_check(pieces, check_data)
@@ -250,9 +254,9 @@ class Game
     row = (king_pos[1] - attk_pos[1]).abs
     return col_attk(king_pos, attk_pos) if col.zero?
 
-    return row_attk if row.zero?
+    return row_attk(king_pos, attk_pos) if row.zero?
 
-    #piece = @board.get_unit(attk_pos)
+    # piece = @board.get_unit(attk_pos)
     # unit = get_unit_obj(piece)
   end
 
@@ -264,6 +268,9 @@ class Game
     block_moves
   end
 
+  def row_attk(king_pos, attk_pos)
+    # tbd
+  end
 
   def activate(pieces)
     activate = {}
@@ -277,16 +284,10 @@ class Game
     activate
   end
 
-  def b_remove?(coords)
-    while @board.b_king_check? == true
-      b_activate
-    end
-  end
-
   def pieces(activate)
     pieces = []
     activate.each do |coords, piece|
-      coords = coords.reverse # temp until pawns are fixed
+      coords = coords.reverse # reverse for array input
       pieces << select_unit(coords, piece)
     end
     pieces

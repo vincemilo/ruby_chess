@@ -112,9 +112,9 @@ describe Game do
     end
   end
 
-  describe '#b_king_check?' do
+  describe '#king_check?' do
     # arr = Array.new(8) { Array.new(8, '0') }
-    let(:board) { Board.new } #{ instance_double(Board, data: arr, turn: 0) }
+    let(:board) { Board.new } # { instance_double(Board, data: arr, turn: 0) }
     subject(:game) { described_class.new(board) }
 
     it 'displays true if the black king is in check' do
@@ -126,13 +126,13 @@ describe Game do
       board.data[row - 7][col - 1] = 'b'
       board.data[row - 7][col + 1] = 'n'
       rook = Rook.new(board)
-      expect(game.b_king_check?([col, row - 7], rook)).to eq(true)
+      expect(game.king_check?([col, row - 7], rook, 'k')).to eq(true)
     end
   end
 
-  describe '#b_activate' do
+  describe '#activation' do
     # arr = Array.new(8) { Array.new(8, '0') }
-    let(:board) { Board.new } #{ instance_double(Board, data: arr, turn: 0) }
+    let(:board) { Board.new } # { instance_double(Board, data: arr, turn: 0) }
     subject(:game) { described_class.new(board) }
 
     before do
@@ -149,42 +149,44 @@ describe Game do
       board.data[row - 7][col] = 'R'
       board.data[row - 7][col - 1] = 'b'
       board.data[row - 7][col + 1] = 'n'
-      display_board
-      game.b_activate
-      
-
-      # expect(game.b_king_check?([col, row - 7], rook)).to eq(true)
+      units = game.activation(1)
+      unit_moves = {}
+      units.each { |unit| unit_moves[unit.class] = unit.moves }
+      expect(unit_moves).to eq({ Bishop => [[1, 1]],
+                                 Knight => [[-1, 2]],
+                                 Rook => [[-3, 0]],
+                                 King => [[1, -1], [-1, -1], [1, 0], [-1, 0]] })
     end
   end
 
-  describe '#b_remove?' do
+  describe '#remove?' do
     # arr = Array.new(8) { Array.new(8, '0') }
-    let(:board) { Board.new } #{ instance_double(Board, data: arr, turn: 0) }
+    let(:board) { Board.new } # { instance_double(Board, data: arr, turn: 0) }
     subject(:game) { described_class.new(board) }
 
     before do
-      board.instance_variable_set(:@b_king_check, [1, [4, 0], 'R'])
+      board.update_turn
+      board.instance_variable_set(:@b_king_check,
+                                  { check: 1, king_pos: [4, 7], attk_pos: [4, 0] })
     end
 
-    xit 'only allows moves that take the black king out of check' do
+    it 'only allows selection of unit that take the black king out of check' do
       row = 7
       col = 4
       board.data[row][col] = 'k'
-      board.data[row][col + 3] = 'r'
+      board.data[row - 1][col + 3] = 'r'
       board.data[row - 7][col] = 'R'
       board.data[row - 7][col - 1] = 'b'
       board.data[row - 7][col + 1] = 'n'
-      rook = Rook.new(board)
-      display_board
-      game.b_remove
-
-      # expect(game.b_king_check?([col, row - 7], rook)).to eq(true)
+      # #remove_check leads here, must be a piece
+      friendly_rook = [col + 3, row - 1]
+      expect(game.remove?(friendly_rook, 1)).to eq(true)
     end
   end
 
   describe '#attack_direction' do
     # arr = Array.new(8) { Array.new(8, '0') }
-    let(:board) { Board.new } #{ instance_double(Board, data: arr, turn: 0) }
+    let(:board) { Board.new } # { instance_double(Board, data: arr, turn: 0) }
     subject(:game) { described_class.new(board) }
 
     it 'displays the squares that need to be moved into to prevent check' do
