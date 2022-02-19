@@ -256,6 +256,8 @@ class Game
 
     return row_attk(king_pos, attk_pos) if row.zero?
 
+    return diag_attk(king_pos, attk_pos) if row == col
+
     # piece = @board.get_unit(attk_pos)
     # unit = get_unit_obj(piece)
   end
@@ -269,7 +271,65 @@ class Game
   end
 
   def row_attk(king_pos, attk_pos)
-    # tbd
+    block_moves = []
+    diff = [king_pos[0], attk_pos[0]].sort
+    block_range = (diff[0]...diff[1]).to_a
+    block_range.each { |coord| block_moves << [coord, king_pos[1]] }
+    block_moves
+  end
+
+  def diag_attk(king_pos, attk_pos)
+    row_diff = king_pos[1] - attk_pos[1]
+    col_diff = king_pos[0] - attk_pos[0]
+    if row_diff.positive? && col_diff.positive?
+      return r_pos_diag(king_pos, attk_pos)
+    end
+
+    if row_diff.positive? && col_diff.negative?
+      return l_pos_diag(king_pos, attk_pos)
+    end
+
+    if row_diff.negative? && col_diff.negative?
+      return l_neg_diag(king_pos, attk_pos)
+    end
+
+    r_neg_diag(king_pos, attk_pos) if row_diff.negative? && col_diff.positive?
+  end
+
+  def r_pos_diag(king_pos, attk_pos)
+    block_moves = []
+    until king_pos == attk_pos
+      king_pos = [king_pos[0] - 1, king_pos[1] - 1]
+      block_moves << king_pos
+    end
+    block_moves.sort
+  end
+
+  def l_pos_diag(king_pos, attk_pos)
+    block_moves = []
+    until king_pos == attk_pos
+      king_pos = [king_pos[0] + 1, king_pos[1] - 1]
+      block_moves << king_pos
+    end
+    block_moves.sort
+  end
+
+  def l_neg_diag(king_pos, attk_pos)
+    block_moves = []
+    until king_pos == attk_pos
+      king_pos = [king_pos[0] + 1, king_pos[1] + 1]
+      block_moves << king_pos
+    end
+    block_moves.sort
+  end
+
+  def r_neg_diag(king_pos, attk_pos)
+    block_moves = []
+    until king_pos == attk_pos
+      king_pos = [king_pos[0] - 1, king_pos[1] + 1]
+      block_moves << king_pos
+    end
+    block_moves.sort
   end
 
   def activate(pieces)

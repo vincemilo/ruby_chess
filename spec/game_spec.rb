@@ -141,7 +141,7 @@ describe Game do
                                   { check: 1, king_pos: [4, 7], attk_pos: [4, 0] })
     end
 
-    it 'only allows moves that take the black king out of check' do
+    it 'only returns moves that take the black king out of check' do
       row = 7
       col = 4
       board.data[row][col] = 'k'
@@ -184,7 +184,7 @@ describe Game do
     end
   end
 
-  describe '#attack_direction' do
+  describe '#col_attk' do
     # arr = Array.new(8) { Array.new(8, '0') }
     let(:board) { Board.new } # { instance_double(Board, data: arr, turn: 0) }
     subject(:game) { described_class.new(board) }
@@ -193,12 +193,84 @@ describe Game do
       row = 7
       col = 4
       board.data[row][col] = 'k'
-      board.data[row][col + 3] = 'r'
       board.data[row - 7][col] = 'R'
-      board.data[row - 7][col - 1] = 'b'
-      board.data[row - 7][col + 1] = 'n'
       block_moves = [[4, 0], [4, 1], [4, 2], [4, 3], [4, 4], [4, 5], [4, 6]]
-      expect(game.attack_direction([col, row], [col, row - 7])).to eq(block_moves)
+      expect(game.col_attk([col, row], [col, row - 7])).to eq(block_moves)
+    end
+  end
+
+  describe '#row_attk' do
+    # arr = Array.new(8) { Array.new(8, '0') }
+    let(:board) { Board.new } # { instance_double(Board, data: arr, turn: 0) }
+    subject(:game) { described_class.new(board) }
+
+    it 'displays the squares that need to be moved into to prevent check' do
+      row = 7
+      col = 4
+      board.data[row][col] = 'k'
+      board.data[row][col - 4] = 'R'
+      block_moves = [[0, 7], [1, 7], [2, 7], [3, 7]]
+      expect(game.row_attk([col, row], [col - 4, row])).to eq(block_moves)
+    end
+  end
+
+  describe '#r_pos_diag' do
+    # arr = Array.new(8) { Array.new(8, '0') }
+    let(:board) { Board.new } # { instance_double(Board, data: arr, turn: 0) }
+    subject(:game) { described_class.new(board) }
+
+    it 'displays the squares that need to be moved into to prevent check' do
+      row = 7
+      col = 4
+      board.data[row][col] = 'k'
+      board.data[row - 4][col - 4] = 'B'
+      block_moves = [[0, 3], [1, 4], [2, 5], [3, 6]]
+      expect(game.r_pos_diag([col, row], [col - 4, row - 4])).to eq(block_moves)
+    end
+  end
+
+  describe '#l_pos_diag' do
+    # arr = Array.new(8) { Array.new(8, '0') }
+    let(:board) { Board.new } # { instance_double(Board, data: arr, turn: 0) }
+    subject(:game) { described_class.new(board) }
+
+    it 'displays the squares that need to be moved into to prevent check' do
+      row = 7
+      col = 4
+      board.data[row][col] = 'k'
+      board.data[row - 3][col + 3] = 'B'
+      block_moves = [[5, 6], [6, 5], [7, 4]]
+      expect(game.l_pos_diag([col, row], [col + 3, row - 3])).to eq(block_moves)
+    end
+  end
+
+  describe '#l_neg_diag' do
+    # arr = Array.new(8) { Array.new(8, '0') }
+    let(:board) { Board.new } # { instance_double(Board, data: arr, turn: 0) }
+    subject(:game) { described_class.new(board) }
+
+    it 'displays the squares that need to be moved into to prevent check' do
+      row = 0
+      col = 4
+      board.data[row][col] = 'K'
+      board.data[row + 3][col + 3] = 'b'
+      block_moves = [[5, 1], [6, 2], [7, 3]]
+      expect(game.l_neg_diag([col, row], [col + 3, row + 3])).to eq(block_moves)
+    end
+  end
+
+  describe '#r_neg_diag' do
+    # arr = Array.new(8) { Array.new(8, '0') }
+    let(:board) { Board.new } # { instance_double(Board, data: arr, turn: 0) }
+    subject(:game) { described_class.new(board) }
+
+    it 'displays the squares that need to be moved into to prevent check' do
+      row = 0
+      col = 4
+      board.data[row][col] = 'K'
+      board.data[row + 4][col - 4] = 'b'
+      block_moves = [[0, 4], [1, 3], [2, 2], [3, 1]]
+      expect(game.r_neg_diag([col, row], [col - 4, row + 4])).to eq(block_moves)
     end
   end
 end
