@@ -111,31 +111,31 @@ class Unit
   end
 
   def w_r_rook_moved?
-    return true if @board.data[0][7] != 'R' || @board.w_r_rook.positive?
+    return true if @board.data[0][7] != 'R' || @board.castle[:w_r_rook].positive?
 
     false
   end
 
   def w_l_rook_moved?
-    return true if @board.data[0][0] != 'R' || @board.w_l_rook.positive?
+    return true if @board.data[0][0] != 'R' || @board.castle[:w_l_rook].positive?
 
     false
   end
 
   def b_rooks_moved?
-    return true if @board.turn.positive && b_r_rook_moved? && b_l_rook_moved?
+    return true if @board.turn.positive? && b_r_rook_moved? && b_l_rook_moved?
 
     false
   end
 
   def b_r_rook_moved?
-    return true if @board.data[7][7] != 'r' || @board.b_r_rook.positive?
+    return true if @board.data[7][7] != 'r' || @board.castle[:b_r_rook].positive?
 
     false
   end
 
   def b_l_rook_moved?
-    return true if @board.data[7][0] != 'r' || @board.b_l_rook.positive?
+    return true if @board.data[7][0] != 'r' || @board.castle[:b_l_rook].positive?
 
     false
   end

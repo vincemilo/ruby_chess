@@ -59,6 +59,7 @@ class Pawn < Unit
   end
 
   def get_x_factor(start_pos)
+    p start_pos
     if @board.turn.zero?
       @board.en_passant[0] - start_pos[0]
     else
@@ -109,7 +110,7 @@ class Pawn < Unit
     @start_pos = start_pos
     check_one_ahead(start_pos, pawn)
     check_diags(start_pos, pawn)
-    assign_en_passant(start_pos, pawn) unless @board.en_passant.nil?
+    assign_en_passant(start_pos, pawn) unless @board.en_passant.empty?
 
     if @board.turn.positive? # inverse moves for black
       pawn.moves.each do |set|
