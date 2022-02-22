@@ -6,6 +6,7 @@ require_relative '../lib/game'
 require_relative '../lib/board'
 require_relative '../lib/units/pawn'
 require_relative '../lib/units/rook'
+require_relative '../lib/units/king'
 
 describe Game do
   def display_board
@@ -276,7 +277,35 @@ describe Game do
       end
     end
   end
-  
+
+  # describe '#put_in_check?' do
+  #   context 'when a white king has hostile rows/columns' do
+  #     # arr = Array.new(8) { Array.new(8, '0') }
+  #     let(:board) { Board.new } # { instance_double(Board, data: arr, turn: 0) }
+  #     subject(:game) { described_class.new(board) }
+
+  #     # before do
+  #     #   board.instance_variable_set(:@w_king_check,
+  #     #                               { check: 1, king_pos: [6, 0], attk_pos: [0, 7] })
+  #     # end
+
+  #     it 'can only move into neutral rows/columns' do
+  #       row = 0
+  #       col = 6
+  #       board.data[row][col] = 'K'
+  #       board.data[row + 7][col + 1] = 'r'
+  #       board.data[row + 7][col - 1] = 'r'
+  #       display_board
+  #       king = King.new(board)
+  #       mod_king = king.assign_moves([col, row], king)
+  #       game.put_in_check?(mod_king.moves)
+        
+  #       #units = game.activation(1)
+  #       #expect(game.get_moves(units)).to eq([])
+  #     end
+  #   end
+  # end
+
   describe '#col_attk' do
     # arr = Array.new(8) { Array.new(8, '0') }
     let(:board) { Board.new } # { instance_double(Board, data: arr, turn: 0) }

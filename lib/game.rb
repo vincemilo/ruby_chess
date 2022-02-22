@@ -14,13 +14,13 @@ class Game
   def initialize(board = Board.new)
     @board = board
     @game_over = false
-    # disable below for testing
+    # disable below for testing until fully decoupled
     # @board.place_pawns
-    @board.place_rooks
+    # @board.place_rooks
     # @board.place_knights
     # @board.place_bishops
     # @board.place_queens
-    @board.place_kings
+    # @board.place_kings
   end
 
   def intro
@@ -332,6 +332,11 @@ class Game
     new_moves
   end
 
+  # def put_in_check?(moves)
+  #   p moves.sort
+  #   p col_attk([5, 0], [5, 7])
+  # end
+
   def attack_direction(king_pos, attk_pos)
     col = (king_pos[0] - attk_pos[0]).abs
     row = (king_pos[1] - attk_pos[1]).abs
@@ -413,8 +418,8 @@ class Game
   end
 end
 
-game = Game.new
-game.intro
+# game = Game.new
+# game.intro
 # row = 1
 # col = 4
 # game.board.data[row][col] = 'P'

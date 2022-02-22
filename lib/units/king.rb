@@ -271,10 +271,75 @@ class King < Unit
       @moves << [2, 0] if w_r_castle?
       @moves << [-2, 0] if w_l_castle?
     else
-      p b_r_castle?
-      p b_r_castle?
       @moves << [2, 0] if b_r_castle?
       @moves << [-2, 0] if b_l_castle?
     end
+  end
+
+  def put_in_check?(start_pos)
+    row = start_pos[1]
+    col = start_pos[0]
+    hostile_vert?(row, col)
+  end
+
+  def hostile_vert?(row, col)
+    return true if hostile_r_col?(row, col) #|| hostile_l_col?(row, col)
+
+    false
+  end
+
+  def hostile_r_col?(row, col)
+    return false if (col + 1) > 7
+
+    trans_r = @board.data.transpose[col + 1]
+    return false unless hostile_pieces?(trans_r)
+
+    # return true if hostile_u?(row, trans_r) || hostile_d?(row, trans_r)
+
+    false
+  end
+
+  def hostile_pieces?(trans)
+    w_hostile_pieces = %w[Q R]
+    b_hostile_pieces = %w[q r]
+    return true if @board.turn.zero? && trans.any? do |piece|
+      b_hostile_pieces.any? { |hostile| piece == hostile }
+    end
+
+    return true if @board.turn.positive? && trans.any? do |piece|
+      w_hostile_pieces.any? { |hostile| piece == hostile }
+    end
+
+    false
+  end
+
+  def col_enemy_check?(trans, row, moves)
+    return true if @board.enemy_occupied?(trans[row + moves])
+
+    false
+  end
+
+  def hostile_u?(row, trans)
+    # moves = 1
+    # while trans[row + moves] == '0' || @board.enemy_occupied?(trans[row + moves])
+    #   options << [0, moves]
+    #   return options if enemy_check?(trans, row, moves)
+
+    #   moves += 1
+    # end
+    # options
+  end
+
+  def check_d?(row, trans)
+    options = []
+    moves = -1
+    while row + moves >= 0 && (trans[row + moves] == '0' ||
+          @board.enemy_occupied?(trans[row + moves]))
+      options << [0, moves]
+      return options if enemy_check?(trans, row, moves)
+
+      moves -= 1
+    end
+    options
   end
 end

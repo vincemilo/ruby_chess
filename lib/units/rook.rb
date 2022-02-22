@@ -10,47 +10,6 @@ class Rook < Unit
     super
   end
 
-  def check_vert(start_pos, rook)
-    row = start_pos[0]
-    col = start_pos[1]
-    trans = @board.data.transpose[col]
-    u_moves = check_u(row, trans)
-    d_moves = check_d(row, trans)
-    @moves += u_moves + d_moves
-    rook
-  end
-
-  def enemy_check?(trans, row, moves)
-    return true if @board.enemy_occupied?(trans[row + moves])
-
-    false
-  end
-
-  def check_u(row, trans)
-    options = []
-    moves = 1
-    while trans[row + moves] == '0' || @board.enemy_occupied?(trans[row + moves])
-      options << [0, moves]
-      return options if enemy_check?(trans, row, moves)
-
-      moves += 1
-    end
-    options
-  end
-
-  def check_d(row, trans)
-    options = []
-    moves = -1
-    while row + moves >= 0 && (trans[row + moves] == '0' ||
-          @board.enemy_occupied?(trans[row + moves]))
-      options << [0, moves]
-      return options if enemy_check?(trans, row, moves)
-
-      moves -= 1
-    end
-    options
-  end
-
   def check_horiz(start_pos, rook)
     row = start_pos[0]
     col = start_pos[1]
