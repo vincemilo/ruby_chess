@@ -276,70 +276,59 @@ class King < Unit
     end
   end
 
-  def put_in_check?(start_pos)
+  def hostile_r_col?(start_pos)
     row = start_pos[1]
     col = start_pos[0]
-    hostile_vert?(row, col)
-  end
-
-  def hostile_vert?(row, col)
-    return true if hostile_r_col?(row, col) #|| hostile_l_col?(row, col)
-
-    false
-  end
-
-  def hostile_r_col?(row, col)
     return false if (col + 1) > 7
 
     trans_r = @board.data.transpose[col + 1]
-    return false unless hostile_pieces?(trans_r)
-
-    # return true if hostile_u?(row, trans_r) || hostile_d?(row, trans_r)
+    return true if hostile_u?(row, trans_r) || hostile_d?(row, trans_r)
 
     false
   end
 
-  def hostile_pieces?(trans)
-    w_hostile_pieces = %w[Q R]
-    b_hostile_pieces = %w[q r]
-    return true if @board.turn.zero? && trans.any? do |piece|
-      b_hostile_pieces.any? { |hostile| piece == hostile }
-    end
+  def hostile_l_col?(start_pos)
+    row = start_pos[1]
+    col = start_pos[0]
+    return false if (col - 1) > 7
 
-    return true if @board.turn.positive? && trans.any? do |piece|
-      w_hostile_pieces.any? { |hostile| piece == hostile }
-    end
+    trans_r = @board.data.transpose[col - 1]
+    return true if hostile_u?(row, trans_r) || hostile_d?(row, trans_r)
 
     false
   end
 
-  def col_enemy_check?(trans, row, moves)
-    return true if @board.enemy_occupied?(trans[row + moves])
+  def q_r_check?(trans, row, moves)
+    # checks if an enemy queen or rook is in the row
+    w_hostile_pieces = %w[R Q]
+    b_hostile_pieces = %w[r q]
+    piece = trans[row + moves]
+    return true if @board.turn.zero? &&
+                   b_hostile_pieces.any? { |hostile| hostile == piece }
+
+    return true if @board.turn.positive? &&
+                   w_hostile_pieces.any? { |hostile| hostile == piece }
 
     false
   end
 
   def hostile_u?(row, trans)
-    # moves = 1
-    # while trans[row + moves] == '0' || @board.enemy_occupied?(trans[row + moves])
-    #   options << [0, moves]
-    #   return options if enemy_check?(trans, row, moves)
+    moves = 0
+    while trans[row + moves] == '0' || q_r_check?(trans, row, moves)
+      moves += 1
+      return true if q_r_check?(trans, row, moves)
+    end
 
-    #   moves += 1
-    # end
-    # options
+    false
   end
 
-  def check_d?(row, trans)
-    options = []
-    moves = -1
-    while row + moves >= 0 && (trans[row + moves] == '0' ||
-          @board.enemy_occupied?(trans[row + moves]))
-      options << [0, moves]
-      return options if enemy_check?(trans, row, moves)
-
+  def hostile_d?(row, trans)
+    moves = 0
+    while trans[row + moves] == '0' || q_r_check?(trans, row, moves)
       moves -= 1
+      return true if q_r_check?(trans, row, moves)
     end
-    options
+
+    false
   end
 end

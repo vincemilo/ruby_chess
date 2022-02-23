@@ -196,26 +196,18 @@ describe King do
     end
   end
 
-  describe '#put_in_check?' do
-    context 'when a white king has hostile rows/columns' do
+  describe '#hostile_r_col?' do
+    context 'when a white king has a hostile r column' do
       # arr = Array.new(8) { Array.new(8, '0') }
       let(:board) { Board.new } # { instance_double(Board, data: arr, turn: 0) }
       subject(:king) { described_class.new(board) }
 
-      # before do
-      #   board.instance_variable_set(:@w_king_check,
-      #                               { check: 1, king_pos: [6, 0], attk_pos: [0, 7] })
-      # end
-
-      it 'can only move into neutral rows/columns' do
+      it 'returns true' do
         row = 0
         col = 6
         board.data[row][col] = 'K'
         board.data[row + 7][col + 1] = 'r'
-        board.data[row + 7][col - 1] = 'r'
-        display_board
-        king.put_in_check?([col, row])
-
+        expect(king.hostile_r_col?([col, row])).to eq(true)
       end
     end
   end
