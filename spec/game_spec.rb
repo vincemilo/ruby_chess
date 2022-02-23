@@ -299,7 +299,7 @@ describe Game do
   #       king = King.new(board)
   #       mod_king = king.assign_moves([col, row], king)
   #       game.put_in_check?(mod_king.moves)
-        
+
   #       #units = game.activation(1)
   #       #expect(game.get_moves(units)).to eq([])
   #     end

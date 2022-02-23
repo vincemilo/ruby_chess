@@ -62,8 +62,8 @@ describe King do
 
   describe '#castle' do
     context 'when a white king castles right' do
-      # arr = Array.new(8) { Array.new(8, '0') }
-      let(:board) { Board.new } # { instance_double(Board, data: arr) }
+      arr = Array.new(8) { Array.new(8, '0') }
+      let(:board) { instance_double(Board, data: arr) }
       subject(:king) { described_class.new(board) }
 
       it 'displays the correct results' do
@@ -77,8 +77,8 @@ describe King do
     end
 
     context 'when a white king castles left' do
-      # arr = Array.new(8) { Array.new(8, '0') }
-      let(:board) { Board.new } # { instance_double(Board, data: arr) }
+      arr = Array.new(8) { Array.new(8, '0') }
+      let(:board) { instance_double(Board, data: arr) }
       subject(:king) { described_class.new(board) }
 
       it 'displays the correct results' do
@@ -92,8 +92,8 @@ describe King do
     end
 
     context 'when a black king castles right' do
-      # arr = Array.new(8) { Array.new(8, '0') }
-      let(:board) { Board.new } # { instance_double(Board, data: arr) }
+      arr = Array.new(8) { Array.new(8, '0') }
+      let(:board) { instance_double(Board, data: arr) }
       subject(:king) { described_class.new(board) }
 
       it 'displays the correct results' do
@@ -107,8 +107,8 @@ describe King do
     end
 
     context 'when a black king castles left' do
-      # arr = Array.new(8) { Array.new(8, '0') }
-      let(:board) { Board.new } # { instance_double(Board, data: arr) }
+      arr = Array.new(8) { Array.new(8, '0') }
+      let(:board) { instance_double(Board, data: arr) }
       subject(:king) { described_class.new(board) }
 
       it 'displays the correct results' do
@@ -162,8 +162,8 @@ describe King do
 
   describe '#assign_castle_moves' do
     context 'when a white king castles right' do
-      # arr = Array.new(8) { Array.new(8, '0') }
-      let(:board) { Board.new } # { instance_double(Board, data: arr) }
+      arr = Array.new(8) { Array.new(8, '0') }
+      let(:board) { instance_double(Board, data: arr, turn: 0) }
       subject(:king) { described_class.new(board) }
 
       it 'displays the correct results' do
@@ -177,13 +177,9 @@ describe King do
     end
 
     context 'when a black king castles right' do
-      # arr = Array.new(8) { Array.new(8, '0') }
-      let(:board) { Board.new } # { instance_double(Board, data: arr) }
+      arr = Array.new(8) { Array.new(8, '0') }
+      let(:board) { instance_double(Board, data: arr, turn: 1) }
       subject(:king) { described_class.new(board) }
-
-      before do
-        board.update_turn
-      end
 
       it 'displays the correct results' do
         row = 7
@@ -198,8 +194,8 @@ describe King do
 
   describe '#hostile_r_col?' do
     context 'when a white king has a hostile r column' do
-      # arr = Array.new(8) { Array.new(8, '0') }
-      let(:board) { Board.new } # { instance_double(Board, data: arr, turn: 0) }
+      arr = Array.new(8) { Array.new(8, '0') }
+      let(:board) { instance_double(Board, data: arr, turn: 0) }
       subject(:king) { described_class.new(board) }
 
       it 'returns true' do
@@ -207,7 +203,107 @@ describe King do
         col = 6
         board.data[row][col] = 'K'
         board.data[row + 7][col + 1] = 'r'
-        expect(king.hostile_r_col?([col, row])).to eq(true)
+        expect(king.hostile_r_col?(col, row)).to eq(true)
+      end
+    end
+
+    context 'when a white king has an non-hostile r column' do
+      arr = Array.new(8) { Array.new(8, '0') }
+      let(:board) { instance_double(Board, data: arr, turn: 0) }
+      subject(:king) { described_class.new(board) }
+
+      it 'returns false' do
+        row = 0
+        col = 6
+        board.data[row][col] = 'K'
+        board.data[row + 7][col + 1] = 'R'
+        expect(king.hostile_r_col?(col, row)).to eq(false)
+      end
+    end
+
+    context 'when a black king has a hostile r column' do
+      arr = Array.new(8) { Array.new(8, '0') }
+      let(:board) { instance_double(Board, data: arr, turn: 1) }
+      subject(:king) { described_class.new(board) }
+
+      it 'returns true' do
+        row = 7
+        col = 6
+        board.data[row][col] = 'k'
+        board.data[row - 7][col + 1] = 'R'
+        expect(king.hostile_r_col?(col, row)).to eq(true)
+      end
+    end
+
+    context 'when a black king has an non-hostile r column' do
+      arr = Array.new(8) { Array.new(8, '0') }
+      let(:board) { instance_double(Board, data: arr, turn: 1) }
+      subject(:king) { described_class.new(board) }
+
+      it 'returns false' do
+        row = 7
+        col = 6
+        board.data[row][col] = 'k'
+        board.data[row - 7][col + 1] = 'r'
+        expect(king.hostile_r_col?(col, row)).to eq(false)
+      end
+    end
+  end
+
+  describe '#hostile_l_col?' do
+    context 'when a white king has a hostile l column' do
+      arr = Array.new(8) { Array.new(8, '0') }
+      let(:board) { instance_double(Board, data: arr, turn: 0) }
+      subject(:king) { described_class.new(board) }
+
+      it 'returns true' do
+        row = 0
+        col = 6
+        board.data[row][col] = 'K'
+        board.data[row + 7][col - 1] = 'r'
+        expect(king.hostile_l_col?(col, row)).to eq(true)
+      end
+    end
+
+    context 'when a white king has an non-hostile l column' do
+      arr = Array.new(8) { Array.new(8, '0') }
+      let(:board) { instance_double(Board, data: arr, turn: 0) }
+      subject(:king) { described_class.new(board) }
+
+      it 'returns false' do
+        row = 0
+        col = 6
+        board.data[row][col] = 'K'
+        board.data[row + 7][col - 1] = 'R'
+        expect(king.hostile_l_col?(col, row)).to eq(false)
+      end
+    end
+
+    context 'when a black king has a hostile l column' do
+      arr = Array.new(8) { Array.new(8, '0') }
+      let(:board) { instance_double(Board, data: arr, turn: 1) }
+      subject(:king) { described_class.new(board) }
+
+      it 'returns true' do
+        row = 7
+        col = 6
+        board.data[row][col] = 'k'
+        board.data[row - 7][col - 1] = 'R'
+        expect(king.hostile_l_col?(col, row)).to eq(true)
+      end
+    end
+
+    context 'when a black king has an non-hostile l column' do
+      arr = Array.new(8) { Array.new(8, '0') }
+      let(:board) { instance_double(Board, data: arr, turn: 1) }
+      subject(:king) { described_class.new(board) }
+
+      it 'returns false' do
+        row = 7
+        col = 6
+        board.data[row][col] = 'k'
+        board.data[row - 7][col - 1] = 'r'
+        expect(king.hostile_l_col?(col, row)).to eq(false)
       end
     end
   end

@@ -2,8 +2,10 @@
 
 require_relative 'unit'
 require_relative '../../lib/board'
+require_relative 'mods/king_check'
 
 class King < Unit
+  include KingCheck
   attr_reader :board
 
   def initialize(board)
@@ -12,9 +14,8 @@ class King < Unit
 
   def assign_moves(start_pos, king)
     @start_pos = start_pos
-    start_pos = start_pos.reverse # reversed for array
-    row = start_pos[0]
-    col = start_pos[1]
+    row = start_pos[1] # reverse due to array
+    col = start_pos[0] # reverse due to array
     check_diags(row, col, king)
     check_horiz(row, col, king)
     check_vert(row, col, king)
@@ -77,7 +78,9 @@ class King < Unit
   end
 
   def check_r(row, col, king)
-    return king if off_the_board?([row, col + 1])
+    return king if (col + 1) > 7
+
+    return king if hostile_r_col?(col, row)
 
     dest = @board.data[row][col + 1]
     @moves << [1, 0] if dest == '0' || @board.enemy_occupied?(dest)
@@ -276,24 +279,16 @@ class King < Unit
     end
   end
 
-  def hostile_r_col?(start_pos)
-    row = start_pos[1]
-    col = start_pos[0]
-    return false if (col + 1) > 7
-
+  def hostile_r_col?(col, row)
     trans_r = @board.data.transpose[col + 1]
     return true if hostile_u?(row, trans_r) || hostile_d?(row, trans_r)
 
     false
   end
 
-  def hostile_l_col?(start_pos)
-    row = start_pos[1]
-    col = start_pos[0]
-    return false if (col - 1) > 7
-
-    trans_r = @board.data.transpose[col - 1]
-    return true if hostile_u?(row, trans_r) || hostile_d?(row, trans_r)
+  def hostile_l_col?(col, row)
+    trans_l = @board.data.transpose[col - 1]
+    return true if hostile_u?(row, trans_l) || hostile_d?(row, trans_l)
 
     false
   end
@@ -332,3 +327,7 @@ class King < Unit
     false
   end
 end
+
+# arr = Array.new(8) { Array.new(8, '0') }
+# king = King.new(arr)
+# king.test
