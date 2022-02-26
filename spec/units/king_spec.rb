@@ -307,4 +307,135 @@ describe King do
       end
     end
   end
+
+  describe '#hostile_u_row?' do
+    context 'when a white king has a hostile up row' do
+      arr = Array.new(8) { Array.new(8, '0') }
+      let(:board) { instance_double(Board, data: arr, turn: 0) }
+      subject(:king) { described_class.new(board) }
+
+      it 'returns true' do
+        row = 1
+        col = 4
+        board.data[row][col] = 'K'
+        board.data[row + 1][col + 3] = 'r'
+        expect(king.hostile_u_row?(col, row)).to eq(true)
+      end
+    end
+
+    context 'when a white king has no hostile up row' do
+      arr = Array.new(8) { Array.new(8, '0') }
+      let(:board) { instance_double(Board, data: arr, turn: 0) }
+      subject(:king) { described_class.new(board) }
+
+      it 'returns false' do
+        row = 1
+        col = 4
+        board.data[row][col] = 'K'
+        board.data[row + 1][col + 3] = 'R'
+        expect(king.hostile_u_row?(col, row)).to eq(false)
+      end
+    end
+
+    context 'when a black king has a hostile up row' do
+      arr = Array.new(8) { Array.new(8, '0') }
+      let(:board) { instance_double(Board, data: arr, turn: 1) }
+      subject(:king) { described_class.new(board) }
+
+      it 'returns true' do
+        row = 1
+        col = 4
+        board.data[row][col] = 'k'
+        board.data[row + 1][col + 3] = 'R'
+        expect(king.hostile_u_row?(col, row)).to eq(true)
+      end
+    end
+
+    context 'when a black king has no hostile up row' do
+      arr = Array.new(8) { Array.new(8, '0') }
+      let(:board) { instance_double(Board, data: arr, turn: 1) }
+      subject(:king) { described_class.new(board) }
+
+      it 'returns false' do
+        row = 1
+        col = 4
+        board.data[row][col] = 'k'
+        board.data[row + 1][col + 3] = 'r'
+        expect(king.hostile_u_row?(col, row)).to eq(false)
+      end
+    end
+  end
+
+  describe '#hostile_d_row?' do
+    context 'when a white king has a hostile up row' do
+      arr = Array.new(8) { Array.new(8, '0') }
+      let(:board) { instance_double(Board, data: arr, turn: 0) }
+      subject(:king) { described_class.new(board) }
+
+      it 'returns true' do
+        row = 1
+        col = 4
+        board.data[row][col] = 'K'
+        board.data[row - 1][col + 3] = 'r'
+        expect(king.hostile_d_row?(col, row)).to eq(true)
+      end
+    end
+
+    context 'when a white king has no hostile up row' do
+      arr = Array.new(8) { Array.new(8, '0') }
+      let(:board) { instance_double(Board, data: arr, turn: 0) }
+      subject(:king) { described_class.new(board) }
+
+      it 'returns false' do
+        row = 1
+        col = 4
+        board.data[row][col] = 'K'
+        board.data[row - 1][col + 3] = 'R'
+        expect(king.hostile_d_row?(col, row)).to eq(false)
+      end
+    end
+
+    context 'when a black king has a hostile up row' do
+      arr = Array.new(8) { Array.new(8, '0') }
+      let(:board) { instance_double(Board, data: arr, turn: 1) }
+      subject(:king) { described_class.new(board) }
+
+      it 'returns true' do
+        row = 1
+        col = 4
+        board.data[row][col] = 'k'
+        board.data[row - 1][col + 3] = 'R'
+        expect(king.hostile_d_row?(col, row)).to eq(true)
+      end
+    end
+
+    context 'when a black king has no hostile up row' do
+      arr = Array.new(8) { Array.new(8, '0') }
+      let(:board) { instance_double(Board, data: arr, turn: 1) }
+      subject(:king) { described_class.new(board) }
+
+      it 'returns false' do
+        row = 1
+        col = 4
+        board.data[row][col] = 'k'
+        board.data[row - 1][col + 3] = 'r'
+        expect(king.hostile_d_row?(col, row)).to eq(false)
+      end
+    end
+  end
+
+  describe '#hostile_neg_diag?' do
+    # arr = Array.new(8) { Array.new(8, '0') }
+    let(:board) { Board.new } # { instance_double(Board, data: arr, turn: 0) }
+    subject(:king) { described_class.new(board) }
+
+    it 'returns true' do
+      row = 3
+      col = 4
+      board.data[row][col] = 'K'
+      board.data[row - 1][col + 3] = 'b'
+      king.hostile_neg_diag?(col + 1, row + 1)
+      expect(king.hostile_neg_diag?(col + 1, row + 1)).to eq(true)
+    end
+  end
 end

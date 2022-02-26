@@ -70,7 +70,9 @@ class King < Unit
   end
 
   def check_l(row, col, king)
-    return king if off_the_board?([row, col - 1])
+    return king if (col - 1).negative?
+
+    return king if hostile_l_col?(col, row)
 
     dest = @board.data[row][col - 1]
     @moves << [-1, 0] if dest == '0' || @board.enemy_occupied?(dest)
@@ -94,7 +96,9 @@ class King < Unit
   end
 
   def check_u(row, col, king)
-    return king if off_the_board?([row + 1, col])
+    return king if (row + 1) > 7
+
+    return king if hostile_u_row?(col, row)
 
     dest = @board.data[row + 1][col]
     @moves << [0, 1] if dest == '0' || @board.enemy_occupied?(dest)
@@ -102,7 +106,9 @@ class King < Unit
   end
 
   def check_d(row, col, king)
-    return king if off_the_board?([row - 1, col])
+    return king if (row - 1).negative?
+
+    return king if hostile_d_row?(col, row)
 
     dest = @board.data[row - 1][col]
     @moves << [0, -1] if dest == '0' || @board.enemy_occupied?(dest)
@@ -310,8 +316,9 @@ class King < Unit
   def hostile_u?(row, trans)
     moves = 0
     while trans[row + moves] == '0' || q_r_check?(trans, row, moves)
-      moves += 1
       return true if q_r_check?(trans, row, moves)
+
+      moves += 1
     end
 
     false
@@ -320,12 +327,59 @@ class King < Unit
   def hostile_d?(row, trans)
     moves = 0
     while trans[row + moves] == '0' || q_r_check?(trans, row, moves)
-      moves -= 1
       return true if q_r_check?(trans, row, moves)
+
+      moves -= 1
     end
 
     false
   end
+
+  def hostile_u_row?(col, row)
+    u_row = @board.data[row + 1]
+    return true if hostile_u?(col, u_row) || hostile_d?(col, u_row)
+
+    false
+  end
+
+  def hostile_d_row?(col, row)
+    d_row = @board.data[row - 1]
+    return true if hostile_u?(col, d_row) || hostile_d?(col, d_row)
+
+    false
+  end
+
+  def hostile_neg_diag?(col, row)
+    return true if hostile_r_neg_diag?(col, row)
+
+    false
+  end
+
+  def hostile_r_neg_diag?(col, row)
+    while ((row - 1).positive? && (col + 1) <= 7) &&
+          (@board.get_unit([col + 1, row - 1]) == '0' ||
+          q_b_check?(@board.get_unit([col + 1, row - 1])))
+      return true if q_b_check?(@board.data[row - 1][col + 1])
+
+      col += 1
+      row -= 1
+    end
+    false
+  end
+
+  def q_b_check?(piece)
+    # checks if an enemy queen or rook is in the row
+    w_hostile_pieces = %w[B Q]
+    b_hostile_pieces = %w[b q]
+    return true if @board.turn.zero? &&
+                   b_hostile_pieces.any? { |hostile| hostile == piece }
+
+    return true if @board.turn.positive? &&
+                   w_hostile_pieces.any? { |hostile| hostile == piece }
+
+    false
+  end
+
 end
 
 # arr = Array.new(8) { Array.new(8, '0') }
