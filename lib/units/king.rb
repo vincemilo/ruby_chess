@@ -350,12 +350,13 @@ class King < Unit
   end
 
   def hostile_neg_diag?(col, row)
-    return true if hostile_r_neg_diag?(col, row)
+    return true if hostile_neg_diag_d?(col, row) ||
+                   hostile_neg_diag_u?(col, row)
 
     false
   end
 
-  def hostile_r_neg_diag?(col, row)
+  def hostile_neg_diag_d?(col, row)
     while ((row - 1).positive? && (col + 1) <= 7) &&
           (@board.get_unit([col + 1, row - 1]) == '0' ||
           q_b_check?(@board.get_unit([col + 1, row - 1])))
@@ -363,6 +364,49 @@ class King < Unit
 
       col += 1
       row -= 1
+    end
+    false
+  end
+
+  def hostile_neg_diag_u?(col, row)
+    while ((row + 1) <= 7 && (col - 1).positive?) &&
+          (@board.get_unit([col - 1, row + 1]) == '0' ||
+          q_b_check?(@board.get_unit([col - 1, row + 1])))
+      return true if q_b_check?(@board.data[row + 1][col - 1])
+
+      col -= 1
+      row += 1
+    end
+    false
+  end
+
+  def hostile_pos_diag?(col, row)
+    return true if hostile_pos_diag_d?(col, row) ||
+                   hostile_pos_diag_u?(col, row)
+
+    false
+  end
+
+  def hostile_pos_diag_d?(col, row)
+    while ((col - 1).positive? && (row - 1).positive?) &&
+          (@board.get_unit([col - 1, row - 1]) == '0' ||
+          q_b_check?(@board.get_unit([col - 1, row - 1])))
+      return true if q_b_check?(@board.data[row - 1][col - 1])
+
+      col -= 1
+      row -= 1
+    end
+    false
+  end
+
+  def hostile_pos_diag_u?(col, row)
+    while ((col + 1) <= 7 && (row + 1) <= 7) &&
+          (@board.get_unit([col + 1, row + 1]) == '0' ||
+          q_b_check?(@board.get_unit([col + 1, row + 1])))
+      return true if q_b_check?(@board.data[row + 1][col + 1])
+
+      col += 1
+      row += 1
     end
     false
   end
@@ -379,7 +423,6 @@ class King < Unit
 
     false
   end
-
 end
 
 # arr = Array.new(8) { Array.new(8, '0') }
