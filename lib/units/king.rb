@@ -32,35 +32,72 @@ class King < Unit
   end
 
   def check_1(row, col, king)
-    return king if off_the_board?([row + 1, col + 1])
+    return king if r_u_diag_invalid?(row, col)
 
     dest = @board.data[row + 1][col + 1]
     @moves << [1, 1] if dest == '0' || @board.enemy_occupied?(dest)
     king
   end
 
+  def r_u_diag_invalid?(row, col)
+    return true if off_the_board?([row + 1, col + 1]) ||
+                   hostile_r_col?(col, row) ||
+                   hostile_u_row?(col, row) ||
+                   hostile_neg_diag?(col, row)
+
+    false
+  end
+
   def check_2(row, col, king)
-    return king if off_the_board?([row - 1, col + 1])
+    return king if r_d_diag_invalid?(row, col)
 
     dest = @board.data[row - 1][col + 1]
     @moves << [1, -1] if dest == '0' || @board.enemy_occupied?(dest)
     king
   end
 
+  def r_d_diag_invalid?(row, col)
+    return true if off_the_board?([row - 1, col + 1]) ||
+                   hostile_r_col?(col, row) ||
+                   hostile_d_row?(col, row) ||
+                   hostile_pos_diag?(col, row)
+
+    false
+  end
+
   def check_3(row, col, king)
-    return king if off_the_board?([row - 1, col - 1])
+    return king if l_d_diag_invalid?(row, col)
 
     dest = @board.data[row - 1][col - 1]
     @moves << [-1, -1] if dest == '0' || @board.enemy_occupied?(dest)
     king
   end
 
+  def l_d_diag_invalid?(row, col)
+    return true if off_the_board?([row - 1, col - 1]) ||
+                   hostile_l_col?(col, row) ||
+                   hostile_d_row?(col, row) ||
+                   hostile_neg_diag?(col, row)
+
+    false
+  end
+
   def check_4(row, col, king)
-    return king if off_the_board?([row + 1, col - 1])
+    p l_u_diag_invalid?(row, col)
+    return king if l_u_diag_invalid?(row, col)
 
     dest = @board.data[row + 1][col - 1]
     @moves << [-1, 1] if dest == '0' || @board.enemy_occupied?(dest)
     king
+  end
+
+  def l_u_diag_invalid?(row, col)
+    return true if off_the_board?([row + 1, col - 1]) ||
+                   hostile_l_col?(col, row) ||
+                   hostile_u_row?(col, row) ||
+                   hostile_pos_diag?(col, row)
+
+    false
   end
 
   def check_horiz(row, col, king)
@@ -71,7 +108,7 @@ class King < Unit
 
   def check_l(row, col, king)
     return king if (col - 1).negative?
-
+    return king if hostile_row?(col, row)
     return king if hostile_l_col?(col, row)
 
     dest = @board.data[row][col - 1]
@@ -81,7 +118,7 @@ class King < Unit
 
   def check_r(row, col, king)
     return king if (col + 1) > 7
-
+    return king if hostile_row?(col, row)
     return king if hostile_r_col?(col, row)
 
     dest = @board.data[row][col + 1]
@@ -97,7 +134,7 @@ class King < Unit
 
   def check_u(row, col, king)
     return king if (row + 1) > 7
-
+    return king if hostile_col?(col, row)
     return king if hostile_u_row?(col, row)
 
     dest = @board.data[row + 1][col]
@@ -107,7 +144,7 @@ class King < Unit
 
   def check_d(row, col, king)
     return king if (row - 1).negative?
-
+    return king if hostile_col?(col, row)
     return king if hostile_d_row?(col, row)
 
     dest = @board.data[row - 1][col]
@@ -285,8 +322,17 @@ class King < Unit
     end
   end
 
+  def hostile_col?(col, row)
+    trans = @board.data.transpose[col]
+    # add/subtract 1 to row to not count King itself
+    return true if hostile_u?(row + 1, trans) || hostile_d?(row - 1, trans)
+
+    false
+  end
+
   def hostile_r_col?(col, row)
     trans_r = @board.data.transpose[col + 1]
+    return false if trans_r.nil?
     return true if hostile_u?(row, trans_r) || hostile_d?(row, trans_r)
 
     false
@@ -294,6 +340,7 @@ class King < Unit
 
   def hostile_l_col?(col, row)
     trans_l = @board.data.transpose[col - 1]
+    return false if trans_l.nil?
     return true if hostile_u?(row, trans_l) || hostile_d?(row, trans_l)
 
     false
@@ -335,8 +382,17 @@ class King < Unit
     false
   end
 
+  def hostile_row?(col, row)
+    trans = @board.data[row]
+    # add/subtract 1 to row to not count King itself
+    return true if hostile_u?(col + 1, trans) || hostile_d?(col - 1, trans)
+
+    false
+  end
+
   def hostile_u_row?(col, row)
     u_row = @board.data[row + 1]
+    return false if u_row.nil?
     return true if hostile_u?(col, u_row) || hostile_d?(col, u_row)
 
     false
@@ -344,6 +400,7 @@ class King < Unit
 
   def hostile_d_row?(col, row)
     d_row = @board.data[row - 1]
+    return false if d_row.nil?
     return true if hostile_u?(col, d_row) || hostile_d?(col, d_row)
 
     false

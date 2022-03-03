@@ -16,11 +16,11 @@ class Game
     @game_over = false
     # disable below for testing until fully decoupled
     # @board.place_pawns
-    # @board.place_rooks
+    @board.place_rooks
     # @board.place_knights
     # @board.place_bishops
     # @board.place_queens
-    # @board.place_kings
+    @board.place_kings
   end
 
   def intro
@@ -141,6 +141,15 @@ class Game
 
   def select_dest(end_pos, start_pos, unit, options)
     unmark_options(options)
+    move_pieces(start_pos, end_pos, unit)
+    check(end_pos, unit) if check?(end_pos, unit)
+    @board.update_turn
+    return unless in_check? && checkmate?(get_moves(activation(@board.turn)))
+
+    checkmate(@board.turn)
+  end
+
+  def move_pieces(start_pos, end_pos, unit)
     if unit.class == Pawn
       unit.move_pawn(start_pos, end_pos)
     elsif unit.class == King
@@ -150,8 +159,7 @@ class Game
     else
       @board.move_unit(start_pos, end_pos)
     end
-    check(end_pos, unit) if check?(end_pos, unit)
-    @board.update_turn
+    unit
   end
 
   def check?(end_pos, unit)
@@ -233,8 +241,6 @@ class Game
 
   def remove?(coords, turn)
     units = activation(turn)
-    return checkmate(turn) if checkmate?(get_moves(units))
-
     piece = nil
     units.any? do |unit|
       piece = unit if unit.start_pos == coords && !unit.moves.empty?
@@ -274,8 +280,10 @@ class Game
                  activate(black_pieces)
                end
     pieces = pieces(activate)
-    mod_units = filter_moves(pieces)
-    mod_units
+    p pieces
+    pieces = filter_moves(pieces) if in_check?
+    p pieces
+    pieces
   end
 
   def get_moves(unit_objs)
@@ -418,8 +426,8 @@ class Game
   end
 end
 
-# game = Game.new
-# game.intro
+game = Game.new
+game.intro
 # row = 1
 # col = 4
 # game.board.data[row][col] = 'P'

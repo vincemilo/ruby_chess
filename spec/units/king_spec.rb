@@ -36,6 +36,21 @@ describe King do
       end
     end
 
+    context 'when a white king on the edge is selected' do
+      # arr = Array.new(8) { Array.new(8, '0') }
+      let(:board) { Board.new } # { instance_double(Board, data: arr) }
+      subject(:king) { described_class.new(board) }
+
+      it 'assigns the correct moves' do
+        row = 0
+        col = 0
+        board.data[row][col] = 'K'
+        w_king = king.assign_moves([col, row], king)
+        king_moves = [[1, 1], [1, 0], [0, 1]]
+        expect(w_king.moves).to eq(king_moves)
+      end
+    end
+
     context 'when a black king on the edge is selected' do
       # arr = Array.new(8) { Array.new(8, '0') }
       let(:board) { Board.new } # { instance_double(Board, data: arr) }
@@ -47,15 +62,118 @@ describe King do
 
       it 'assigns the correct moves' do
         row = 7
-        col = 4
+        col = 7
         board.data[row][col] = 'k'
-        board.data[row - 1][col + 1] = 'N'
-        board.data[row][col + 1] = 'N'
-        board.data[row][col - 1] = 'r'
-        board.data[row - 1][col] = 'r'
         b_king = king.assign_moves([col, row], king)
-        king_moves = [[1, -1], [-1, -1], [1, 0]]
+        king_moves = [[-1, -1], [-1, 0], [0, -1]]
         expect(b_king.moves).to eq(king_moves)
+      end
+    end
+
+    context 'when a white king with hostile left and right cols is selected' do
+      # arr = Array.new(8) { Array.new(8, '0') }
+      let(:board) { Board.new } # { instance_double(Board, data: arr) }
+      subject(:king) { described_class.new(board) }
+
+      it 'assigns the correct moves' do
+        row = 2
+        col = 4
+        board.data[row][col] = 'K'
+        board.data[row + 5][col - 1] = 'r'
+        board.data[row - 2][col + 1] = 'r'
+        w_king = king.assign_moves([col, row], king)
+        king_moves = [[0, 1], [0, -1]]
+        expect(w_king.moves).to eq(king_moves)
+      end
+    end
+
+    context 'when a white king with hostile up and down rows is selected' do
+      # arr = Array.new(8) { Array.new(8, '0') }
+      let(:board) { Board.new } # { instance_double(Board, data: arr) }
+      subject(:king) { described_class.new(board) }
+
+      it 'assigns the correct moves' do
+        row = 2
+        col = 4
+        board.data[row][col] = 'K'
+        board.data[row + 1][col - 4] = 'r'
+        board.data[row - 1][col + 2] = 'r'
+        w_king = king.assign_moves([col, row], king)
+        king_moves = [[1, 0], [-1, 0]]
+        expect(w_king.moves).to eq(king_moves)
+      end
+    end
+
+    context 'when a white king with hostile r col friendly l col is selected' do
+      # arr = Array.new(8) { Array.new(8, '0') }
+      let(:board) { Board.new } # { instance_double(Board, data: arr) }
+      subject(:king) { described_class.new(board) }
+
+      it 'assigns the correct moves' do
+        row = 0
+        col = 6
+        board.data[row][col] = 'K'
+        board.data[row + 7][col + 1] = 'r'
+        board.data[row][col - 1] = 'R'
+        w_king = king.assign_moves([col, row], king)
+        display_board
+        king_moves = [[-1, 1], [0, 1]]
+        expect(w_king.moves).to eq(king_moves)
+      end
+    end
+
+    context 'when a white king is checkmated via cols' do
+      # arr = Array.new(8) { Array.new(8, '0') }
+      let(:board) { Board.new } # { instance_double(Board, data: arr) }
+      subject(:king) { described_class.new(board) }
+
+      it 'should have no moves' do
+        row = 0
+        col = 7
+        board.data[row][col] = 'K'
+        board.data[row + 7][col] = 'r'
+        board.data[row + 6][col - 1] = 'r'
+        w_king = king.assign_moves([col, row], king)
+        king_moves = []
+        expect(w_king.moves).to eq(king_moves)
+      end
+    end
+
+    context 'when a black king is checkmated via cols' do
+      # arr = Array.new(8) { Array.new(8, '0') }
+      let(:board) { Board.new } # { instance_double(Board, data: arr) }
+      subject(:king) { described_class.new(board) }
+
+      before do
+        board.update_turn
+      end
+
+      it 'should have no moves' do
+        row = 7
+        col = 7
+        board.data[row][col] = 'k'
+        board.data[row - 7][col] = 'R'
+        board.data[row - 6][col - 1] = 'R'
+        w_king = king.assign_moves([col, row], king)
+        king_moves = []
+        expect(w_king.moves).to eq(king_moves)
+      end
+    end
+
+    context 'when a white king is checkmated via rows' do
+      # arr = Array.new(8) { Array.new(8, '0') }
+      let(:board) { Board.new } # { instance_double(Board, data: arr) }
+      subject(:king) { described_class.new(board) }
+
+      it 'should have no moves' do
+        row = 0
+        col = 6
+        board.data[row][col] = 'K'
+        board.data[row][col - 6] = 'r'
+        board.data[row + 1][col - 5] = 'r'
+        w_king = king.assign_moves([col, row], king)
+        king_moves = []
+        expect(w_king.moves).to eq(king_moves)
       end
     end
   end
@@ -525,7 +643,7 @@ describe King do
       end
     end
 
-    context 'when a bishop is blocking the down left diag' do
+    context 'when the down left diag is not blocked' do
       # arr = Array.new(8) { Array.new(8, '0') }
       let(:board) { Board.new } # { instance_double(Board, data: arr, turn: 0) }
       subject(:king) { described_class.new(board) }
@@ -538,5 +656,9 @@ describe King do
         expect(king.hostile_neg_diag?(col - 1, row - 1)).to eq(false)
       end
     end
+  end
+
+  describe '#hostile pawns' do
+    # to do
   end
 end
