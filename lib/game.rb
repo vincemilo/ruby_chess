@@ -16,11 +16,11 @@ class Game
     @game_over = false
     # disable below for testing until fully decoupled
     # @board.place_pawns
-    @board.place_rooks
+    # @board.place_rooks
     # @board.place_knights
     # @board.place_bishops
     # @board.place_queens
-    @board.place_kings
+    # @board.place_kings
   end
 
   def intro
@@ -129,7 +129,14 @@ class Game
       unit = Rook.new(@board)
     elsif unit.downcase == 'n'
       unit = Knight.new(@board)
-    elsif unit.downcase == 'b'
+    else
+      unit = get_unit_obj_2(unit) # break method up
+    end
+    unit
+  end
+
+  def get_unit_obj_2(unit)
+    if unit.downcase == 'b'
       unit = Bishop.new(@board)
     elsif unit.downcase == 'q'
       unit = Queen.new(@board)
@@ -233,7 +240,6 @@ class Game
     if @board.turn.zero? && @board.w_king_check[:check].positive?
       return true if remove?(coords, 0)
     end
-
     return true if remove?(coords, 1)
 
     false
@@ -280,9 +286,7 @@ class Game
                  activate(black_pieces)
                end
     pieces = pieces(activate)
-    p pieces
     pieces = filter_moves(pieces) if in_check?
-    p pieces
     pieces
   end
 
@@ -317,6 +321,8 @@ class Game
   end
 
   def block_check(pieces, check_data)
+    # checks which squares would intercept check to king and matches them with
+    # available moves
     units = []
     block_moves = attack_direction(check_data[:king_pos], check_data[:attk_pos])
     pieces.each do |piece|
@@ -330,10 +336,7 @@ class Game
   def block_match(piece, options, block_moves)
     new_moves = []
     options.each_with_index do |val, i|
-      if piece.class == King && block_moves.any?(val)
-        piece.moves.delete_at(i)
-        return piece.moves
-      end
+      return piece.moves if piece.class == King
 
       new_moves << piece.moves[i] if block_moves.any?(val)
     end
@@ -426,8 +429,8 @@ class Game
   end
 end
 
-game = Game.new
-game.intro
+# game = Game.new
+# game.intro
 # row = 1
 # col = 4
 # game.board.data[row][col] = 'P'

@@ -214,7 +214,6 @@ describe Game do
         board.data[row + 7][col] = 'r'
         friendly_rook = [col - 6, row]
         friendly_rook2 = [col + 1, row + 1]
-        display_board
         expect(game.remove?(friendly_rook, 0)).to eq(false)
         expect(game.remove?(friendly_rook2, 0)).to eq(true)
       end
@@ -408,6 +407,56 @@ describe Game do
       board.data[row + 4][col - 4] = 'b'
       expect(game.activate(['K'])).to eq({ [0, 4] => 'K' })
       expect(game.activate(['b'])).to eq({ [4, 0] => 'b' })
+    end
+  end
+
+  describe '#block_check' do
+    context 'when a white king is not checkmated' do
+      # arr = Array.new(8) { Array.new(8, '0') }
+      let(:board) { Board.new } # { instance_double(Board, data: arr, turn: 0) }
+      subject(:game) { described_class.new(board) }
+
+      before do
+        board.instance_variable_set(:@w_king_check,
+                                    { check: 1, king_pos: [6, 0], attk_pos: [6, 7] })
+      end
+
+      it 'returns the correct values' do
+        row = 0
+        col = 6
+        board.data[row][col] = 'K'
+        board.data[row][col - 1] = 'R'
+        board.data[row + 6][col + 1] = 'r'
+        board.data[row + 7][col] = 'r'
+        king = King.new(board)
+        king.assign_moves([col, row], king)
+        moves = game.block_check([king], board.w_king_check)[0].moves
+        expect(moves).to eq([[-1, 1]])
+      end
+    end
+
+    context 'when a white king is checkmated' do
+      # arr = Array.new(8) { Array.new(8, '0') }
+      let(:board) { Board.new } # { instance_double(Board, data: arr, turn: 0) }
+      subject(:game) { described_class.new(board) }
+
+      before do
+        board.instance_variable_set(:@w_king_check,
+                                    { check: 1, king_pos: [7, 0], attk_pos: [7, 7] })
+      end
+
+      it 'returns the correct values' do
+        row = 0
+        col = 7
+        board.data[row][col] = 'K'
+        board.data[row][col - 1] = 'R'
+        board.data[row + 6][col - 1] = 'r'
+        board.data[row + 7][col] = 'r'
+        king = King.new(board)
+        king.assign_moves([col, row], king)
+        moves = game.block_check([king], board.w_king_check)[0].moves
+        expect(moves).to eq([])
+      end
     end
   end
 end

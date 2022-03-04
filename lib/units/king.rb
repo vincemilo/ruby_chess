@@ -83,7 +83,6 @@ class King < Unit
   end
 
   def check_4(row, col, king)
-    p l_u_diag_invalid?(row, col)
     return king if l_u_diag_invalid?(row, col)
 
     dest = @board.data[row + 1][col - 1]
@@ -93,7 +92,7 @@ class King < Unit
 
   def l_u_diag_invalid?(row, col)
     return true if off_the_board?([row + 1, col - 1]) ||
-                   hostile_l_col?(col, row) ||
+                   hostile_l_col?(col, row + 1) ||
                    hostile_u_row?(col, row) ||
                    hostile_pos_diag?(col, row)
 

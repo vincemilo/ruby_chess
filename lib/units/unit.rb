@@ -11,6 +11,10 @@ class Unit
     @moves = moves
   end
 
+  def update_start_pos(start_pos)
+    @start_pos = start_pos
+  end
+
   def update_moves(moves)
     @moves = moves
   end
