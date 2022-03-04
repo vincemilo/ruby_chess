@@ -454,6 +454,7 @@ describe Game do
         board.data[row + 7][col] = 'r'
         king = King.new(board)
         king.assign_moves([col, row], king)
+        display_board
         moves = game.block_check([king], board.w_king_check)[0].moves
         expect(moves).to eq([])
       end

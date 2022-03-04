@@ -123,15 +123,15 @@ class Game
   end
 
   def get_unit_obj(unit)
-    if unit.downcase == 'p'
-      unit = Pawn.new(@board)
-    elsif unit.downcase == 'r'
-      unit = Rook.new(@board)
-    elsif unit.downcase == 'n'
-      unit = Knight.new(@board)
-    else
-      unit = get_unit_obj_2(unit) # break method up
-    end
+    unit = if unit.downcase == 'p'
+             Pawn.new(@board)
+           elsif unit.downcase == 'r'
+             Rook.new(@board)
+           elsif unit.downcase == 'n'
+             Knight.new(@board)
+           else
+             get_unit_obj_2(unit) # break method up
+           end
     unit
   end
 
