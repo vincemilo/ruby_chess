@@ -227,4 +227,27 @@ module KingCheck
 
     false
   end
+
+  def enemy_pawns?(col, row)
+    return true if @board.turn.zero? && hostile_b_pawns?(col, row)
+    return true if @board.turn.positive? && hostile_w_pawns?(col, row)
+
+    false
+  end
+
+  def hostile_b_pawns?(col, row)
+    r_u_diag = @board.data[row + 1][col + 1]
+    l_u_diag = @board.data[row + 1][col - 1]
+    return true if r_u_diag == 'p' || l_u_diag == 'p'
+
+    false
+  end
+
+  def hostile_w_pawns?(col, row)
+    r_d_diag = @board.data[row - 1][col - 1]
+    l_d_diag = @board.data[row - 1][col + 1]
+    return true if r_d_diag == 'P' || l_d_diag == 'P'
+
+    false
+  end
 end

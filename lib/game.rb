@@ -82,6 +82,8 @@ class Game
 
     return false if in_check? && !remove_check?(coords)
 
+    return false if put_into_check?(coords)
+
     true
   end
 
@@ -175,8 +177,8 @@ class Game
   end
 end
 
-game = Game.new
-game.intro
+# game = Game.new
+# game.intro
 # row = 1
 # col = 4
 # game.board.data[row][col] = 'P'

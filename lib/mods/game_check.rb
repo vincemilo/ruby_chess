@@ -255,4 +255,9 @@ module GameCheck
     end
     block_moves.sort
   end
+
+  def put_into_check?(coords)
+    p @board.w_king_check[:king_pos]
+    p coords
+  end
 end

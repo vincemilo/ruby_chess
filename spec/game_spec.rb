@@ -340,7 +340,7 @@ describe Game do
         king = King.new(board)
         king.assign_moves([col, row], king)
         w_king_check_data = { check: 1, king_pos: [col, row],
-          attk_pos: [col, row + 7] }
+                              attk_pos: [col, row + 7] }
         moves = game.block_check([king], w_king_check_data)[0].moves
         expect(moves).to eq([[-1, 1]])
       end
@@ -367,6 +367,28 @@ describe Game do
         w_king_check_data = { check: 1, king_pos: [7, 0], attk_pos: [7, 7] }
         moves = game.block_check([king], w_king_check_data)[0].moves
         expect(moves).to eq([])
+      end
+    end
+  end
+
+  describe '#put_into_check?' do
+    arr = Array.new(8) { Array.new(8, '0') }
+    let(:board) do
+      instance_double(Board, data: arr, turn: 0,
+                             w_king_check: { king_pos: [4, 0] })
+    end
+    subject(:game) { described_class.new(board) }
+
+    context 'when moving a unit would put a king into check' do
+      xit 'returns true' do
+        row = 0
+        col = 4
+        board.data[row][col] = 'K'
+        board.data[row + 1][col] = 'R'
+        board.data[row + 7][col] = 'r'
+        display_board
+        game.put_into_check?([col, row + 1])
+        # expect(game.put_into_check?(coords)).to eq(true)
       end
     end
   end

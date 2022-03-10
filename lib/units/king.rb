@@ -120,6 +120,11 @@ class King < Unit
   def move_king(start_pos, end_pos)
     first_move if first_move?
     @board.move_unit(start_pos, end_pos)
+    if @board.turn.zero?
+      @board.update_w_king_pos(end_pos)
+    else
+      @board.update_b_king_pos(end_pos)
+    end
     castle(end_pos) if (start_pos[0] - end_pos[0]).abs == 2
   end
 end

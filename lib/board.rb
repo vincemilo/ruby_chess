@@ -11,8 +11,8 @@ class Board
     @captured = [[], []]
     @castle = { w_king: 0, b_king: 0, w_r_rook: 0,
                 w_l_rook: 0, b_r_rook: 0, b_l_rook: 0 }
-    @w_king_check = { check: 0, king_pos: [], attk_pos: [] }
-    @b_king_check = { check: 0, king_pos: [], attk_pos: [] }
+    @w_king_check = { check: 0, king_pos: [4, 0], attk_pos: [] }
+    @b_king_check = { check: 0, king_pos: [4, 7], attk_pos: [] }
   end
 
   def display_board

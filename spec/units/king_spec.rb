@@ -658,7 +658,24 @@ describe King do
     end
   end
 
-  describe '#hostile pawns' do
+  describe '#hostile_b_pawns?' do
+    # arr = Array.new(8) { Array.new(8, '0') }
+    let(:board) { Board.new } # { instance_double(Board, data: arr, turn: 0) }
+    subject(:king) { described_class.new(board) }
+
+    it 'returns the correct value' do
+      row = 0
+      col = 4
+      board.data[row][col] = 'K'
+      board.data[row + 2][col] = 'p'
+      board.data[row + 2][col + 1] = 'p'
+      display_board
+      expect(king.hostile_b_pawns?(col - 1, row + 1)).to eq(true)
+      expect(king.hostile_b_pawns?(col - 1, row)).to eq(false)
+    end
+  end
+
+  describe '#enemy_king' do
     # to do
   end
 end
