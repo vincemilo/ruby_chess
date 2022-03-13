@@ -250,4 +250,11 @@ module KingCheck
 
     false
   end
+
+  def hostile_pawns?(col, row)
+    return true if (@board.turn.zero? && hostile_b_pawns?(col, row)) ||
+                   (@board.turn.positive? && hostile_w_pawns?(col, row))
+
+    false
+  end
 end

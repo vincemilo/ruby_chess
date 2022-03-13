@@ -34,7 +34,8 @@ class King < Unit
   end
 
   def check_1(row, col, king)
-    return king if r_u_diag_invalid?(row, col)
+    return king if r_u_diag_invalid?(row, col) ||
+                   hostile_pawns?(col + 1, row + 1)
 
     dest = @board.data[row + 1][col + 1]
     @moves << [1, 1] if dest == '0' || @board.enemy_occupied?(dest)
@@ -42,7 +43,8 @@ class King < Unit
   end
 
   def check_2(row, col, king)
-    return king if r_d_diag_invalid?(row, col)
+    return king if r_d_diag_invalid?(row, col) ||
+                   hostile_pawns?(col + 1, row - 1)
 
     dest = @board.data[row - 1][col + 1]
     @moves << [1, -1] if dest == '0' || @board.enemy_occupied?(dest)
@@ -50,7 +52,8 @@ class King < Unit
   end
 
   def check_3(row, col, king)
-    return king if l_d_diag_invalid?(row, col)
+    return king if l_d_diag_invalid?(row, col) ||
+                   hostile_pawns?(col - 1, row - 1)
 
     dest = @board.data[row - 1][col - 1]
     @moves << [-1, -1] if dest == '0' || @board.enemy_occupied?(dest)
@@ -58,7 +61,8 @@ class King < Unit
   end
 
   def check_4(row, col, king)
-    return king if l_u_diag_invalid?(row, col)
+    return king if l_u_diag_invalid?(row, col) ||
+                   hostile_pawns?(col - 1, row + 1)
 
     dest = @board.data[row + 1][col - 1]
     @moves << [-1, 1] if dest == '0' || @board.enemy_occupied?(dest)
@@ -75,6 +79,7 @@ class King < Unit
     return king if (col - 1).negative?
     return king if hostile_row?(col, row)
     return king if hostile_l_col?(col, row)
+    return king if hostile_pawns?(col - 1, row)
 
     dest = @board.data[row][col - 1]
     @moves << [-1, 0] if dest == '0' || @board.enemy_occupied?(dest)
@@ -85,6 +90,7 @@ class King < Unit
     return king if (col + 1) > 7
     return king if hostile_row?(col, row)
     return king if hostile_r_col?(col, row)
+    return king if hostile_pawns?(col + 1, row)
 
     dest = @board.data[row][col + 1]
     @moves << [1, 0] if dest == '0' || @board.enemy_occupied?(dest)
@@ -101,6 +107,7 @@ class King < Unit
     return king if (row + 1) > 7
     return king if hostile_col?(col, row)
     return king if hostile_u_row?(col, row)
+    return king if hostile_pawns?(col, row + 1)
 
     dest = @board.data[row + 1][col]
     @moves << [0, 1] if dest == '0' || @board.enemy_occupied?(dest)
@@ -111,6 +118,7 @@ class King < Unit
     return king if (row - 1).negative?
     return king if hostile_col?(col, row)
     return king if hostile_d_row?(col, row)
+    return king if hostile_pawns?(col, row - 1)
 
     dest = @board.data[row - 1][col]
     @moves << [0, -1] if dest == '0' || @board.enemy_occupied?(dest)

@@ -176,6 +176,44 @@ describe King do
         expect(w_king.moves).to eq(king_moves)
       end
     end
+
+    context 'when a white king is surrounded by hostile pawns' do
+      # arr = Array.new(8) { Array.new(8, '0') }
+      let(:board) { Board.new } # { instance_double(Board, data: arr) }
+      subject(:king) { described_class.new(board) }
+
+      it 'should assign the correct moves' do
+        row = 0
+        col = 6
+        board.data[row][col] = 'K'
+        board.data[row + 2][col + 1] = 'p'
+        board.data[row + 2][col] = 'p'
+        w_king = king.assign_moves([col, row], king)
+        king_moves = [[1, 0], [-1, 0]]
+        expect(w_king.moves).to eq(king_moves)
+      end
+    end
+
+    context 'when a white king is surrounded by hostile pawns' do
+      # arr = Array.new(8) { Array.new(8, '0') }
+      let(:board) { Board.new } # { instance_double(Board, data: arr) }
+      subject(:king) { described_class.new(board) }
+
+      before do
+        board.update_turn
+      end
+
+      it 'should assign the correct moves' do
+        row = 7
+        col = 6
+        board.data[row][col] = 'k'
+        board.data[row - 2][col - 1] = 'P'
+        board.data[row - 2][col] = 'P'
+        b_king = king.assign_moves([col, row], king)
+        king_moves = [[1, 0], [-1, 0]]
+        expect(b_king.moves).to eq(king_moves)
+      end
+    end
   end
 
   describe '#castle' do
@@ -669,9 +707,28 @@ describe King do
       board.data[row][col] = 'K'
       board.data[row + 2][col] = 'p'
       board.data[row + 2][col + 1] = 'p'
-      display_board
       expect(king.hostile_b_pawns?(col - 1, row + 1)).to eq(true)
       expect(king.hostile_b_pawns?(col - 1, row)).to eq(false)
+    end
+  end
+
+  describe '#hostile_w_pawns?' do
+    # arr = Array.new(8) { Array.new(8, '0') }
+    let(:board) { Board.new } # { instance_double(Board, data: arr, turn: 0) }
+    subject(:king) { described_class.new(board) }
+
+    before do
+      board.update_turn
+    end
+
+    it 'returns the correct value' do
+      row = 7
+      col = 4
+      board.data[row][col] = 'k'
+      board.data[row - 2][col] = 'P'
+      board.data[row - 2][col + 1] = 'P'
+      expect(king.hostile_w_pawns?(col - 1, row - 1)).to eq(true)
+      expect(king.hostile_w_pawns?(col - 1, row)).to eq(false)
     end
   end
 
