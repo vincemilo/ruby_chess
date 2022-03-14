@@ -116,7 +116,6 @@ describe King do
         board.data[row + 7][col + 1] = 'r'
         board.data[row][col - 1] = 'R'
         w_king = king.assign_moves([col, row], king)
-        display_board
         king_moves = [[-1, 1], [0, 1]]
         expect(w_king.moves).to eq(king_moves)
       end
@@ -209,6 +208,42 @@ describe King do
         board.data[row][col] = 'k'
         board.data[row - 2][col - 1] = 'P'
         board.data[row - 2][col] = 'P'
+        b_king = king.assign_moves([col, row], king)
+        king_moves = [[1, 0], [-1, 0]]
+        expect(b_king.moves).to eq(king_moves)
+      end
+    end
+
+    context 'when a white king has an enemy king nearby' do
+      # arr = Array.new(8) { Array.new(8, '0') }
+      let(:board) { Board.new } # { instance_double(Board, data: arr, turn: 0) }
+      subject(:king) { described_class.new(board) }
+
+      it 'returns the correct value' do
+        row = 0
+        col = 4
+        board.data[row][col] = 'K'
+        board.data[row + 2][col] = 'k'
+        w_king = king.assign_moves([col, row], king)
+        king_moves = [[1, 0], [-1, 0]]
+        expect(w_king.moves).to eq(king_moves)
+      end
+    end
+
+    context 'when a black king has an enemy king nearby' do
+      # arr = Array.new(8) { Array.new(8, '0') }
+      let(:board) { Board.new } # { instance_double(Board, data: arr, turn: 0) }
+      subject(:king) { described_class.new(board) }
+
+      before do
+        board.update_turn
+      end
+
+      it 'returns the correct value' do
+        row = 7
+        col = 4
+        board.data[row][col] = 'k'
+        board.data[row - 2][col] = 'K'
         b_king = king.assign_moves([col, row], king)
         king_moves = [[1, 0], [-1, 0]]
         expect(b_king.moves).to eq(king_moves)
@@ -732,7 +767,43 @@ describe King do
     end
   end
 
-  describe '#enemy_king' do
-    # to do
+  describe '#hostile_king?' do
+    context 'when a white king has an enemy king nearby' do
+      # arr = Array.new(8) { Array.new(8, '0') }
+      let(:board) { Board.new } # { instance_double(Board, data: arr, turn: 0) }
+      subject(:king) { described_class.new(board) }
+
+      it 'returns the correct value' do
+        row = 0
+        col = 4
+        board.data[row][col] = 'K'
+        board.data[row + 2][col] = 'k'
+        expect(king.hostile_king?(col - 1, row + 1)).to eq(true)
+        expect(king.hostile_king?(col, row + 1)).to eq(true)
+        expect(king.hostile_king?(col - 1, row + 1)).to eq(true)
+        expect(king.hostile_king?(col - 1, row)).to eq(false)
+      end
+    end
+
+    context 'when a black king has an enemy king nearby' do
+      # arr = Array.new(8) { Array.new(8, '0') }
+      let(:board) { Board.new } # { instance_double(Board, data: arr, turn: 0) }
+      subject(:king) { described_class.new(board) }
+
+      before do
+        board.update_turn
+      end
+
+      it 'returns the correct value' do
+        row = 7
+        col = 4
+        board.data[row][col] = 'k'
+        board.data[row - 2][col] = 'K'
+        expect(king.hostile_king?(col - 1, row - 1)).to eq(true)
+        expect(king.hostile_king?(col, row - 1)).to eq(true)
+        expect(king.hostile_king?(col + 1, row - 1)).to eq(true)
+        expect(king.hostile_king?(col - 1, row)).to eq(false)
+      end
+    end
   end
 end

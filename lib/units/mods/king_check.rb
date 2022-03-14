@@ -257,4 +257,89 @@ module KingCheck
 
     false
   end
+
+  def hostile_king?(col, row)
+    king = if @board.turn.zero?
+             'k'
+           else
+             'K'
+           end
+    return true if hostile_king_diag?(col, row, king)
+    return true if hostile_king_orthog?(col, row, king)
+
+    false
+  end
+
+  def hostile_king_diag?(col, row, king)
+    return true if h_k_r_u(col, row) == king
+    return true if h_k_l_u(col, row) == king
+    return true if h_k_r_d(col, row) == king
+    return true if h_k_l_d(col, row) == king
+
+    false
+  end
+
+  def hostile_king_orthog?(col, row, king)
+    return true if h_k_up(col, row) == king
+    return true if h_k_down(col, row) == king
+    return true if h_k_left(col, row) == king
+    return true if h_k_right(col, row) == king
+
+    false
+  end
+
+  def h_k_r_u(col, row)
+    return if (row + 1) > 7 || (col + 1) > 7
+
+    @board.data[row + 1][col + 1]
+  end
+
+  def h_k_l_u(col, row)
+    return if (row + 1) > 7 || (col - 1).negative?
+
+    @board.data[row + 1][col - 1]
+  end
+
+  def h_k_r_d(col, row)
+    return if (row - 1).negative? || (col + 1) > 7
+
+    @board.data[row - 1][col + 1]
+  end
+
+  def h_k_l_d(col, row)
+    return if (row - 1).negative? || (col - 1).negative?
+
+    @board.data[row - 1][col - 1]
+  end
+
+  def h_k_up(col, row)
+    return if (row + 1) > 7
+
+    @board.data[row + 1][col]
+  end
+
+  def h_k_down(col, row)
+    return if (row - 1).negative?
+
+    @board.data[row - 1][col]
+  end
+
+  def h_k_left(col, row)
+    return if (col - 1).negative?
+
+    @board.data[row][col - 1]
+  end
+
+  def h_k_right(col, row)
+    return if (col + 1) > 7
+
+    @board.data[row][col + 1]
+  end
+
+  def hostile_pawns_kings?(col, row)
+    return true if hostile_pawns?(col, row)
+    return true if hostile_king?(col, row)
+
+    false
+  end
 end
