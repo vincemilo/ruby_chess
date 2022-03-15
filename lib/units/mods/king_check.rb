@@ -336,10 +336,92 @@ module KingCheck
     @board.data[row][col + 1]
   end
 
-  def hostile_pawns_kings?(col, row)
+  def hostile_pawns_kings_knights?(col, row)
     return true if hostile_pawns?(col, row)
     return true if hostile_king?(col, row)
+    return true if hostile_knights?(col, row)
 
     false
+  end
+
+  def hostile_knights?(col, row)
+    knight = if @board.turn.zero?
+               'n'
+             else
+               'N'
+             end
+
+    return true if h_n_check?(col, row, knight)
+
+    false
+  end
+
+  def h_n_check?(col, row, knight)
+    return true if h_n_1(row, col) == knight
+    return true if h_n_2(row, col) == knight
+    return true if h_n_3(row, col) == knight
+    return true if h_n_4(row, col) == knight
+    return true if h_n_check_2?(col, row, knight)
+
+    false
+  end
+
+  # broke these up to reduce complexity not sure if that actually does anything
+
+  def h_n_check_2?(col, row, knight)
+    return true if h_n_5(row, col) == knight
+    return true if h_n_6(row, col) == knight
+    return true if h_n_7(row, col) == knight
+    return true if h_n_8(row, col) == knight
+
+    false
+  end
+
+  def h_n_1(row, col)
+    return if (row + 2) > 7 || (col + 1) > 7
+
+    @board.data[row + 2][col + 1]
+  end
+
+  def h_n_2(row, col)
+    return if (row + 1) > 7 || (col + 2) > 7
+
+    @board.data[row + 1][col + 2]
+  end
+
+  def h_n_3(row, col)
+    return if (row + 2) > 7 || (col - 1).negative?
+
+    @board.data[row + 2][col - 1]
+  end
+
+  def h_n_4(row, col)
+    return if (row + 1) > 7 || (col - 2).negative?
+
+    @board.data[row + 1][col - 2]
+  end
+
+  def h_n_5(row, col)
+    return if (row - 1).negative? || (col - 2).negative?
+
+    @board.data[row - 1][col - 2]
+  end
+
+  def h_n_6(row, col)
+    return if (row - 2).negative? || (col - 1).negative?
+
+    @board.data[row - 2][col - 1]
+  end
+
+  def h_n_7(row, col)
+    return if (row - 2).negative? || (col + 1) > 7
+
+    @board.data[row - 2][col + 1]
+  end
+
+  def h_n_8(row, col)
+    return if (row - 1).negative? || (col + 2) > 7
+
+    @board.data[row - 1][col + 2]
   end
 end
