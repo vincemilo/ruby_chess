@@ -86,22 +86,33 @@ module KingCastle
   end
 
   def w_r_castle?
-    return true if @board.data[0][5] == '0' && @board.data[0][6] == '0'
+    return false unless @board.data[0][5] == '0' && @board.data[0][6] == '0'
+    return false if hostile_squares?(5, 0) || hostile_squares?(6, 0)
+
+    true
+  end
+
+  def hostile_squares?(col, row)
+    return true if hostile_col?(col, row)
+    return true if hostile_pos_diag?(col, row)
+    return true if hostile_neg_diag?(col, row)
 
     false
   end
 
   def w_l_castle?
-    return true if @board.data[0][1] == '0' && @board.data[0][2] == '0' &&
-                   @board.data[0][3] == '0'
+    return false unless @board.data[0][1] == '0' && @board.data[0][2] == '0' &&
+                        @board.data[0][3] == '0'
+    return false if hostile_squares?(2, 0) || hostile_squares?(3, 0)
 
-    false
+    true
   end
 
   def b_r_castle?
-    return true if @board.data[7][5] == '0' && @board.data[7][6] == '0'
+    return false unless @board.data[7][5] == '0' && @board.data[7][6] == '0'
+    return false if hostile_squares?(5, 7) || hostile_squares?(6, 7)
 
-    false
+    true
   end
 
   def b_l_castle?
