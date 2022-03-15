@@ -116,10 +116,11 @@ module KingCastle
   end
 
   def b_l_castle?
-    return true if @board.data[7][1] == '0' && @board.data[7][2] == '0' &&
-                   @board.data[7][3] == '0'
+    return false unless @board.data[7][1] == '0' && @board.data[7][2] == '0' &&
+                        @board.data[7][3] == '0'
+    return false if hostile_squares?(2, 7) || hostile_squares?(3, 7)
 
-    false
+    true
   end
 
   def first_move?
