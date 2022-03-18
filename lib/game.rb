@@ -50,6 +50,7 @@ class Game
     options = display_moves(start_pos, unit.moves)
     puts 'Please select their destination (i.e. e4):'
     end_pos = move_translator(gets.chomp)
+    return if put_into_check?(start_pos, end_pos)
     return unless valid_end?(end_pos, options)
 
     select_dest(end_pos, start_pos, unit, options)
@@ -81,8 +82,6 @@ class Game
     return false if coords.length != 2 || @board.off_the_board?(coords)
 
     return false if in_check? && !remove_check?(coords)
-
-    return false if put_into_check?(coords)
 
     true
   end
@@ -177,8 +176,8 @@ class Game
   end
 end
 
-# game = Game.new
-# game.intro
+game = Game.new
+game.intro
 # row = 1
 # col = 4
 # game.board.data[row][col] = 'P'

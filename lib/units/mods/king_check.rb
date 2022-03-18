@@ -37,8 +37,8 @@ module KingCheck
     false
   end
 
-  def hostile_col?(col, row)
-    trans = @board.data.transpose[col]
+  def hostile_col?(col, row, board = @board)
+    trans = board.data.transpose[col]
     # add/subtract 1 to row to not count King itself
     return true if hostile_u?(row + 1, trans) || hostile_d?(row - 1, trans)
 
@@ -113,8 +113,8 @@ module KingCheck
     false
   end
 
-  def hostile_row?(col, row)
-    trans = @board.data[row]
+  def hostile_row?(col, row, board = @board)
+    trans = board.data[row]
     # add/subtract 1 to row to not count King itself
     return true if hostile_u?(col + 1, trans) || hostile_d?(col - 1, trans)
 
@@ -153,18 +153,18 @@ module KingCheck
     false
   end
 
-  def hostile_neg_diag?(col, row)
-    return true if hostile_neg_diag_d?(col, row) ||
-                   hostile_neg_diag_u?(col, row)
+  def hostile_neg_diag?(col, row, board = @board)
+    return true if hostile_neg_diag_d?(col, row, board) ||
+                   hostile_neg_diag_u?(col, row, board)
 
     false
   end
 
-  def hostile_neg_diag_d?(col, row)
+  def hostile_neg_diag_d?(col, row, board = @board)
     while ((row - 1).positive? && (col + 1) <= 7) &&
-          (@board.get_unit([col + 1, row - 1]) == '0' ||
-          q_b_check?(@board.get_unit([col + 1, row - 1])))
-      return true if q_b_check?(@board.data[row - 1][col + 1])
+          (board.get_unit([col + 1, row - 1]) == '0' ||
+          q_b_check?(board.get_unit([col + 1, row - 1])))
+      return true if q_b_check?(board.data[row - 1][col + 1])
 
       col += 1
       row -= 1
@@ -172,11 +172,11 @@ module KingCheck
     false
   end
 
-  def hostile_neg_diag_u?(col, row)
+  def hostile_neg_diag_u?(col, row, board = @board)
     while ((row + 1) <= 7 && (col - 1).positive?) &&
-          (@board.get_unit([col - 1, row + 1]) == '0' ||
-          q_b_check?(@board.get_unit([col - 1, row + 1])))
-      return true if q_b_check?(@board.data[row + 1][col - 1])
+          (board.get_unit([col - 1, row + 1]) == '0' ||
+          q_b_check?(board.get_unit([col - 1, row + 1])))
+      return true if q_b_check?(board.data[row + 1][col - 1])
 
       col -= 1
       row += 1
@@ -184,18 +184,18 @@ module KingCheck
     false
   end
 
-  def hostile_pos_diag?(col, row)
-    return true if hostile_pos_diag_d?(col, row) ||
-                   hostile_pos_diag_u?(col, row)
+  def hostile_pos_diag?(col, row, board = @board)
+    return true if hostile_pos_diag_d?(col, row, board) ||
+                   hostile_pos_diag_u?(col, row, board)
 
     false
   end
 
-  def hostile_pos_diag_d?(col, row)
+  def hostile_pos_diag_d?(col, row, board = @board)
     while ((col - 1).positive? && (row - 1).positive?) &&
-          (@board.get_unit([col - 1, row - 1]) == '0' ||
-          q_b_check?(@board.get_unit([col - 1, row - 1])))
-      return true if q_b_check?(@board.data[row - 1][col - 1])
+          (board.get_unit([col - 1, row - 1]) == '0' ||
+          q_b_check?(board.get_unit([col - 1, row - 1])))
+      return true if q_b_check?(board.data[row - 1][col - 1])
 
       col -= 1
       row -= 1
@@ -203,11 +203,11 @@ module KingCheck
     false
   end
 
-  def hostile_pos_diag_u?(col, row)
+  def hostile_pos_diag_u?(col, row, board = @board)
     while ((col + 1) <= 7 && (row + 1) <= 7) &&
-          (@board.get_unit([col + 1, row + 1]) == '0' ||
-          q_b_check?(@board.get_unit([col + 1, row + 1])))
-      return true if q_b_check?(@board.data[row + 1][col + 1])
+          (board.get_unit([col + 1, row + 1]) == '0' ||
+          q_b_check?(board.get_unit([col + 1, row + 1])))
+      return true if q_b_check?(board.data[row + 1][col + 1])
 
       col += 1
       row += 1

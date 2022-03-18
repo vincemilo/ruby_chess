@@ -256,8 +256,30 @@ module GameCheck
     block_moves.sort
   end
 
-  def put_into_check?(coords)
-    p @board.w_king_check[:king_pos]
-    p coords
+  def put_into_check?(start_pos, end_pos)
+    board_copy = board_copy(start_pos, end_pos)
+    king = King.new(board_copy)
+    king_start_pos = @board.w_king_check[:king_pos]
+    king_col = king_start_pos[0]
+    king_row = king_start_pos[1]
+    return true if king.hostile_col?(king_col, king_row, board_copy)
+    return true if king.hostile_row?(king_col, king_row, board_copy)
+    return true if king.hostile_pos_diag?(king_col, king_row, board_copy)
+    return true if king.hostile_neg_diag?(king_col, king_row, board_copy)
+
+    false
+  end
+
+  def board_copy(start_pos, end_pos)
+    # creates a modified Board instance to see if check would occur
+    col = start_pos[0]
+    row = start_pos[1]
+    new_col = end_pos[0]
+    new_row = end_pos[1]
+    unit = @board.get_unit(start_pos)
+    board_copy = Board.new(@board.data)
+    board_copy.data[row][col] = '0'
+    board_copy.data[new_row][new_col] = unit
+    board_copy
   end
 end

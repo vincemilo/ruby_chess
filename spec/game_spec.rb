@@ -286,14 +286,6 @@ describe Game do
     context 'a black king has a rook to defend it' do
       arr = Array.new(8) { Array.new(8, '0') }
       let(:board) { instance_double(Board, data: arr, turn: 1) }
-      # let(:king) do
-      #   instance_double(King, board: board, start_pos: [4, 7],
-      #                         moves: [])
-      # end
-      # let(:b_rook) do
-      #   instance_double(Rook, board: board, start_pos: [7, 6],
-      #                         moves: [-3, 0])
-      # end
       subject(:game) { described_class.new(board) }
 
       before do
@@ -307,8 +299,6 @@ describe Game do
         board.data[row][col] = 'k'
         board.data[row - 1][col + 3] = 'r'
         board.data[row - 7][col] = 'R'
-        # board.data[row - 7][col - 1] = 'b'
-        # board.data[row - 7][col + 1] = 'n'
         b_rook = Rook.new(board)
         b_rook.assign_moves([col + 3, row - 1], b_rook)
         piece = [b_rook]
@@ -372,23 +362,85 @@ describe Game do
   end
 
   describe '#put_into_check?' do
-    arr = Array.new(8) { Array.new(8, '0') }
-    let(:board) do
-      instance_double(Board, data: arr, turn: 0,
-                             w_king_check: { king_pos: [4, 0] })
-    end
-    subject(:game) { described_class.new(board) }
+    context 'when moving a unit would put a king into check via col' do
+      # arr = Array.new(8) { Array.new(8, '0') }
+      let(:board) { Board.new }
+      subject(:game) { described_class.new(board) }
 
-    context 'when moving a unit would put a king into check' do
-      xit 'returns true' do
+      it 'returns the correct value' do
         row = 0
         col = 4
         board.data[row][col] = 'K'
         board.data[row + 1][col] = 'R'
         board.data[row + 7][col] = 'r'
-        display_board
-        game.put_into_check?([col, row + 1])
-        # expect(game.put_into_check?(coords)).to eq(true)
+        rook_start = [col, row + 1]
+        expect(game.put_into_check?(rook_start, [col + 1, row + 1])).to eq(true)
+        expect(game.put_into_check?(rook_start, [col, row + 7])).to eq(false)
+      end
+    end
+
+    context 'when moving a unit would put a king into check via row' do
+      # arr = Array.new(8) { Array.new(8, '0') }
+      let(:board) { Board.new }
+      subject(:game) { described_class.new(board) }
+
+      it 'returns the correct value' do
+        row = 0
+        col = 4
+        board.data[row][col] = 'K'
+        board.data[row][col - 1] = 'R'
+        board.data[row][col - 4] = 'q'
+        rook_start = [col - 1, row]
+        expect(game.put_into_check?(rook_start, [col - 1, row + 1])).to eq(true)
+        expect(game.put_into_check?(rook_start, [col - 4, row])).to eq(false)
+      end
+    end
+
+    context 'when moving a unit would put a king into check via pos diag' do
+      # arr = Array.new(8) { Array.new(8, '0') }
+      let(:board) { Board.new }
+      subject(:game) { described_class.new(board) }
+
+      it 'returns the correct value' do
+        row = 0
+        col = 4
+        board.data[row][col] = 'K'
+        board.data[row + 1][col + 1] = 'P'
+        board.data[row + 3][col + 3] = 'b'
+        pawn_start = [col + 1, row + 1]
+        expect(game.put_into_check?(pawn_start, [col + 1, row + 2])).to eq(true)
+      end
+    end
+
+    context 'when moving a unit would put a king into check via pos diag' do
+      # arr = Array.new(8) { Array.new(8, '0') }
+      let(:board) { Board.new }
+      subject(:game) { described_class.new(board) }
+
+      it 'returns the correct value' do
+        row = 0
+        col = 4
+        board.data[row][col] = 'K'
+        board.data[row + 1][col - 1] = 'P'
+        board.data[row + 3][col - 3] = 'q'
+        pawn_start = [col - 1, row + 1]
+        expect(game.put_into_check?(pawn_start, [col - 1, row + 2])).to eq(true)
+      end
+    end
+
+    context 'when moving a unit would take a king out of check via pos diag' do
+      # arr = Array.new(8) { Array.new(8, '0') }
+      let(:board) { Board.new }
+      subject(:game) { described_class.new(board) }
+
+      it 'returns the correct value' do
+        row = 0
+        col = 4
+        board.data[row][col] = 'K'
+        board.data[row][col - 1] = 'P'
+        board.data[row + 3][col - 3] = 'q'
+        pawn_start = [col - 1, row]
+        expect(game.put_into_check?(pawn_start, [col - 1, row + 1])).to eq(false)
       end
     end
   end

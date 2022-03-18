@@ -4,8 +4,8 @@ class Board
   attr_reader :data, :turn, :captured, :en_passant, :w_king,
               :castle, :w_king_check, :b_king_check
 
-  def initialize
-    @data = Array.new(8) { Array.new(8, '0') }
+  def initialize(data = Array.new(8) { Array.new(8, '0') })
+    @data = data
     @turn = 0
     @en_passant = []
     @captured = [[], []]
@@ -121,8 +121,9 @@ class Board
     return if off_the_board?(end_pos)
 
     piece = get_unit(start_pos)
+    terminus = get_unit(end_pos)
     @data[y_pos(start_pos)][x_pos(start_pos)] = '0'
-    capture(end_pos) if get_unit(end_pos) != '0'
+    capture(end_pos) unless terminus == '0' || terminus.downcase == 'k'
     @data[y_pos(end_pos)][x_pos(end_pos)] = piece
   end
 
