@@ -16,7 +16,7 @@ describe Pawn do
 
   describe '#assign_moves' do
     before do
-      allow(board).to receive(:en_passant).and_return(nil)
+      allow(board).to receive(:en_passant).and_return([])
     end
 
     context 'when a white pawn is in its starting position
@@ -31,7 +31,6 @@ describe Pawn do
 
       it 'has 1 move or 2 move ahead options' do
         board.data[1][2] = 'P'
-        display_board
         start_pos = [2, 1]
         w_pawn = pawn.assign_moves(start_pos, pawn)
         expect(w_pawn.moves).to eq [[0, 1], [0, 2]]

@@ -118,8 +118,6 @@ class Board
   end
 
   def move_unit(start_pos, end_pos)
-    return if off_the_board?(end_pos)
-
     piece = get_unit(start_pos)
     terminus = get_unit(end_pos)
     @data[y_pos(start_pos)][x_pos(start_pos)] = '0'

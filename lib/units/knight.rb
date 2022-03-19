@@ -14,15 +14,15 @@ class Knight < Unit
     return knight if @board.off_the_board?([row + 2, col + 1])
 
     dest = @board.data[row + 2][col + 1]
-    @moves << [2, 1] if dest == '0' || @board.enemy_occupied?(dest)
+    @moves << [1, 2] if dest == '0' || @board.enemy_occupied?(dest)
     knight
   end
 
   def check_2(row, col, knight)
-    return knight if @board.off_the_board?([row + 1, col + 2])
+    return knight if @board.off_the_board?([row + 2, col + 1])
 
     dest = @board.data[row + 1][col + 2]
-    @moves << [1, 2] if dest == '0' || @board.enemy_occupied?(dest)
+    @moves << [2, 1] if dest == '0' || @board.enemy_occupied?(dest)
     knight
   end
 
@@ -30,7 +30,7 @@ class Knight < Unit
     return knight if @board.off_the_board?([row + 2, col - 1])
 
     dest = @board.data[row + 2][col - 1]
-    @moves << [2, -1] if dest == '0' || @board.enemy_occupied?(dest)
+    @moves << [-1, 2] if dest == '0' || @board.enemy_occupied?(dest)
     knight
   end
 
@@ -38,7 +38,7 @@ class Knight < Unit
     return knight if @board.off_the_board?([row + 1, col - 2])
 
     dest = @board.data[row + 1][col - 2]
-    @moves << [1, -2] if dest == '0' || @board.enemy_occupied?(dest)
+    @moves << [-2, 1] if dest == '0' || @board.enemy_occupied?(dest)
     knight
   end
 
@@ -46,7 +46,7 @@ class Knight < Unit
     return knight if @board.off_the_board?([row - 1, col - 2])
 
     dest = @board.data[row - 1][col - 2]
-    @moves << [-1, -2] if dest == '0' || @board.enemy_occupied?(dest)
+    @moves << [-2, -1] if dest == '0' || @board.enemy_occupied?(dest)
     knight
   end
 
@@ -54,7 +54,7 @@ class Knight < Unit
     return knight if @board.off_the_board?([row - 2, col - 1])
 
     dest = @board.data[row - 2][col - 1]
-    @moves << [-2, -1] if dest == '0' || @board.enemy_occupied?(dest)
+    @moves << [-1, -2] if dest == '0' || @board.enemy_occupied?(dest)
     knight
   end
 
@@ -62,7 +62,7 @@ class Knight < Unit
     return knight if @board.off_the_board?([row - 2, col + 1])
 
     dest = @board.data[row - 2][col + 1]
-    @moves << [-2, 1] if dest == '0' || @board.enemy_occupied?(dest)
+    @moves << [1, -2] if dest == '0' || @board.enemy_occupied?(dest)
     knight
   end
 
@@ -70,7 +70,7 @@ class Knight < Unit
     return knight if @board.off_the_board?([row - 1, col + 2])
 
     dest = @board.data[row - 1][col + 2]
-    @moves << [-1, 2] if dest == '0' || @board.enemy_occupied?(dest)
+    @moves << [2, -1] if dest == '0' || @board.enemy_occupied?(dest)
     knight
   end
 
@@ -88,11 +88,9 @@ class Knight < Unit
 
   def assign_moves(start_pos, knight)
     @start_pos = start_pos
-    start_pos = start_pos.reverse # reversed for array
-    row = start_pos[0]
-    col = start_pos[1]
+    col = start_pos[0]
+    row = start_pos[1]
     check_moves(row, col, knight)
-    @moves.map!(&:reverse) # reversed for array
     knight
   end
 end

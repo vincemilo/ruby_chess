@@ -166,6 +166,8 @@ class Game
     if unit.class == Pawn
       unit.move_pawn(start_pos, end_pos)
     elsif unit.class == King
+      p start_pos
+      p end_pos
       unit.move_king(start_pos, end_pos)
     elsif unit.class == Rook
       unit.move_rook(start_pos, end_pos)
@@ -176,8 +178,8 @@ class Game
   end
 end
 
-game = Game.new
-game.intro
+# game = Game.new
+# game.intro
 # row = 1
 # col = 4
 # game.board.data[row][col] = 'P'

@@ -176,7 +176,6 @@ describe Rook do
         col = 7
         board.data[row][col] = 'r'
         b_rook = rook.assign_moves([col, row], rook)
-        display_board
         rook_moves = [[0, 1], [0, -1], [0, -2], [0, -3], [0, -4], [0, -5], [0, -6],
                       [-1, 0], [-2, 0], [-3, 0], [-4, 0], [-5, 0], [-6, 0], [-7, 0]]
         expect(b_rook.moves).to eq(rook_moves)
