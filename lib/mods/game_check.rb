@@ -256,12 +256,31 @@ module GameCheck
     block_moves.sort
   end
 
-  def put_into_check?(start_pos, end_pos)
-    board_copy = board_copy(start_pos, end_pos)
-    king = King.new(board_copy)
-    king_start_pos = @board.w_king_check[:king_pos]
+  def put_into_check?(start_pos)
+    return if @board.get_unit(start_pos).downcase == 'k'
+
+    piece = @board.get_unit(start_pos)
+    col = start_pos[0]
+    row = start_pos[1]
+    @board.data[row][col] = '0'
+    king_start_pos = king_start_pos(@board.turn)
     king_col = king_start_pos[0]
     king_row = king_start_pos[1]
+    hostile_opening = hostile_opening?(king_col, king_row, @board)
+    @board.data[row][col] = piece
+    return true if hostile_opening
+
+    false
+  end
+
+  def king_start_pos(turn)
+    return @board.w_king_check[:king_pos] if turn.zero?
+
+    @board.b_king_check[:king_pos]
+  end
+
+  def hostile_opening?(king_col, king_row, board_copy)
+    king = King.new(board_copy)
     return true if king.hostile_col?(king_col, king_row, board_copy)
     return true if king.hostile_row?(king_col, king_row, board_copy)
     return true if king.hostile_pos_diag?(king_col, king_row, board_copy)
@@ -270,16 +289,13 @@ module GameCheck
     false
   end
 
-  def board_copy(start_pos, end_pos)
-    # creates a modified Board instance to see if check would occur
-    col = start_pos[0]
-    row = start_pos[1]
-    new_col = end_pos[0]
-    new_row = end_pos[1]
-    unit = @board.get_unit(start_pos)
-    board_copy = Board.new(@board.data)
-    board_copy.data[row][col] = '0'
-    board_copy.data[new_row][new_col] = unit
-    board_copy
-  end
+  # def board_copy(start_pos)
+  #   # creates a modified Board instance to see if check would occur
+  #   col = start_pos[0]
+  #   row = start_pos[1]
+  #   arr = @board.data.dup
+  #   board_copy = Board.new(arr)
+  #   board_copy.data[row][col] = '0'
+  #   board_copy
+  # end
 end

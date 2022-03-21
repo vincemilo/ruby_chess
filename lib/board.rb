@@ -121,7 +121,7 @@ class Board
     piece = get_unit(start_pos)
     terminus = get_unit(end_pos)
     @data[y_pos(start_pos)][x_pos(start_pos)] = '0'
-    capture(end_pos) unless terminus == '0' || terminus.downcase == 'k'
+    capture(end_pos) unless terminus == '0'
     @data[y_pos(end_pos)][x_pos(end_pos)] = piece
   end
 
@@ -187,9 +187,9 @@ class Board
   end
 end
 
-# board = Board.new
+board = Board.new
 # p board.b_king_check
 # board.place_queens
-# board.display_board
+board.display_board
 # board.update_turn
 # p board.turn

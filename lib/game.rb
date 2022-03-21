@@ -50,7 +50,6 @@ class Game
     options = display_moves(start_pos, unit.moves)
     puts 'Please select their destination (i.e. e4):'
     end_pos = move_translator(gets.chomp)
-    return if put_into_check?(start_pos, end_pos)
     return unless valid_end?(end_pos, options)
 
     select_dest(end_pos, start_pos, unit, options)
@@ -58,7 +57,7 @@ class Game
 
   def valid_start?(start_pos, piece)
     return true if valid_selection?(start_pos) && piece != '0' &&
-                   !@board.enemy_occupied?(piece)
+                   !@board.enemy_occupied?(piece) #&& !put_into_check?(start_pos)
 
     invalid_selection
   end
@@ -166,8 +165,6 @@ class Game
     if unit.class == Pawn
       unit.move_pawn(start_pos, end_pos)
     elsif unit.class == King
-      p start_pos
-      p end_pos
       unit.move_king(start_pos, end_pos)
     elsif unit.class == Rook
       unit.move_rook(start_pos, end_pos)
