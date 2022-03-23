@@ -29,6 +29,7 @@ class Board
   def display_rows
     nums = (1..8).to_a.reverse
     @data.reverse.each do |row|
+      # spaced = row.each.map { |e| e + ' ' if e.length < 2 }
       letter = nums.shift.to_s
       puts letter + row.to_s + letter
     end
@@ -187,9 +188,9 @@ class Board
   end
 end
 
-board = Board.new
+# board = Board.new
 # p board.b_king_check
 # board.place_queens
-board.display_board
+#board.display_board
 # board.update_turn
 # p board.turn
