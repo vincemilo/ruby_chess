@@ -267,7 +267,10 @@ describe Game do
         board.data[row + 1][col] = 'R'
         board.data[row + 7][col] = 'r'
         rook_start = [col, row + 1]
-        expect(game.put_into_check?(rook_start)).to eq(true)
+        rook_end = [col + 1, row + 1]
+        rook_end2 = [col, row + 7]
+        expect(game.put_into_check?(rook_start, rook_end)).to eq(true)
+        expect(game.put_into_check?(rook_start, rook_end2)).to eq(false)
       end
     end
 
@@ -283,7 +286,10 @@ describe Game do
         board.data[row][col - 1] = 'R'
         board.data[row][col - 4] = 'q'
         rook_start = [col - 1, row]
-        expect(game.put_into_check?(rook_start)).to eq(true)
+        rook_end = [col - 1, row + 1]
+        rook_end2 = [col - 4, row]
+        expect(game.put_into_check?(rook_start, rook_end)).to eq(true)
+        expect(game.put_into_check?(rook_start, rook_end2)).to eq(false)
       end
     end
 
@@ -299,7 +305,8 @@ describe Game do
         board.data[row + 1][col + 1] = 'P'
         board.data[row + 3][col + 3] = 'b'
         pawn_start = [col + 1, row + 1]
-        expect(game.put_into_check?(pawn_start)).to eq(true)
+        pawn_end = [col + 1, row + 2]
+        expect(game.put_into_check?(pawn_start, pawn_end)).to eq(true)
       end
     end
 
@@ -315,7 +322,25 @@ describe Game do
         board.data[row + 1][col - 1] = 'P'
         board.data[row + 3][col - 3] = 'q'
         pawn_start = [col - 1, row + 1]
-        expect(game.put_into_check?(pawn_start)).to eq(true)
+        pawn_end = [col - 1, row + 2]
+        expect(game.put_into_check?(pawn_start, pawn_end)).to eq(true)
+      end
+    end
+
+    context 'when moving a unit would not put a white king into check via neg diag' do
+      # arr = Array.new(8) { Array.new(8, '0') }
+      let(:board) { Board.new }
+      subject(:game) { described_class.new(board) }
+
+      it 'returns the correct value' do
+        row = 0
+        col = 4
+        board.data[row][col] = 'K'
+        board.data[row][col - 1] = 'P'
+        board.data[row + 3][col - 3] = 'q'
+        pawn_start = [col - 1, row]
+        pawn_end = [col - 1, row + 1]
+        expect(game.put_into_check?(pawn_start, pawn_end)).to eq(false)
       end
     end
 
@@ -336,7 +361,8 @@ describe Game do
         board.data[row - 7][col + 2] = 'K'
         board.data[row - 7][col + 1] = 'R'
         rook_start = [col + 3, row]
-        expect(game.put_into_check?(rook_start)).to eq(false)
+        rook_end = [col + 3, row - 1]
+        expect(game.put_into_check?(rook_start, rook_end)).to eq(false)
       end
     end
   end

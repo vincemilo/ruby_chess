@@ -188,11 +188,3 @@ class Board
     @w_king_check[:king_pos] = coords
   end
 end
-
-board = Board.new
-# board.display_cols
-# p board.b_king_check
-# board.place_queens
-board.display_board
-# board.update_turn
-# p board.turn

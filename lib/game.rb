@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require_relative 'board'
-require_relative 'comp_ai'
 require_relative 'units/pawn'
 require_relative 'units/rook'
 require_relative 'units/knight'
@@ -9,9 +8,11 @@ require_relative 'units/bishop'
 require_relative 'units/queen'
 require_relative 'units/king'
 require_relative 'mods/game_check'
+require_relative 'mods/comp_ai'
 
 class Game
   include GameCheck
+  include CompAI
   attr_reader :board, :game_over
 
   def initialize(board = Board.new)
@@ -22,6 +23,17 @@ class Game
   def intro
     place_pieces
     puts 'Welcome to Chess!'
+    selection = nil
+    while selection != 1 || selection != 2
+      puts 'Press 1 to play vs a human or 2 to play vs the computer:'
+      selection = gets.chomp.to_i
+      return play_human if selection == 1
+
+      puts 'Invalid selection, please try again.'
+    end
+  end
+
+  def play_human
     while @game_over == false
       @board.display_board
       puts "Player #{@board.turn + 1} please select your piece (i.e. e2):"
@@ -34,12 +46,13 @@ class Game
   end
 
   def place_pieces
-    @board.place_pawns
+    # @board.place_pawns
     @board.place_rooks
     # @board.place_knights
     # @board.place_bishops
     # @board.place_queens
     @board.place_kings
+    @board.display_board
   end
 
   def get_end(start_pos, piece)
@@ -58,7 +71,10 @@ class Game
 
   def valid_start?(start_pos, piece)
     return true if valid_selection?(start_pos) && piece != '0' &&
-                   !@board.enemy_occupied?(piece) # && !put_into_check?(start_pos)
+                   !@board.enemy_occupied?(piece) # &&
+
+    # !select_unit(start_pos, piece).moves.empty? &&
+    # !put_into_check?(start_pos)
 
     invalid_selection
   end
@@ -80,7 +96,6 @@ class Game
 
   def valid_selection?(coords)
     return false if coords.length != 2 || @board.off_the_board?(coords)
-
     return false if in_check? && !remove_check?(coords)
 
     true
@@ -176,8 +191,8 @@ class Game
   end
 end
 
-game = Game.new
-game.intro
+# game = Game.new
+# game.intro
 # row = 1
 # col = 4
 # game.board.data[row][col] = 'P'

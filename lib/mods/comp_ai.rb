@@ -1,14 +1,6 @@
 # frozen_string_literal: true
 
-require_relative 'game'
-
-class CompAI < Game
-  attr_reader :board
-
-  def initialize(board)
-    super
-  end
-
+module CompAI
   def comp_activate
     pieces = activation(@board.turn).shuffle
     piece = get_piece(pieces)
@@ -25,6 +17,3 @@ class CompAI < Game
     piece
   end
 end
-
-# comp_ai = CompAI.new
-# comp_ai.comp_activate
