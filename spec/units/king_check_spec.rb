@@ -476,4 +476,3 @@ describe King do
     end
   end
 end
-

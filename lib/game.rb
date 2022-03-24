@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require_relative 'board'
+require_relative 'comp_ai'
 require_relative 'units/pawn'
 require_relative 'units/rook'
 require_relative 'units/knight'
@@ -33,7 +34,7 @@ class Game
   end
 
   def place_pieces
-    # @board.place_pawns
+    @board.place_pawns
     @board.place_rooks
     # @board.place_knights
     # @board.place_bishops
@@ -57,7 +58,7 @@ class Game
 
   def valid_start?(start_pos, piece)
     return true if valid_selection?(start_pos) && piece != '0' &&
-                   !@board.enemy_occupied?(piece) #&& !put_into_check?(start_pos)
+                   !@board.enemy_occupied?(piece) # && !put_into_check?(start_pos)
 
     invalid_selection
   end
@@ -175,8 +176,8 @@ class Game
   end
 end
 
-# game = Game.new
-# game.intro
+game = Game.new
+game.intro
 # row = 1
 # col = 4
 # game.board.data[row][col] = 'P'

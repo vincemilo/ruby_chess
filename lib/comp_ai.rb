@@ -1,15 +1,30 @@
 # frozen_string_literal: true
 
-require_relative 'board'
-require_relative 'units/pawn'
-require_relative 'units/rook'
-require_relative 'units/knight'
-require_relative 'units/bishop'
-require_relative 'units/queen'
-require_relative 'units/king'
-require_relative 'mods/game_check'
+require_relative 'game'
 
-class CompAI
+class CompAI < Game
+  attr_reader :board
 
-    
+  def initialize(board)
+    super
+  end
+
+  def comp_activate
+    pieces = activation(@board.turn).shuffle
+    piece = get_piece(pieces)
+    start_pos = piece.start_pos
+    moves = piece.moves
+    options = create_options(start_pos, moves).shuffle
+    end_pos = options[0]
+    select_dest(end_pos, start_pos, piece, options)
+  end
+
+  def get_piece(pieces)
+    piece = pieces.shift
+    piece = pieces.shift while piece.moves.empty?
+    piece
+  end
 end
+
+# comp_ai = CompAI.new
+# comp_ai.comp_activate

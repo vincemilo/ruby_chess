@@ -427,7 +427,7 @@ describe King do
   describe '#assign_castle_moves' do
     context 'when a white king castles right' do
       # arr = Array.new(8) { Array.new(8, '0') }
-      let(:board) { Board.new} # { instance_double(Board, data: arr, turn: 0) }
+      let(:board) { Board.new } # { instance_double(Board, data: arr, turn: 0) }
       subject(:king) { described_class.new(board) }
 
       it 'displays the correct results' do

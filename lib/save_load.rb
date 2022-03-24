@@ -28,12 +28,12 @@ class SaveLoad
 
   def from_yaml
     save_game = File.open('save_game.yaml')
-    @load = YAML.load(save_game)
+    @load = YAML.safe_load(save_game)
     puts 'Game loaded'
     p @load
   end
 end
 
 save_load = SaveLoad.new
-#save_load.to_yaml
+# save_load.to_yaml
 save_load.from_yaml

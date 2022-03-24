@@ -22,16 +22,17 @@ class Board
   end
 
   def display_cols
-    cols = ('a'..'h').to_a.to_s
-    puts ' ' + cols
+    cols = ('a'..'h').to_a
+    spaced = cols.map { |e| e + ' ' }.to_s
+    puts ' ' + spaced
   end
 
   def display_rows
     nums = (1..8).to_a.reverse
     @data.reverse.each do |row|
-      # spaced = row.each.map { |e| e + ' ' if e.length < 2 }
+      spaced = row.map { |e| e.length == 1 ? e + ' ' : e }
       letter = nums.shift.to_s
-      puts letter + row.to_s + letter
+      puts letter + spaced.to_s + letter
     end
   end
 
@@ -188,9 +189,10 @@ class Board
   end
 end
 
-# board = Board.new
+board = Board.new
+# board.display_cols
 # p board.b_king_check
 # board.place_queens
-#board.display_board
+board.display_board
 # board.update_turn
 # p board.turn

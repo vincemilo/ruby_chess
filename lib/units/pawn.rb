@@ -41,7 +41,7 @@ class Pawn < Unit
       @board.update_en_passant(end_pos)
     end
     @board.move_unit(start_pos, end_pos)
-    en_passant_capture?(end_pos) unless @board.en_passant.nil?
+    en_passant_capture?(end_pos) unless @board.en_passant.empty?
     promote(end_pos) if promote?(end_pos)
   end
 
