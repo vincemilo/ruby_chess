@@ -281,13 +281,13 @@ describe Game do
 
       it 'returns the correct value' do
         row = 0
-        col = 4
+        col = 6
         board.data[row][col] = 'K'
         board.data[row][col - 1] = 'R'
-        board.data[row][col - 4] = 'q'
+        board.data[row][col - 6] = 'r'
         rook_start = [col - 1, row]
         rook_end = [col - 1, row + 1]
-        rook_end2 = [col - 4, row]
+        rook_end2 = [col - 6, row]
         expect(game.put_into_check?(rook_start, rook_end)).to eq(true)
         expect(game.put_into_check?(rook_start, rook_end2)).to eq(false)
       end

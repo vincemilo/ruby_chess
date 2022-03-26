@@ -27,32 +27,34 @@ class Game
     while selection != 1 || selection != 2
       puts 'Press 1 to play vs a human or 2 to play vs the computer:'
       selection = gets.chomp.to_i
-      return play_human if selection == 1
+      return play_select(1) if selection == 1
+      return play_select(2) if selection == 2
 
-      puts 'Invalid selection, please try again.'
+      invalid_selection
     end
   end
 
-  def play_human
+  def play_select(selection)
     while @game_over == false
       @board.display_board
       puts "Player #{@board.turn + 1} please select your piece (i.e. e2):"
       start_pos = move_translator(gets.chomp)
       piece = @board.get_unit(start_pos)
       next unless valid_start?(start_pos, piece)
+      return get_end(start_pos, piece) if selection == 1
 
       get_end(start_pos, piece)
+      comp_activate
     end
   end
 
   def place_pieces
-    # @board.place_pawns
+    @board.place_pawns
     @board.place_rooks
-    # @board.place_knights
-    # @board.place_bishops
-    # @board.place_queens
+    @board.place_knights
+    @board.place_bishops
+    @board.place_queens
     @board.place_kings
-    @board.display_board
   end
 
   def get_end(start_pos, piece)
@@ -64,34 +66,32 @@ class Game
     options = display_moves(start_pos, unit.moves)
     puts 'Please select their destination (i.e. e4):'
     end_pos = move_translator(gets.chomp)
+    unmark_options(options)
+    return invalid_selection if put_into_check?(start_pos, end_pos)
     return unless valid_end?(end_pos, options)
 
-    select_dest(end_pos, start_pos, unit, options)
+    select_dest(end_pos, start_pos, unit)
   end
 
   def valid_start?(start_pos, piece)
     return true if valid_selection?(start_pos) && piece != '0' &&
-                   !@board.enemy_occupied?(piece) # &&
-
-    # !select_unit(start_pos, piece).moves.empty? &&
-    # !put_into_check?(start_pos)
+                   !@board.enemy_occupied?(piece) &&
+                   !select_unit(start_pos, piece).moves.empty?
 
     invalid_selection
+    false
   end
 
   def valid_end?(end_pos, options)
     remove_check if in_check?
-    if valid_selection?(end_pos) && options.any? { |moves| moves == end_pos }
-      return true
-    end
+    return true if valid_selection?(end_pos) && options.include?(end_pos)
 
-    unmark_options(options)
     invalid_selection
+    false
   end
 
   def invalid_selection
     puts 'Invalid selection, please try again.'
-    false
   end
 
   def valid_selection?(coords)
@@ -167,8 +167,7 @@ class Game
     unit
   end
 
-  def select_dest(end_pos, start_pos, unit, options)
-    unmark_options(options)
+  def select_dest(end_pos, start_pos, unit)
     move_pieces(start_pos, end_pos, unit)
     check(end_pos, unit) if check?(end_pos, unit)
     @board.update_turn
@@ -191,8 +190,8 @@ class Game
   end
 end
 
-# game = Game.new
-# game.intro
+game = Game.new
+game.intro
 # row = 1
 # col = 4
 # game.board.data[row][col] = 'P'

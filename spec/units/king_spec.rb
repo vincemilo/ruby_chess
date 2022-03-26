@@ -299,7 +299,6 @@ describe King do
         board.data[row][col] = 'K'
         board.data[row][col + 3] = 'R'
         king.move_king([col, row], [col + 2, row])
-        display_board
         expect(board.data[row][col + 2]).to eq('K')
         expect(board.data[row][col + 1]).to eq('R')
       end
