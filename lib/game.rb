@@ -190,8 +190,8 @@ class Game
   end
 end
 
-game = Game.new
-game.intro
+# game = Game.new
+# game.intro
 # row = 1
 # col = 4
 # game.board.data[row][col] = 'P'

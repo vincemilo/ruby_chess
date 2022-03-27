@@ -5,7 +5,7 @@ module KingCheck
     return true if off_the_board?([row + 1, col + 1]) ||
                    hostile_r_col_diag?(col, row) ||
                    hostile_u_row_diag?(col, row) ||
-                   hostile_neg_diag?(col, row)
+                   hostile_neg_diag?(col + 1, row + 1)
 
     false
   end
@@ -14,7 +14,7 @@ module KingCheck
     return true if off_the_board?([row - 1, col + 1]) ||
                    hostile_r_col_diag?(col, row) ||
                    hostile_d_row_diag?(col, row) ||
-                   hostile_pos_diag?(col, row)
+                   hostile_pos_diag?(col + 1, row - 1)
 
     false
   end
@@ -23,7 +23,7 @@ module KingCheck
     return true if off_the_board?([row - 1, col - 1]) ||
                    hostile_l_col_diag?(col, row) ||
                    hostile_d_row_diag?(col, row) ||
-                   hostile_neg_diag?(col, row)
+                   hostile_neg_diag?(col - 1, row - 1)
 
     false
   end
@@ -32,7 +32,7 @@ module KingCheck
     return true if off_the_board?([row + 1, col - 1]) ||
                    hostile_l_col_diag?(col, row) ||
                    hostile_u_row_diag?(col, row) ||
-                   hostile_pos_diag?(col, row)
+                   hostile_pos_diag?(col - 1, row + 1)
 
     false
   end

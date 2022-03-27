@@ -144,4 +144,60 @@ describe Game do
       end
     end
   end
+
+  describe '#comp_activate' do
+    context 'when a black king is threatened via col' do
+      # arr = Array.new(8) { Array.new(8, '0') }
+      let(:board) { Board.new } # { instance_double(Board, data: arr, turn: 1) }
+      subject(:comp_ai) { described_class.new(board) }
+
+      before do
+        board.update_turn
+        board.update_b_king_check([4, 0])
+      end
+
+      xit 'moves a piece to block check' do
+        row = 7
+        col = 4
+        board.data[row][col] = 'k'
+        board.data[row][col + 1] = 'p'
+        board.data[row][col - 1] = 'p'
+        board.data[row - 1][col + 1] = 'r'
+        board.data[row - 1][col - 1] = 'r'
+        board.data[row - 7][col] = 'R'
+        # board.data[row - 7][col - 1] = 'b'
+        # board.data[row - 7][col + 1] = 'n'
+        comp_ai.comp_activate
+        expect(board.data[row - 1][col]).to eq('r')
+      end
+    end
+
+    context 'when a black king is threatened via row' do
+      # arr = Array.new(8) { Array.new(8, '0') }
+      let(:board) { Board.new } # { instance_double(Board, data: arr, turn: 1) }
+      subject(:comp_ai) { described_class.new(board) }
+
+      before do
+        board.update_turn
+        board.update_b_king_check([1, 7])
+        board.update_b_king_pos([3, 7])
+      end
+
+      it 'moves a piece to block check' do
+        row = 7
+        col = 3
+        board.data[row][col] = 'k'
+        board.data[row - 1][col] = 'p'
+        board.data[row - 1][col + 1] = 'p'
+        #board.data[row][col - 3] = 'r'
+        board.data[row][col - 2] = 'Q'
+        
+        # board.data[row - 7][col - 1] = 'b'
+        # board.data[row - 7][col + 1] = 'n'
+        comp_ai.comp_activate
+        display_board
+        #expect(board.data[row - 1][col]).to eq('r')
+      end
+    end
+  end
 end

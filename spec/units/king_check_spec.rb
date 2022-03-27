@@ -247,7 +247,7 @@ describe King do
   end
 
   describe '#hostile_neg_diag?' do
-    context 'when a bishop is blocking the up right diag' do
+    context 'when an bishop is blocking the up right diag of a white king' do
       # arr = Array.new(8) { Array.new(8, '0') }
       let(:board) { Board.new } # { instance_double(Board, data: arr, turn: 0) }
       subject(:king) { described_class.new(board) }
@@ -258,10 +258,11 @@ describe King do
         board.data[row][col] = 'K'
         board.data[row - 1][col + 3] = 'b'
         expect(king.hostile_neg_diag?(col + 1, row + 1)).to eq(true)
+        expect(king.r_u_diag_invalid?(row, col)).to eq(true)
       end
     end
 
-    context 'when a bishop is not blocking the up right diag' do
+    context 'when a bishop is not blocking the up right diag of a white king' do
       # arr = Array.new(8) { Array.new(8, '0') }
       let(:board) { Board.new } # { instance_double(Board, data: arr, turn: 0) }
       subject(:king) { described_class.new(board) }
@@ -275,7 +276,64 @@ describe King do
       end
     end
 
-    context 'when a bishop is blocking the down left diag' do
+    context 'when a bishop is blocking the down left diag of a white king' do
+      # arr = Array.new(8) { Array.new(8, '0') }
+      let(:board) { Board.new } # { instance_double(Board, data: arr, turn: 0) }
+      subject(:king) { described_class.new(board) }
+
+      it 'returns true' do
+        row = 3
+        col = 4
+        board.data[row][col] = 'K'
+        board.data[row + 1][col - 3] = 'b'
+        expect(king.hostile_neg_diag?(col - 1, row - 1)).to eq(true)
+        expect(king.l_d_diag_invalid?(row, col)).to eq(true)
+      end
+    end
+
+    context 'when a bishop is blocking the down left diag  of a white king' do
+      # arr = Array.new(8) { Array.new(8, '0') }
+      let(:board) { Board.new } # { instance_double(Board, data: arr, turn: 0) }
+      subject(:king) { described_class.new(board) }
+
+      it 'returns false' do
+        row = 3
+        col = 4
+        board.data[row][col] = 'K'
+        board.data[row][col - 3] = 'b'
+        expect(king.hostile_neg_diag?(col - 1, row - 1)).to eq(false)
+      end
+    end
+
+    context 'when an bishop is blocking the up right diag of a white king' do
+      # arr = Array.new(8) { Array.new(8, '0') }
+      let(:board) { Board.new } # { instance_double(Board, data: arr, turn: 0) }
+      subject(:king) { described_class.new(board) }
+
+      it 'returns true' do
+        row = 3
+        col = 4
+        board.data[row][col] = 'K'
+        board.data[row - 1][col + 3] = 'b'
+        expect(king.hostile_neg_diag?(col + 1, row + 1)).to eq(true)
+      end
+    end
+
+    context 'when a bishop is not blocking the up right diag of a white king' do
+      # arr = Array.new(8) { Array.new(8, '0') }
+      let(:board) { Board.new } # { instance_double(Board, data: arr, turn: 0) }
+      subject(:king) { described_class.new(board) }
+
+      it 'returns false' do
+        row = 3
+        col = 4
+        board.data[row][col] = 'K'
+        board.data[row][col + 3] = 'b'
+        expect(king.hostile_neg_diag?(col + 1, row + 1)).to eq(false)
+      end
+    end
+
+    context 'when a bishop is blocking the down left diag of a white king' do
       # arr = Array.new(8) { Array.new(8, '0') }
       let(:board) { Board.new } # { instance_double(Board, data: arr, turn: 0) }
       subject(:king) { described_class.new(board) }
@@ -289,7 +347,7 @@ describe King do
       end
     end
 
-    context 'when a bishop is blocking the down left diag' do
+    context 'when a bishop is blocking the down left diag  of a white king' do
       # arr = Array.new(8) { Array.new(8, '0') }
       let(:board) { Board.new } # { instance_double(Board, data: arr, turn: 0) }
       subject(:king) { described_class.new(board) }
@@ -305,7 +363,7 @@ describe King do
   end
 
   describe '#hostile_pos_diag?' do
-    context 'when a bishop is blocking the up right diag' do
+    context 'when a bishop is blocking the up left diag' do
       # arr = Array.new(8) { Array.new(8, '0') }
       let(:board) { Board.new } # { instance_double(Board, data: arr, turn: 0) }
       subject(:king) { described_class.new(board) }
@@ -316,10 +374,11 @@ describe King do
         board.data[row][col] = 'K'
         board.data[row - 1][col - 3] = 'b'
         expect(king.hostile_pos_diag?(col - 1, row + 1)).to eq(true)
+        expect(king.l_u_diag_invalid?(row, col)).to eq(true)
       end
     end
 
-    context 'when a bishop is not blocking the up right diag' do
+    context 'when a bishop is not blocking the down right diag' do
       # arr = Array.new(8) { Array.new(8, '0') }
       let(:board) { Board.new } # { instance_double(Board, data: arr, turn: 0) }
       subject(:king) { described_class.new(board) }
@@ -333,7 +392,7 @@ describe King do
       end
     end
 
-    context 'when a bishop is blocking the down left diag' do
+    context 'when a bishop is blocking the down right diag' do
       # arr = Array.new(8) { Array.new(8, '0') }
       let(:board) { Board.new } # { instance_double(Board, data: arr, turn: 0) }
       subject(:king) { described_class.new(board) }
@@ -344,10 +403,11 @@ describe King do
         board.data[row][col] = 'K'
         board.data[row + 1][col + 3] = 'b'
         expect(king.hostile_pos_diag?(col + 1, row - 1)).to eq(true)
+        expect(king.r_d_diag_invalid?(row, col)).to eq(true)
       end
     end
 
-    context 'when the down left diag is not blocked' do
+    context 'when the up left diag is not blocked' do
       # arr = Array.new(8) { Array.new(8, '0') }
       let(:board) { Board.new } # { instance_double(Board, data: arr, turn: 0) }
       subject(:king) { described_class.new(board) }
@@ -356,8 +416,8 @@ describe King do
         row = 3
         col = 4
         board.data[row][col] = 'K'
-        board.data[row][col - 3] = 'Q'
-        expect(king.hostile_neg_diag?(col - 1, row - 1)).to eq(false)
+        board.data[row][col - 2] = 'Q'
+        expect(king.hostile_pos_diag?(col - 1, row + 1)).to eq(false)
       end
     end
   end
