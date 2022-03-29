@@ -14,6 +14,6 @@ module CompAI
   def get_piece(pieces)
     piece = pieces.shift
     piece = pieces.shift while piece.moves.empty?
-    p piece
+    piece
   end
 end

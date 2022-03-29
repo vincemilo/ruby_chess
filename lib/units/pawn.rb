@@ -42,7 +42,6 @@ class Pawn < Unit
     end
     @board.move_unit(start_pos, end_pos)
     en_passant_capture?(end_pos) unless @board.en_passant.empty?
-    promote(end_pos) if promote?(end_pos)
   end
 
   def en_passant?(end_pos)
@@ -83,7 +82,7 @@ class Pawn < Unit
     col = @board.en_passant[1] - end_pos[1]
 
     unless row.zero? && col.abs == 1
-      @board.update_en_passant(nil)
+      @board.update_en_passant([])
       return false
     end
 
@@ -119,26 +118,9 @@ class Pawn < Unit
     end
     pawn
   end
-
-  def promote?(end_pos)
-    return true if @board.turn.zero? && end_pos[1] == 7 ||
-                   @board.turn.positive? && end_pos[1].zero?
-
-    false
-  end
-
-  def promote(end_pos)
-    promotion = 0
-    while promotion < 1 || promotion > 4
-      puts 'Enter promotion number: 1 - Queen, 2 - Rook, 3 - Bishop, 4 - Knight'
-      promotion = gets.chomp.to_i
-      puts 'Invalid entry, please try again.' if promotion < 1 || promotion > 4
-    end
-    # temp
-    @board.data[y_pos(end_pos)][x_pos(end_pos)] = promotion.to_s
-  end
 end
 
 # pawn = Pawn.new(Board.new, [0, 5])
 # pawn.move_pawn([0, 6], [0, 7])
 # pawn.board.display_board
+# puts '♔'

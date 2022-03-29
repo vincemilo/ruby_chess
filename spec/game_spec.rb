@@ -154,9 +154,10 @@ describe Game do
       before do
         board.update_turn
         board.update_b_king_check([4, 0])
+        allow(comp_ai).to receive(:puts)
       end
 
-      xit 'moves a piece to block check' do
+      it 'moves a piece to block check' do
         row = 7
         col = 4
         board.data[row][col] = 'k'
@@ -181,6 +182,8 @@ describe Game do
         board.update_turn
         board.update_b_king_check([1, 7])
         board.update_b_king_pos([3, 7])
+        allow(comp_ai).to receive(:puts)
+        allow(board).to receive(:puts)
       end
 
       it 'moves a piece to block check' do
@@ -189,14 +192,82 @@ describe Game do
         board.data[row][col] = 'k'
         board.data[row - 1][col] = 'p'
         board.data[row - 1][col + 1] = 'p'
-        #board.data[row][col - 3] = 'r'
+        # board.data[row - 1][col] = 'b'
+        # board.data[row - 1][col + 1] = 'n'
+        board.data[row][col - 3] = 'r'
         board.data[row][col - 2] = 'Q'
-        
-        # board.data[row - 7][col - 1] = 'b'
-        # board.data[row - 7][col + 1] = 'n'
         comp_ai.comp_activate
+        expect(board.data[row][col - 2]).to eq('r')
+      end
+    end
+  end
+
+  describe '#promote?' do
+    context 'when a white pawn reaches the last col' do
+      arr = Array.new(8) { Array.new(8, '0') }
+      let(:board) { instance_double(Board, data: arr, turn: 0) }
+      subject(:game) { described_class.new(board) }
+
+      it 'returns true' do
+        col = 1
+        row = 7
+        game.board.data[row][col] = 'P'
+        expect(game.promote?([col, row], Pawn)).to be true
+      end
+    end
+
+    context 'when a black pawn reaches the last col' do
+      arr = Array.new(8) { Array.new(8, '0') }
+      let(:board) { instance_double(Board, data: arr, turn: 1) }
+      subject(:game) { described_class.new(board) }
+
+      it 'returns true' do
+        col = 1
+        row = 0
+        game.board.data[row][col] = 'p'
+        expect(game.promote?([col, row], Pawn)).to be true
+      end
+    end
+  end
+
+  describe '#promote' do
+    context 'when a white pawn reaches the last col' do
+      # arr = Array.new(8) { Array.new(8, '0') }
+      let(:board) { Board.new } # { instance_double(Board, data: arr, turn: 0) }
+      subject(:game) { described_class.new(board) }
+
+      before do
+        allow(game).to receive(:promote_prompt).and_return(1)
+      end
+
+      xit 'returns the correct unit' do
+        row = 7
+        col = 1
+        game.board.data[row][col] = 'P'
+        game.promote([col, row])
+        expect(board.data[row][col]).to eq('Q')
+      end
+    end
+  end
+
+  describe '#activate_promotion' do
+    context 'when a white pawn reaches the last col' do
+      arr = Array.new(8) { Array.new(8, '0') }
+      let(:board) { instance_double(Board, data: arr, turn: 0) }
+      subject(:game) { described_class.new(board) }
+
+      # before do
+      #   allow(game).to receive(:promote_prompt).and_return(1)
+      # end
+
+      it 'returns and activates the correct unit' do
+        row = 7
+        col = 1
+        game.board.data[row][col] = 'P'
+        promotion = 1
+        game.activate_promotion(row, col, promotion)
         display_board
-        #expect(board.data[row - 1][col]).to eq('r')
+        # expect(board.data[row][col]).to eq('Q')
       end
     end
   end

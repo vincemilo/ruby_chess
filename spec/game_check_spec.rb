@@ -44,13 +44,12 @@ describe Game do
 
   describe '#get_moves' do
     context 'a black king has several units to defend it and can move away' do
-      arr = Array.new(8) { Array.new(8, '0') }
-      let(:board) { instance_double(Board, data: arr, turn: 1) }
+      # arr = Array.new(8) { Array.new(8, '0') }
+      let(:board) { Board.new } # { instance_double(Board, data: arr, turn: 1) }
       subject(:game) { described_class.new(board) }
 
       before do
-        allow(board).to receive(:enemy_occupied?).and_return(false)
-        allow(board).to receive(:en_passant).and_return([])
+        board.update_turn
         allow(board).to receive(:b_king_check).and_return({ check: 1,
                                                             king_pos: [7, 7],
                                                             attk_pos: [0, 7] })
@@ -204,14 +203,14 @@ describe Game do
     end
 
     context 'when a white king is not checkmated' do
-      arr = Array.new(8) { Array.new(8, '0') }
-      let(:board) { instance_double(Board, data: arr, turn: 0) }
+      # arr = Array.new(8) { Array.new(8, '0') }
+      let(:board) { Board.new } # { instance_double(Board, data: arr, turn: 0) }
       subject(:game) { described_class.new(board) }
 
-      before do
-        allow(board).to receive(:get_unit).with([7, 1]).and_return('r')
-        allow(board).to receive(:enemy_occupied?).with('R').and_return(false)
-      end
+      #   before do
+      #     allow(board).to receive(:get_unit).with([7, 1]).and_return('r')
+      #     allow(board).to receive(:enemy_occupied?).with('R').and_return(false)
+      #   end
 
       it 'returns the correct values' do
         row = 0

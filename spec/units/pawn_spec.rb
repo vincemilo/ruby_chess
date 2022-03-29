@@ -382,7 +382,6 @@ describe Pawn do
         row = 4
         pawn.board.data[row][col] = 'P'
         pawn.board.data[row][col - 1] = 'p'
-        display_board
         w_pawn = pawn.assign_en_passant([col, row], pawn)
         expect(w_pawn.moves).to eq [[-1, 1]]
       end
@@ -454,34 +453,6 @@ describe Pawn do
           set.map! { |move| move * -1 }
         end
         expect(b_pawn.moves).to eq [[1, -1]]
-      end
-    end
-  end
-
-  describe '#promote?' do
-    context 'when a white pawn reaches the last col' do
-      arr = Array.new(8) { Array.new(8, '0') }
-      let(:board) { instance_double(Board, data: arr, turn: 0) }
-      subject(:pawn) { described_class.new(board) }
-
-      it 'returns true' do
-        col = 7
-        row = 1
-        pawn.board.data[col][row] = 'P'
-        expect(pawn.promote?([row, col])).to be true
-      end
-    end
-
-    context 'when a black pawn reaches the last col' do
-      arr = Array.new(8) { Array.new(8, '0') }
-      let(:board) { instance_double(Board, data: arr, turn: 1) }
-      subject(:pawn) { described_class.new(board) }
-
-      it 'returns true' do
-        col = 0
-        row = 1
-        pawn.board.data[col][row] = 'p'
-        expect(pawn.promote?([row, col])).to be true
       end
     end
   end

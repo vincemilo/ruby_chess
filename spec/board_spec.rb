@@ -119,6 +119,7 @@ describe Board do
         # allow(board).to receive(:puts)
         board.update_turn
         board.update_en_passant([1, 3])
+        allow(board).to receive(:puts)
       end
 
       it 'captures the piece and adds it to the list' do
@@ -127,7 +128,6 @@ describe Board do
         board.data[row][col] = 'p'
         board.data[row][col - 1] = 'P'
         board.en_passant_capture
-        board.display_board
         expect(board.captured).to eq([[], ['P']])
       end
     end
