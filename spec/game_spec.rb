@@ -252,22 +252,19 @@ describe Game do
 
   describe '#activate_promotion' do
     context 'when a white pawn reaches the last col' do
-      arr = Array.new(8) { Array.new(8, '0') }
-      let(:board) { instance_double(Board, data: arr, turn: 0) }
+      # arr = Array.new(8) { Array.new(8, '0') }
+      let(:board) { Board.new } # { instance_double(Board, data: arr, turn: 0) }
       subject(:game) { described_class.new(board) }
 
-      # before do
-      #   allow(game).to receive(:promote_prompt).and_return(1)
-      # end
-
-      it 'returns and activates the correct unit' do
+      it 'promotes to queen and puts the black king in check' do
         row = 7
         col = 1
         game.board.data[row][col] = 'P'
+        game.board.data[row][col + 3] = 'k'
         promotion = 1
-        game.activate_promotion(row, col, promotion)
-        display_board
-        # expect(board.data[row][col]).to eq('Q')
+        unit = game.activate_promotion(row, col, promotion)
+        expect(unit.class).to eq(Queen)
+        expect(game.check?([col, row], unit)).to eq(true)
       end
     end
   end

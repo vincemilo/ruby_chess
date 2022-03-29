@@ -113,11 +113,7 @@ module GameCheck
   def activation(turn)
     white_pieces = %w[P R N B Q K]
     black_pieces = %w[p r n b q k]
-    activate = if turn.zero?
-                 activate(white_pieces)
-               else
-                 activate(black_pieces)
-               end
+    activate = turn.zero? ? activate(white_pieces) : activate(black_pieces)
     pieces = pieces(activate)
     pieces = filter_moves(pieces) if in_check?
     pieces
@@ -167,11 +163,12 @@ module GameCheck
   end
 
   def block_match(piece, options, block_moves)
-    new_moves = []
-    options.each_with_index do |val, i|
-      return piece.moves if piece.class == King
+    return piece.moves if piece.class == King
+    return [] if block_moves.nil?
 
-      new_moves << piece.moves[i] if block_moves.any?(val)
+    new_moves = []
+    options.each_with_index do |val, i| 
+      new_moves << piece.moves[i] if block_moves.include?(val)
     end
     new_moves
   end

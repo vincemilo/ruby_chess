@@ -251,6 +251,34 @@ describe Game do
         expect(moves).to eq([])
       end
     end
+
+    context 'when a black king is checked by a knight' do
+      # arr = Array.new(8) { Array.new(8, '0') }
+      let(:board) { Board.new } # { instance_double(Board, data: arr, turn: 1) }
+      subject(:game) { described_class.new(board) }
+
+      before do
+        board.update_turn
+      end
+
+      it 'matches available moves that block check to a king' do
+        row = 7
+        col = 4
+        board.data[row][col] = 'k'
+        board.data[row - 2][col + 1] = 'N'
+        board.data[row][col - 1] = 'r'
+        board.update_b_king_check([col + 1, row - 2])
+        check_data = board.b_king_check
+        black_pieces = %w[p r n b q k]
+        activate = game.activate(black_pieces)
+        pieces = game.pieces(activate)
+        units = game.block_check(pieces, check_data)
+        rook_moves = units[0].moves
+        king_moves = units[1].moves
+        expect(rook_moves).to eq([])
+        expect(king_moves).to eq([[1, -1], [1, 0], [0, -1]])
+      end
+    end
   end
 
   describe '#put_into_check?' do

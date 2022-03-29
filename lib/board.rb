@@ -30,10 +30,48 @@ class Board
   def display_rows
     nums = (1..8).to_a.reverse
     @data.reverse.each do |row|
-      spaced = row.map { |e| e.length == 1 ? e + ' ' : e }
+      spaced = row.map do |e|
+        sym = get_sym(e)
+        sym.length == 1 ? sym + ' ' : sym
+      end
       letter = nums.shift.to_s
       puts letter + spaced.to_s + letter
     end
+  end
+
+  def get_sym(piece)
+    return piece if piece[0] == '0'
+    return "#{chess_sym(piece[0])}*" if piece.length == 2
+
+    chess_sym(piece)
+  end
+
+  def chess_sym(piece)
+    return white_sym(piece) if %w[P R B N Q K].include?(piece)
+
+    black_sym(piece)
+  end
+
+  def white_sym(piece)
+    return '♙' if piece == 'P'
+    return '♖' if piece == 'R'
+    return '♗' if piece == 'B'
+    return '♘' if piece == 'N'
+    return '♕' if piece == 'Q'
+    return '♔' if piece == 'K'
+
+    piece
+  end
+
+  def black_sym(piece)
+    return '♟' if piece == 'p'
+    return '♜' if piece == 'r'
+    return '♝' if piece == 'b'
+    return '♞' if piece == 'n'
+    return '♛' if piece == 'q'
+    return '♚' if piece == 'k'
+
+    piece
   end
 
   def update_board(coords, value)
@@ -128,7 +166,7 @@ class Board
   end
 
   def capture(coords)
-    piece = get_unit(coords)
+    piece = chess_sym(get_unit(coords))
     if @turn.zero?
       @captured[0] << piece
     else

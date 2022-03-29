@@ -285,6 +285,26 @@ describe King do
         expect(b_king.moves).to eq(king_moves)
       end
     end
+
+    context 'when a black king is in check via enemy knight' do
+      # arr = Array.new(8) { Array.new(8, '0') }
+      let(:board) { Board.new } # { instance_double(Board, data: arr, turn: 0) }
+      subject(:king) { described_class.new(board) }
+
+      before do
+        board.update_turn
+      end
+
+      it 'returns the correct value' do
+        row = 7
+        col = 4
+        board.data[row][col] = 'k'
+        board.data[row - 2][col] = 'N'
+        b_king = king.assign_moves([col, row], king)
+        king_moves = [[1, -1], [-1, -1], [0, -1]]
+        expect(b_king.moves).to eq(king_moves)
+      end
+    end
   end
 
   describe '#move_king' do

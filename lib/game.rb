@@ -183,7 +183,7 @@ class Game
   end
 
   def move_log(unit, end_pos)
-    puts "Player #{@board.turn + 1} moves #{unit.class} to #{end_pos}."
+    puts "Player #{@board.turn + 1} moves #{unit} to #{end_pos}."
   end
 
   def coord_translator(coords)
