@@ -87,6 +87,8 @@ module KingCheck
   end
 
   def hostile_u?(row, trans)
+    return false if (row + 1) > 7
+
     moves = 0
     while empty_check?(trans[row + moves]) || q_r_check?(trans, row, moves)
       return true if q_r_check?(trans, row, moves)
@@ -98,6 +100,8 @@ module KingCheck
   end
 
   def hostile_d?(row, trans)
+    return false if (row - 1).negative?
+
     moves = 0
     while empty_check?(trans[row + moves]) || q_r_check?(trans, row, moves)
       return true if q_r_check?(trans, row, moves)

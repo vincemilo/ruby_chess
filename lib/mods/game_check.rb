@@ -167,7 +167,7 @@ module GameCheck
     return [] if block_moves.nil?
 
     new_moves = []
-    options.each_with_index do |val, i| 
+    options.each_with_index do |val, i|
       new_moves << piece.moves[i] if block_moves.include?(val)
     end
     new_moves

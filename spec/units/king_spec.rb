@@ -305,6 +305,26 @@ describe King do
         expect(b_king.moves).to eq(king_moves)
       end
     end
+
+    context 'when a white king has both castling options available' do
+      # arr = Array.new(8) { Array.new(8, '0') }
+      let(:board) { Board.new } # { instance_double(Board, data: arr, turn: 0) }
+      subject(:king) { described_class.new(board) }
+
+      it 'returns the correct options' do
+        row = 0
+        col = 4
+        board.data[row][col] = 'K'
+        board.data[row][col + 3] = 'R'
+        board.data[row][col - 4] = 'R'
+        board.data[row + 1][col + 1] = 'P'
+        board.data[row + 1][col] = 'P'
+        board.data[row + 1][col - 1] = 'P'
+        w_king = king.assign_moves([col, row], king)
+        king_moves = [[1, 0], [-1, 0], [2, 0], [-2, 0]]
+        expect(w_king.moves).to eq(king_moves)
+      end
+    end
   end
 
   describe '#move_king' do

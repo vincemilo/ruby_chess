@@ -42,6 +42,35 @@ describe Game do
     end
   end
 
+  describe '#activation' do
+    context 'when a black king is put in check but has no units to defend it' do
+      # arr = Array.new(8) { Array.new(8, '0') }
+      let(:board) { Board.new } # { instance_double(Board, data: arr, turn: 1) }
+      subject(:game) { described_class.new(board) }
+
+      before do
+        board.update_turn
+      end
+
+      it 'displays the correct results' do
+        row = 5
+        col = 6
+        board.data[row][col] = 'k'
+        board.data[row][col + 1] = 'n'
+        board.data[row][col - 2] = 'Q'
+        board.data[row + 2][col + 1] = 'r'
+        board.data[row + 2][col - 6] = 'r'
+        board.update_b_king_pos([col, row])
+        board.update_b_king_check([col - 2, row])
+        pieces = game.activation(1)
+        activate = {}
+        pieces.each { |piece| activate[piece.class] = piece.moves }
+        moves = { King => [[1, 1], [1, -1], [0, 1], [0, -1]], Knight => [], Rook => [] }
+        expect(activate).to eq(moves)
+      end
+    end
+  end
+
   describe '#get_moves' do
     context 'a black king has several units to defend it and can move away' do
       # arr = Array.new(8) { Array.new(8, '0') }

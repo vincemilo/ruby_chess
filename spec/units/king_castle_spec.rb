@@ -20,6 +20,10 @@ describe King do
       let(:board) { instance_double(Board, data: arr) }
       subject(:king) { described_class.new(board) }
 
+      before do
+        allow(board).to receive(:update_w_rook)
+      end
+
       it 'displays the correct results' do
         row = 0
         col = 4
@@ -34,6 +38,10 @@ describe King do
       arr = Array.new(8) { Array.new(8, '0') }
       let(:board) { instance_double(Board, data: arr) }
       subject(:king) { described_class.new(board) }
+
+      before do
+        allow(board).to receive(:update_w_rook)
+      end
 
       it 'displays the correct results' do
         row = 0
@@ -50,6 +58,10 @@ describe King do
       let(:board) { instance_double(Board, data: arr) }
       subject(:king) { described_class.new(board) }
 
+      before do
+        allow(board).to receive(:update_b_rook)
+      end
+
       it 'displays the correct results' do
         row = 7
         col = 4
@@ -61,6 +73,10 @@ describe King do
     end
 
     context 'when a black king castles left' do
+      before do
+        allow(board).to receive(:update_b_rook)
+      end
+
       arr = Array.new(8) { Array.new(8, '0') }
       let(:board) { instance_double(Board, data: arr) }
       subject(:king) { described_class.new(board) }
@@ -149,6 +165,25 @@ describe King do
         board.data[row + 7][col + 3] = 'r'
         board.data[row][col + 3] = 'R'
         expect(king.w_r_castle?).to eq(true)
+      end
+    end
+  end
+
+  describe '#hostile_squares?' do
+    context 'when a white king is protected to castle right' do
+      # arr = Array.new(8) { Array.new(8, '0') }
+      let(:board) { Board.new } # { instance_double(Board, data: arr, turn: 0) }
+      subject(:king) { described_class.new(board) }
+
+      it 'displays the correct results' do
+        row = 0
+        col = 4
+        board.data[row][col] = 'K'
+        board.data[row + 1][col + 1] = 'P'
+        board.data[row + 7][col - 1] = 'k'
+        board.data[row + 7][col + 1] = 'r'
+        board.data[row][col + 3] = 'R'
+        expect(king.hostile_squares?(col + 1, row)).to eq(false)
       end
     end
   end

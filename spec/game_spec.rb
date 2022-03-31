@@ -19,6 +19,14 @@ describe Game do
     print "#{('a'..'h').to_a} \n"
   end
 
+  describe '#check_alpha?' do
+    subject(:game) { described_class.new }
+    it 'checks for a valid letter combo' do
+      expect(game.check_alpha?(['e', 2])).to eq(true)
+      expect(game.check_alpha?(['v', 9])).to eq(false)
+    end
+  end
+
   describe '#move_translator' do
     subject(:game) { described_class.new }
 
@@ -240,7 +248,7 @@ describe Game do
         allow(game).to receive(:promote_prompt).and_return(1)
       end
 
-      xit 'returns the correct unit' do
+      it 'returns the correct unit' do
         row = 7
         col = 1
         game.board.data[row][col] = 'P'

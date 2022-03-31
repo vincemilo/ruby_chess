@@ -38,7 +38,10 @@ class Game
     while @game_over == false
       @board.display_board
       puts "Player #{@board.turn + 1} please select your piece (e.g. e2):"
-      start_pos = move_translator(gets.chomp)
+      start_pos = gets.chomp
+      next unless check_alpha?(start_pos)
+
+      start_pos = move_translator(start_pos)
       piece = @board.get_unit(start_pos)
       next unless valid_start?(start_pos, piece)
 
@@ -47,26 +50,41 @@ class Game
     end
   end
 
+  def check_alpha?(coords)
+    return true if ('a'..'h').to_a.include?(coords[0])
+
+    invalid_selection
+    false
+  end
+
   def place_pieces
-    @board.place_pawns
+    #@board.place_pawns
     @board.place_rooks
-    @board.place_knights
-    @board.place_bishops
-    @board.place_queens
+    #@board.place_knights
+    #@board.place_bishops
+    #@board.place_queens
     @board.place_kings
   end
 
   def get_end?(start_pos, piece)
     unit = check_unit(start_pos, piece)
     options = display_moves(start_pos, unit.moves)
-    puts 'Please select their destination (e.g. e4):'
-    end_pos = move_translator(gets.chomp)
-    unmark_options(options)
+    end_pos = get_end(options)
+    return invalid_selection unless check_alpha?(end_pos)
+
+    end_pos = move_translator(end_pos)
     return invalid_selection if put_into_check?(start_pos, end_pos)
     return false unless valid_end?(end_pos, options)
 
     select_dest(end_pos, start_pos, unit)
     true
+  end
+
+  def get_end(options)
+    puts 'Please select their destination (e.g. e4):'
+    end_pos = gets.chomp
+    unmark_options(options)
+    end_pos
   end
 
   def check_unit(start_pos, piece)
@@ -245,8 +263,8 @@ class Game
   end
 end
 
-# game = Game.new
-# game.intro
+game = Game.new
+game.intro
 # row = 1
 # col = 4
 # game.board.data[row][col] = 'P'

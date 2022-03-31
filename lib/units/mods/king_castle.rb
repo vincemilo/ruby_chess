@@ -86,8 +86,10 @@ module KingCastle
   end
 
   def w_r_castle?
-    return false unless @board.data[0][5] == '0' && @board.data[0][6] == '0'
-    return false if hostile_squares?(5, 0) || hostile_squares?(6, 0)
+    right_clear = @board.data[0][5] == '0' && @board.data[0][6] == '0'
+    right_hostile = hostile_squares?(5, 0) || hostile_squares?(6, 0)
+    return false unless right_clear
+    return false if right_hostile
 
     true
   end
@@ -101,9 +103,11 @@ module KingCastle
   end
 
   def w_l_castle?
-    return false unless @board.data[0][1] == '0' && @board.data[0][2] == '0' &&
-                        @board.data[0][3] == '0'
-    return false if hostile_squares?(2, 0) || hostile_squares?(3, 0)
+    left_clear = @board.data[0][1] == '0' && @board.data[0][2] == '0' &&
+                 @board.data[0][3] == '0'
+    left_hostile = hostile_squares?(2, 0) || hostile_squares?(3, 0)
+    return false unless left_clear
+    return false if left_hostile
 
     true
   end
@@ -150,21 +154,25 @@ module KingCastle
   def w_r_castle
     @board.data[0][5] = 'R'
     @board.data[0][7] = '0'
+    @board.update_w_rook(1)
   end
 
   def w_l_castle
     @board.data[0][3] = 'R'
     @board.data[0][0] = '0'
+    @board.update_w_rook(2)
   end
 
   def b_l_castle
     @board.data[7][3] = 'r'
     @board.data[7][0] = '0'
+    @board.update_b_rook(2)
   end
 
   def b_r_castle
     @board.data[7][5] = 'r'
     @board.data[7][7] = '0'
+    @board.update_b_rook(1)
   end
 
   def assign_castle_moves

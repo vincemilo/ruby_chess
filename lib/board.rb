@@ -191,18 +191,17 @@ class Board
 
   def update_w_rook(rook)
     if rook == 1
-      @castle[:w_l_rook] = 1
-    elsif rook == 2
       @castle[:w_r_rook] = 1
+    elsif rook == 2
+      @castle[:w_l_rook] = 1
     end
   end
 
   def update_b_rook(rook)
     if rook == 1
-
-      @castle[:w_l_rook] = 1
+      @castle[:b_r_rook] = 1
     elsif rook == 2
-      @castle[:w_r_rook] = 1
+      @castle[:b_l_rook] = 1
     end
   end
 

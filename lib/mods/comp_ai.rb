@@ -7,6 +7,7 @@ module CompAI
     start_pos = piece.start_pos
     moves = piece.moves
     options = create_options(start_pos, moves).shuffle
+    p options
     end_pos = options[0]
     select_dest(end_pos, start_pos, piece)
   end

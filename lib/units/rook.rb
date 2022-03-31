@@ -54,7 +54,8 @@ class Rook < Unit
   end
 
   def move_rook(start_pos, end_pos)
-    first_move if first_move?
+    p first_move?
+    first_move(start_pos) if first_move?
     @board.move_unit(start_pos, end_pos)
   end
 
@@ -64,13 +65,16 @@ class Rook < Unit
     false
   end
 
-  def first_move
-    rook = 0
-    if start_pos == ([7, 0] || [7, 7])
-      rook = 1
-    elsif start_pos == ([0, 0] || [0, 7])
-      rook = 2
-    end
+  def first_move(start_pos)
+    rook = if [[7, 0], [7, 7]].include?(start_pos)
+             1 # right side rooks
+           elsif [[0, 0], [0, 7]].include?(start_pos)
+             2 # left side rooks
+           end
+    return if rook.nil?
+
     @board.turn.zero? ? @board.update_w_rook(rook) : @board.update_b_rook(rook)
+    p rook
+    p @board.castle
   end
 end
