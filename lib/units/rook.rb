@@ -54,7 +54,6 @@ class Rook < Unit
   end
 
   def move_rook(start_pos, end_pos)
-    p first_move?
     first_move(start_pos) if first_move?
     @board.move_unit(start_pos, end_pos)
   end
@@ -74,7 +73,5 @@ class Rook < Unit
     return if rook.nil?
 
     @board.turn.zero? ? @board.update_w_rook(rook) : @board.update_b_rook(rook)
-    p rook
-    p @board.castle
   end
 end

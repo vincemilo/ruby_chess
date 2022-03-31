@@ -56,9 +56,9 @@ module GameCheck
   end
 
   def remove_check
-    return @board.update_w_king_check([]) if @board.turn.zero?
+    return @board.remove_w_king_check if @board.turn.zero?
 
-    @board.update_b_king_check([])
+    @board.remove_b_king_check
   end
 
   def select_unit_check(start_pos, piece)
@@ -66,26 +66,6 @@ module GameCheck
     piece = pieces(activate)
     mod_unit = filter_moves(piece)
     mod_unit[0] # return only the single unit obj
-  end
-
-  def remove_check?(coords)
-    if @board.turn.zero? && @board.w_king_check[:check].positive?
-      return true if remove?(coords, 0)
-    end
-    return true if remove?(coords, 1)
-
-    false
-  end
-
-  def remove?(coords, turn)
-    units = activation(turn)
-    piece = nil
-    units.any? do |unit|
-      piece = unit if unit.start_pos == coords && !unit.moves.empty?
-    end
-    return true if piece
-
-    false
   end
 
   def activate(pieces)

@@ -2,12 +2,17 @@
 
 module CompAI
   def comp_activate
+    # p in_check?
+    # p @board.w_king_check
+    # p @board.b_king_check
     pieces = activation(@board.turn).shuffle
+    # hash = {}
+    # pieces.each { |piece| hash[piece.start_pos] = piece.moves }
+    # p hash
     piece = get_piece(pieces)
     start_pos = piece.start_pos
     moves = piece.moves
     options = create_options(start_pos, moves).shuffle
-    p options
     end_pos = options[0]
     select_dest(end_pos, start_pos, piece)
   end

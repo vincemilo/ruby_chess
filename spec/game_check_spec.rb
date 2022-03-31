@@ -42,6 +42,35 @@ describe Game do
     end
   end
 
+  describe '#select_unit_check' do
+    context 'when a black king is in check but has moves' do
+      # arr = Array.new(8) { Array.new(8, '0') }
+      let(:board) { Board.new } # { instance_double(Board, data: arr, turn: 1) }
+      subject(:game) { described_class.new(board) }
+
+      before do
+        board.update_turn
+      end
+
+      it 'returns the correct values' do
+        row = 7
+        col = 4
+        board.data[row][col] = 'k'
+        board.data[row][col - 1] = 'q'
+        board.data[row][col + 1] = 'b'
+        board.data[row][col + 3] = 'r'
+        board.data[row - 1][col - 4] = 'r'
+        board.data[row - 7][col] = 'R'
+        board.update_b_king_check([col, row - 7])
+        expect(game.select_unit_check([col, row], 'k').moves).to eq([[1, -1], [-1, -1]])
+        expect(game.select_unit_check([col + 3, row], 'r').moves).to eq([])
+        expect(game.select_unit_check([col - 4, row - 1], 'r').moves).to eq([[4, 0]])
+        expect(game.select_unit_check([col - 1, row], 'q').moves).to eq([[1, -1]])
+        expect(game.select_unit_check([col + 1, row], 'b').moves).to eq([[-1, -1]])
+      end
+    end
+  end
+
   describe '#activation' do
     context 'when a black king is put in check but has no units to defend it' do
       # arr = Array.new(8) { Array.new(8, '0') }

@@ -206,9 +206,12 @@ class Board
   end
 
   def update_b_king_check(end_pos)
-    @b_king_check[:check] += 1
-    @b_king_check[:check] %= 2
+    @b_king_check[:check] = 1
     @b_king_check[:attk_pos] = end_pos
+  end
+
+  def remove_b_king_check
+    @b_king_check[:check] = 0
   end
 
   def update_b_king_pos(coords)
@@ -216,9 +219,12 @@ class Board
   end
 
   def update_w_king_check(end_pos)
-    @w_king_check[:check] += 1
-    @w_king_check[:check] %= 2
+    @w_king_check[:check] = 1
     @w_king_check[:attk_pos] = end_pos
+  end
+
+  def remove_w_king_check
+    @w_king_check[:check] = 0
   end
 
   def update_w_king_pos(coords)

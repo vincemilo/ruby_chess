@@ -58,16 +58,18 @@ class Game
   end
 
   def place_pieces
-    #@board.place_pawns
+    # @board.place_pawns
     @board.place_rooks
-    #@board.place_knights
-    #@board.place_bishops
-    #@board.place_queens
+    # @board.place_knights
+    # @board.place_bishops
+    # @board.place_queens
     @board.place_kings
   end
 
   def get_end?(start_pos, piece)
     unit = check_unit(start_pos, piece)
+    return invalid_selection if unit.moves.empty?
+
     options = display_moves(start_pos, unit.moves)
     end_pos = get_end(options)
     return invalid_selection unless check_alpha?(end_pos)
@@ -101,24 +103,21 @@ class Game
                    !select_unit(start_pos, piece).moves.empty?
 
     invalid_selection
-    false
   end
 
   def valid_end?(end_pos, options)
-    remove_check if in_check?
     return true if valid_selection?(end_pos) && options.include?(end_pos)
 
     invalid_selection
-    false
   end
 
   def invalid_selection
     puts 'Invalid selection, please try again.'
+    false
   end
 
   def valid_selection?(coords)
     return false if coords.length != 2 || @board.off_the_board?(coords)
-    return false if in_check? && !remove_check?(coords)
 
     true
   end
@@ -191,13 +190,18 @@ class Game
 
   def select_dest(end_pos, start_pos, unit)
     move_pieces(start_pos, end_pos, unit)
-    move_log(unit.class, coord_translator(end_pos))
-    unit = promote(end_pos) if promote?(end_pos, unit.class)
-    check(end_pos, unit) if check?(end_pos, unit)
+    end_pos_cleanup(end_pos, unit)
     @board.update_turn
     return unless in_check? && checkmate?(get_moves(activation(@board.turn)))
 
     checkmate(@board.turn)
+  end
+
+  def end_pos_cleanup(end_pos, unit)
+    move_log(unit.class, coord_translator(end_pos))
+    unit = promote(end_pos) if promote?(end_pos, unit.class)
+    remove_check if in_check?
+    check(end_pos, unit) if check?(end_pos, unit)
   end
 
   def move_log(unit, end_pos)
@@ -263,8 +267,8 @@ class Game
   end
 end
 
-game = Game.new
-game.intro
+# game = Game.new
+# game.intro
 # row = 1
 # col = 4
 # game.board.data[row][col] = 'P'
