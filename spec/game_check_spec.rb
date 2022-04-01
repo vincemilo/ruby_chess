@@ -98,6 +98,30 @@ describe Game do
         expect(activate).to eq(moves)
       end
     end
+
+    context 'when a white king is put in check but has a unit to defend it via capture' do
+      # arr = Array.new(8) { Array.new(8, '0') }
+      let(:board) { Board.new } # { instance_double(Board, data: arr, turn: 1) }
+      subject(:game) { described_class.new(board) }
+
+      it 'displays the correct results' do
+        row = 3
+        col = 4
+        board.data[row][col] = 'K'
+        board.data[row + 1][col + 1] = 'r'
+        board.data[row][col + 2] = 'r'
+        # board.data[row][col + 3] = 'R'
+        board.update_w_king_pos([col, row])
+        board.update_w_king_check([col - 2, row])
+        display_board
+        pieces = game.activation(0)
+        activate = {}
+        pieces.each { |piece| activate[piece.class] = piece.moves }
+        moves = { King => [[1, 1], [-1, -1], [0, -1]] }
+        p activate
+        # expect(activate).to eq(moves)
+      end
+    end
   end
 
   describe '#get_moves' do

@@ -25,7 +25,8 @@ describe King do
         col = 6
         board.data[row][col] = 'K'
         board.data[row + 7][col + 1] = 'r'
-        expect(king.hostile_r_col?(col, row)).to eq(true)
+        display_board
+        expect(king.hostile_r_col?(col + 1, row)).to eq(true)
       end
     end
 
@@ -39,7 +40,21 @@ describe King do
         col = 6
         board.data[row][col] = 'K'
         board.data[row + 7][col + 1] = 'R'
-        expect(king.hostile_r_col?(col, row)).to eq(false)
+        expect(king.hostile_r_col?(col + 1, row)).to eq(false)
+      end
+    end
+
+    context 'when a white king has an non-hostile r column via capture' do
+      arr = Array.new(8) { Array.new(8, '0') }
+      let(:board) { instance_double(Board, data: arr, turn: 0) }
+      subject(:king) { described_class.new(board) }
+
+      it 'returns false' do
+        row = 1
+        col = 6
+        board.data[row][col] = 'K'
+        board.data[row][col + 1] = 'r'
+        expect(king.hostile_r_col?(col + 1, row)).to eq(false)
       end
     end
 
@@ -53,7 +68,7 @@ describe King do
         col = 6
         board.data[row][col] = 'k'
         board.data[row - 7][col + 1] = 'R'
-        expect(king.hostile_r_col?(col, row)).to eq(true)
+        expect(king.hostile_r_col?(col + 1, row)).to eq(true)
       end
     end
 
@@ -67,7 +82,41 @@ describe King do
         col = 6
         board.data[row][col] = 'k'
         board.data[row - 7][col + 1] = 'r'
-        expect(king.hostile_r_col?(col, row)).to eq(false)
+        expect(king.hostile_r_col?(col + 1, row)).to eq(false)
+      end
+    end
+  end
+
+  describe '#hostile_r_col_diag?' do
+    context 'when a white king is put in check but can escape via capture' do
+      # arr = Array.new(8) { Array.new(8, '0') }
+      let(:board) { Board.new } # { instance_double(Board, data: arr, turn: 0) }
+      subject(:king) { described_class.new(board) }
+
+      it 'displays the correct results' do
+        row = 3
+        col = 4
+        board.data[row][col] = 'K'
+        board.data[row + 1][col + 1] = 'r'
+        board.data[row][col + 2] = 'r'
+        expect(king.hostile_r_col_diag?(col + 1, row + 1)).to eq(false)
+        expect(king.r_u_diag_invalid?(row, col)).to eq(false)
+      end
+    end
+
+    context 'when a white king is put in check but can escape via capture' do
+      # arr = Array.new(8) { Array.new(8, '0') }
+      let(:board) { Board.new } # { instance_double(Board, data: arr, turn: 0) }
+      subject(:king) { described_class.new(board) }
+
+      it 'displays the correct results' do
+        row = 3
+        col = 4
+        board.data[row][col] = 'K'
+        board.data[row - 1][col + 1] = 'r'
+        board.data[row][col + 2] = 'r'
+        expect(king.hostile_r_col_diag?(col + 1, row - 1)).to eq(false)
+        expect(king.r_d_diag_invalid?(row, col)).to eq(false)
       end
     end
   end
@@ -83,7 +132,7 @@ describe King do
         col = 6
         board.data[row][col] = 'K'
         board.data[row + 7][col - 1] = 'r'
-        expect(king.hostile_l_col?(col, row)).to eq(true)
+        expect(king.hostile_l_col?(col - 1, row)).to eq(true)
       end
     end
 
@@ -97,7 +146,7 @@ describe King do
         col = 6
         board.data[row][col] = 'K'
         board.data[row + 7][col - 1] = 'R'
-        expect(king.hostile_l_col?(col, row)).to eq(false)
+        expect(king.hostile_l_col?(col - 1, row)).to eq(false)
       end
     end
 
@@ -111,7 +160,7 @@ describe King do
         col = 6
         board.data[row][col] = 'k'
         board.data[row - 7][col - 1] = 'R'
-        expect(king.hostile_l_col?(col, row)).to eq(true)
+        expect(king.hostile_l_col?(col - 1, row)).to eq(true)
       end
     end
 
@@ -125,7 +174,7 @@ describe King do
         col = 6
         board.data[row][col] = 'k'
         board.data[row - 7][col - 1] = 'r'
-        expect(king.hostile_l_col?(col, row)).to eq(false)
+        expect(king.hostile_l_col?(col - 1, row)).to eq(false)
       end
     end
   end
@@ -141,7 +190,7 @@ describe King do
         col = 4
         board.data[row][col] = 'K'
         board.data[row + 1][col + 3] = 'r'
-        expect(king.hostile_u_row?(col, row)).to eq(true)
+        expect(king.hostile_u_row?(col, row + 1)).to eq(true)
       end
     end
 
@@ -159,6 +208,20 @@ describe King do
       end
     end
 
+    context 'when a white king has no hostile up row via capture' do
+      arr = Array.new(8) { Array.new(8, '0') }
+      let(:board) { instance_double(Board, data: arr, turn: 0) }
+      subject(:king) { described_class.new(board) }
+
+      it 'returns false' do
+        row = 1
+        col = 4
+        board.data[row][col] = 'K'
+        board.data[row + 1][col + 1] = 'r'
+        expect(king.hostile_u_row?(col + 1, row + 1)).to eq(false)
+      end
+    end
+
     context 'when a black king has a hostile up row' do
       arr = Array.new(8) { Array.new(8, '0') }
       let(:board) { instance_double(Board, data: arr, turn: 1) }
@@ -169,7 +232,7 @@ describe King do
         col = 4
         board.data[row][col] = 'k'
         board.data[row + 1][col + 3] = 'R'
-        expect(king.hostile_u_row?(col, row)).to eq(true)
+        expect(king.hostile_u_row?(col, row + 1)).to eq(true)
       end
     end
 
@@ -199,7 +262,7 @@ describe King do
         col = 4
         board.data[row][col] = 'K'
         board.data[row - 1][col + 3] = 'r'
-        expect(king.hostile_d_row?(col, row)).to eq(true)
+        expect(king.hostile_d_row?(col, row - 1)).to eq(true)
       end
     end
 
@@ -213,7 +276,7 @@ describe King do
         col = 4
         board.data[row][col] = 'K'
         board.data[row - 1][col + 3] = 'R'
-        expect(king.hostile_d_row?(col, row)).to eq(false)
+        expect(king.hostile_d_row?(col, row - 1)).to eq(false)
       end
     end
 
@@ -227,7 +290,7 @@ describe King do
         col = 4
         board.data[row][col] = 'k'
         board.data[row - 1][col + 3] = 'R'
-        expect(king.hostile_d_row?(col, row)).to eq(true)
+        expect(king.hostile_d_row?(col, row - 1)).to eq(true)
       end
     end
 
@@ -241,7 +304,7 @@ describe King do
         col = 4
         board.data[row][col] = 'k'
         board.data[row - 1][col + 3] = 'r'
-        expect(king.hostile_d_row?(col, row)).to eq(false)
+        expect(king.hostile_d_row?(col, row - 1)).to eq(false)
       end
     end
   end

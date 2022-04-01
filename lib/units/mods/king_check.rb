@@ -2,9 +2,10 @@
 
 module KingCheck
   def r_u_diag_invalid?(row, col)
+    p hostile_u_row_diag?(col, row)
     return true if off_the_board?([row + 1, col + 1]) ||
-                   hostile_r_col_diag?(col, row) ||
-                   hostile_u_row_diag?(col, row) ||
+                   hostile_r_col_diag?(col + 1, row + 1) ||
+                   hostile_u_row_diag?(col + 1, row + 1) ||
                    hostile_neg_diag?(col + 1, row + 1)
 
     false
@@ -12,8 +13,8 @@ module KingCheck
 
   def r_d_diag_invalid?(row, col)
     return true if off_the_board?([row - 1, col + 1]) ||
-                   hostile_r_col_diag?(col, row) ||
-                   hostile_d_row_diag?(col, row) ||
+                   hostile_r_col_diag?(col + 1, row - 1) ||
+                   hostile_d_row_diag?(col + 1, row - 1) ||
                    hostile_pos_diag?(col + 1, row - 1)
 
     false
@@ -21,8 +22,8 @@ module KingCheck
 
   def l_d_diag_invalid?(row, col)
     return true if off_the_board?([row - 1, col - 1]) ||
-                   hostile_l_col_diag?(col, row) ||
-                   hostile_d_row_diag?(col, row) ||
+                   hostile_l_col_diag?(col - 1, row - 1) ||
+                   hostile_d_row_diag?(col + 1, row - 1) ||
                    hostile_neg_diag?(col - 1, row - 1)
 
     false
@@ -30,8 +31,8 @@ module KingCheck
 
   def l_u_diag_invalid?(row, col)
     return true if off_the_board?([row + 1, col - 1]) ||
-                   hostile_l_col_diag?(col, row) ||
-                   hostile_u_row_diag?(col, row) ||
+                   hostile_l_col_diag?(col - 1, row + 1) ||
+                   hostile_u_row_diag?(col - 1, row + 1) ||
                    hostile_pos_diag?(col - 1, row + 1)
 
     false
@@ -46,15 +47,15 @@ module KingCheck
   end
 
   def hostile_r_col?(col, row)
-    trans_r = @board.data.transpose[col + 1]
+    trans_r = @board.data.transpose[col]
     return false if trans_r.nil?
-    return true if hostile_u?(row, trans_r) || hostile_d?(row, trans_r)
+    return true if hostile_u?(row + 1, trans_r) || hostile_d?(row - 1, trans_r)
 
     false
   end
 
   def hostile_r_col_diag?(col, row)
-    trans_r = @board.data.transpose[col + 1]
+    trans_r = @board.data.transpose[col]
     return false if trans_r.nil?
     return true if hostile_u?(row + 1, trans_r) || hostile_d?(row - 1, trans_r)
 
@@ -62,15 +63,15 @@ module KingCheck
   end
 
   def hostile_l_col?(col, row)
-    trans_l = @board.data.transpose[col - 1]
+    trans_l = @board.data.transpose[col]
     return false if trans_l.nil?
-    return true if hostile_u?(row, trans_l) || hostile_d?(row, trans_l)
+    return true if hostile_u?(row + 1, trans_l) || hostile_d?(row - 1, trans_l)
 
     false
   end
 
   def hostile_l_col_diag?(col, row)
-    trans_l = @board.data.transpose[col - 1]
+    trans_l = @board.data.transpose[col]
     return false if trans_l.nil?
     return true if hostile_u?(row + 1, trans_l) || hostile_d?(row - 1, trans_l)
 
@@ -107,6 +108,8 @@ module KingCheck
       return true if q_r_check?(trans, row, moves)
 
       moves -= 1
+      return false if moves.abs > row + 1
+      # prevent wrapping onto other side of arr
     end
 
     false
@@ -121,15 +124,15 @@ module KingCheck
   end
 
   def hostile_u_row?(col, row)
-    u_row = @board.data[row + 1]
+    u_row = @board.data[row]
     return false if u_row.nil?
-    return true if hostile_u?(col, u_row) || hostile_d?(col, u_row)
+    return true if hostile_u?(col + 1, u_row) || hostile_d?(col - 1, u_row)
 
     false
   end
 
   def hostile_u_row_diag?(col, row)
-    u_row = @board.data[row + 1]
+    u_row = @board.data[row]
     return false if u_row.nil?
     return true if hostile_u?(col + 1, u_row) || hostile_d?(col - 1, u_row)
 
@@ -137,15 +140,15 @@ module KingCheck
   end
 
   def hostile_d_row?(col, row)
-    d_row = @board.data[row - 1]
+    d_row = @board.data[row]
     return false if d_row.nil?
-    return true if hostile_u?(col, d_row) || hostile_d?(col, d_row)
+    return true if hostile_u?(col + 1, d_row) || hostile_d?(col - 1, d_row)
 
     false
   end
 
   def hostile_d_row_diag?(col, row)
-    d_row = @board.data[row - 1]
+    d_row = @board.data[row]
     return false if d_row.nil?
     return true if hostile_u?(col + 1, d_row) || hostile_d?(col - 1, d_row)
 

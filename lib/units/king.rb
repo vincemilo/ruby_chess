@@ -78,7 +78,7 @@ class King < Unit
   def check_l(row, col, king)
     return king if (col - 1).negative?
     return king if hostile_row?(col, row)
-    return king if hostile_l_col?(col, row)
+    return king if hostile_l_col?(col - 1, row)
     return king if hostile_pawns_kings_knights?(col - 1, row)
 
     dest = @board.data[row][col - 1]
@@ -89,7 +89,7 @@ class King < Unit
   def check_r(row, col, king)
     return king if (col + 1) > 7
     return king if hostile_row?(col, row)
-    return king if hostile_r_col?(col, row)
+    return king if hostile_r_col?(col + 1, row)
     return king if hostile_pawns_kings_knights?(col + 1, row)
 
     dest = @board.data[row][col + 1]
@@ -106,7 +106,7 @@ class King < Unit
   def check_u(row, col, king)
     return king if (row + 1) > 7
     return king if hostile_col?(col, row)
-    return king if hostile_u_row?(col, row)
+    return king if hostile_u_row?(col, row + 1)
     return king if hostile_pawns_kings_knights?(col, row + 1)
 
     dest = @board.data[row + 1][col]
@@ -117,7 +117,7 @@ class King < Unit
   def check_d(row, col, king)
     return king if (row - 1).negative?
     return king if hostile_col?(col, row)
-    return king if hostile_d_row?(col, row)
+    return king if hostile_d_row?(col, row - 1)
     return king if hostile_pawns_kings_knights?(col, row - 1)
 
     dest = @board.data[row - 1][col]

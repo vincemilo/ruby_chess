@@ -2,7 +2,9 @@
 
 module CompAI
   def comp_activate
-    # p in_check?
+    return if @game_over == true
+
+    p in_check?
     # p @board.w_king_check
     # p @board.b_king_check
     pieces = activation(@board.turn).shuffle
