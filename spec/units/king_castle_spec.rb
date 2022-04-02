@@ -183,6 +183,7 @@ describe King do
         board.data[row + 7][col - 1] = 'k'
         board.data[row + 7][col + 1] = 'r'
         board.data[row][col + 3] = 'R'
+        display_board
         expect(king.hostile_squares?(col + 1, row)).to eq(false)
       end
     end

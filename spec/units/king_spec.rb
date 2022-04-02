@@ -81,6 +81,7 @@ describe King do
         board.data[row][col] = 'K'
         board.data[row + 5][col - 1] = 'r'
         board.data[row - 2][col + 1] = 'r'
+        display_board
         w_king = king.assign_moves([col, row], king)
         king_moves = [[0, 1], [0, -1]]
         expect(w_king.moves).to eq(king_moves)

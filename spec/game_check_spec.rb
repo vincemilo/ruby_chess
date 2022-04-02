@@ -99,7 +99,7 @@ describe Game do
       end
     end
 
-    context 'when a white king is put in check but has a unit to defend it via capture' do
+    context 'when a white king can escape check via row with units to defend it or via capture' do
       # arr = Array.new(8) { Array.new(8, '0') }
       let(:board) { Board.new } # { instance_double(Board, data: arr, turn: 1) }
       subject(:game) { described_class.new(board) }
@@ -108,18 +108,17 @@ describe Game do
         row = 3
         col = 4
         board.data[row][col] = 'K'
+        board.data[row - 2][col + 1] = 'Q'
         board.data[row + 1][col + 1] = 'r'
         board.data[row][col + 2] = 'r'
-        # board.data[row][col + 3] = 'R'
+        board.data[row][col + 3] = 'R'
         board.update_w_king_pos([col, row])
-        board.update_w_king_check([col - 2, row])
-        display_board
+        board.update_w_king_check([col + 2, row])
         pieces = game.activation(0)
         activate = {}
         pieces.each { |piece| activate[piece.class] = piece.moves }
-        moves = { King => [[1, 1], [-1, -1], [0, -1]] }
-        p activate
-        # expect(activate).to eq(moves)
+        moves = { Queen => [[0, 2]], King => [[1, 1], [-1, -1], [0, -1]], Rook => [[-1, 0]] }
+        expect(activate).to eq(moves)
       end
     end
   end
@@ -152,38 +151,87 @@ describe Game do
   end
 
   describe '#col_attk' do
-    arr = Array.new(8) { Array.new(8, '0') }
-    let(:board) { instance_double(Board, data: arr, turn: 0) }
-    subject(:game) { described_class.new(board) }
+    context 'when a white king is threated by an enemy rook' do
+      arr = Array.new(8) { Array.new(8, '0') }
+      let(:board) { instance_double(Board, data: arr, turn: 0) }
+      subject(:game) { described_class.new(board) }
 
-    it 'displays the squares that need to be moved into to prevent check' do
-      row = 7
-      col = 4
-      board.data[row][col] = 'k'
-      board.data[row - 7][col] = 'R'
-      block_moves = [[4, 0], [4, 1], [4, 2], [4, 3], [4, 4], [4, 5], [4, 6]]
-      expect(game.col_attk([col, row], [col, row - 7])).to eq(block_moves)
+      it 'displays the squares that need to be moved into to prevent check' do
+        row = 0
+        col = 4
+        board.data[row][col] = 'K'
+        board.data[row + 7][col] = 'r'
+        block_moves = [[4, 1], [4, 2], [4, 3], [4, 4], [4, 5], [4, 6], [4, 7]]
+        expect(game.col_attk([col, row], [col, row + 7])).to eq(block_moves)
+      end
+    end
+
+    context 'when a white king is threated by an enemy rook' do
+      arr = Array.new(8) { Array.new(8, '0') }
+      let(:board) { instance_double(Board, data: arr, turn: 0) }
+      subject(:game) { described_class.new(board) }
+
+      it 'displays the squares that need to be moved into to prevent check' do
+        row = 7
+        col = 4
+        board.data[row][col] = 'K'
+        board.data[row - 7][col] = 'r'
+        block_moves = [[4, 0], [4, 1], [4, 2], [4, 3], [4, 4], [4, 5], [4, 6]]
+        expect(game.col_attk([col, row], [col, row - 7])).to eq(block_moves)
+      end
+    end
+
+    context 'when a black king is threated by an enemy rook' do
+      arr = Array.new(8) { Array.new(8, '0') }
+      let(:board) { instance_double(Board, data: arr, turn: 1) }
+      subject(:game) { described_class.new(board) }
+
+      it 'displays the squares that need to be moved into to prevent check' do
+        row = 7
+        col = 4
+        board.data[row][col] = 'k'
+        board.data[row - 7][col] = 'R'
+        block_moves = [[4, 0], [4, 1], [4, 2], [4, 3], [4, 4], [4, 5], [4, 6]]
+        expect(game.col_attk([col, row], [col, row - 7])).to eq(block_moves)
+      end
     end
   end
 
   describe '#row_attk' do
-    arr = Array.new(8) { Array.new(8, '0') }
-    let(:board) { instance_double(Board, data: arr, turn: 0) }
-    subject(:game) { described_class.new(board) }
+    context 'when a white king is threatened by an enemy rook' do
+      arr = Array.new(8) { Array.new(8, '0') }
+      let(:board) { instance_double(Board, data: arr, turn: 0) }
+      subject(:game) { described_class.new(board) }
 
-    it 'displays the squares that need to be moved into to prevent check' do
-      row = 7
-      col = 4
-      board.data[row][col] = 'k'
-      board.data[row][col - 4] = 'R'
-      block_moves = [[0, 7], [1, 7], [2, 7], [3, 7]]
-      expect(game.row_attk([col, row], [col - 4, row])).to eq(block_moves)
+      it 'displays the squares that need to be moved into to prevent check' do
+        row = 2
+        col = 3
+        board.data[row][col] = 'K'
+        board.data[row][col + 3] = 'r'
+        block_moves = [[4, 2], [5, 2], [6, 2]]
+        expect(game.row_attk([col, row], [col + 3, row])).to eq(block_moves)
+      end
+    end
+
+    context 'when a black king is threatened by an enemy rook' do
+      arr = Array.new(8) { Array.new(8, '0') }
+      let(:board) { instance_double(Board, data: arr, turn: 1) }
+      subject(:game) { described_class.new(board) }
+
+      it 'displays the squares that need to be moved into to prevent check' do
+        row = 7
+        col = 4
+        board.data[row][col] = 'k'
+        board.data[row][col - 4] = 'R'
+        block_moves = [[0, 7], [1, 7], [2, 7], [3, 7]]
+        expect(game.row_attk([col, row], [col - 4, row])).to eq(block_moves)
+      end
     end
   end
 
   describe '#r_pos_diag' do
     arr = Array.new(8) { Array.new(8, '0') }
-    let(:board) { instance_double(Board, data: arr, turn: 0) }
+    let(:board) { instance_double(Board, data: arr, turn: 1) }
     subject(:game) { described_class.new(board) }
 
     it 'displays the squares that need to be moved into to prevent check' do
@@ -198,7 +246,7 @@ describe Game do
 
   describe '#l_pos_diag' do
     arr = Array.new(8) { Array.new(8, '0') }
-    let(:board) { instance_double(Board, data: arr, turn: 0) }
+    let(:board) { instance_double(Board, data: arr, turn: 1) }
     subject(:game) { described_class.new(board) }
 
     it 'displays the squares that need to be moved into to prevent check' do
@@ -288,11 +336,6 @@ describe Game do
       # arr = Array.new(8) { Array.new(8, '0') }
       let(:board) { Board.new } # { instance_double(Board, data: arr, turn: 0) }
       subject(:game) { described_class.new(board) }
-
-      #   before do
-      #     allow(board).to receive(:get_unit).with([7, 1]).and_return('r')
-      #     allow(board).to receive(:enemy_occupied?).with('R').and_return(false)
-      #   end
 
       it 'returns the correct values' do
         row = 0

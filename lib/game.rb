@@ -192,7 +192,9 @@ class Game
     move_pieces(start_pos, end_pos, unit)
     end_pos_cleanup(end_pos, unit)
     @board.update_turn
-    return unless in_check? && checkmate?(get_moves(activation(@board.turn)))
+    pieces = get_moves(activation(@board.turn))
+    return stalemate if !in_check? && stalemate?(pieces)
+    return unless in_check? && checkmate?(pieces)
 
     checkmate(@board.turn)
   end
@@ -267,8 +269,8 @@ class Game
   end
 end
 
-# game = Game.new
-# game.intro
+game = Game.new
+game.intro
 # row = 1
 # col = 4
 # game.board.data[row][col] = 'P'

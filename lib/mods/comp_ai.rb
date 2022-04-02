@@ -5,12 +5,10 @@ module CompAI
     return if @game_over == true
 
     p in_check?
-    # p @board.w_king_check
-    # p @board.b_king_check
     pieces = activation(@board.turn).shuffle
-    # hash = {}
-    # pieces.each { |piece| hash[piece.start_pos] = piece.moves }
-    # p hash
+    hash = {}
+    pieces.each { |piece| hash[piece.start_pos] = piece.moves }
+    p hash
     piece = get_piece(pieces)
     start_pos = piece.start_pos
     moves = piece.moves

@@ -2,7 +2,6 @@
 
 module KingCheck
   def r_u_diag_invalid?(row, col)
-    p hostile_u_row_diag?(col, row)
     return true if off_the_board?([row + 1, col + 1]) ||
                    hostile_r_col_diag?(col + 1, row + 1) ||
                    hostile_u_row_diag?(col + 1, row + 1) ||
@@ -88,7 +87,7 @@ module KingCheck
   end
 
   def hostile_u?(row, trans)
-    return false if (row + 1) > 7
+    return false if row > 7
 
     moves = 0
     while empty_check?(trans[row + moves]) || q_r_check?(trans, row, moves)
@@ -101,7 +100,7 @@ module KingCheck
   end
 
   def hostile_d?(row, trans)
-    return false if (row - 1).negative?
+    return false if row.negative?
 
     moves = 0
     while empty_check?(trans[row + moves]) || q_r_check?(trans, row, moves)

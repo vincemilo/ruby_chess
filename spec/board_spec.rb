@@ -88,7 +88,7 @@ describe Board do
         board.data[row][col] = 'P'
         board.data[row + 1][col + 1] = 'p'
         board.capture([col + 1, row + 1])
-        expect(board.captured).to eq([['p'], []])
+        expect(board.captured).to eq([['♟'], []])
       end
     end
   end
@@ -108,7 +108,7 @@ describe Board do
         board.data[row][col] = 'P'
         board.data[row][col + 1] = 'p'
         board.en_passant_capture
-        expect(board.captured).to eq([['p'], []])
+        expect(board.captured).to eq([['♟'], []])
       end
     end
 
@@ -128,7 +128,7 @@ describe Board do
         board.data[row][col] = 'p'
         board.data[row][col - 1] = 'P'
         board.en_passant_capture
-        expect(board.captured).to eq([[], ['P']])
+        expect(board.captured).to eq([[], ['♙']])
       end
     end
   end

@@ -119,6 +119,22 @@ describe King do
         expect(king.r_d_diag_invalid?(row, col)).to eq(false)
       end
     end
+
+    context 'when a white king with hostile left and right cols is selected' do
+      # arr = Array.new(8) { Array.new(8, '0') }
+      let(:board) { Board.new } # { instance_double(Board, data: arr) }
+      subject(:king) { described_class.new(board) }
+
+      it 'assigns the correct moves' do
+        row = 2
+        col = 4
+        board.data[row][col] = 'K'
+        board.data[row + 5][col + 1] = 'n'
+        board.data[row + 5][col - 1] = 'r'
+        board.data[row - 2][col + 1] = 'r'
+        expect(king.hostile_r_col_diag?(col + 1, row - 1)).to eq(true)
+      end
+    end
   end
 
   describe '#hostile_l_col?' do

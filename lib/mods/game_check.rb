@@ -119,6 +119,21 @@ module GameCheck
       puts 'White is checkmated, Black wins!'
     end
     @game_over = true
+    @board.display_board
+  end
+
+  def stalemate?(pieces)
+    return true if checkmate?(pieces)
+    
+    # insufficent material to do
+
+    false
+  end
+
+  def stalemate
+    puts 'Stalemate, game is drawn!'
+    @game_over = true
+    @board.display_board
   end
 
   def filter_moves(pieces)
@@ -165,16 +180,24 @@ module GameCheck
 
   def col_attk(king_pos, attk_pos)
     block_moves = []
-    diff = [king_pos[1], attk_pos[1]].sort
-    block_range = (diff[0]...diff[1]).to_a
+    diff = [king_pos[1], attk_pos[1]]
+    block_range = get_block_range(diff)
     block_range.each { |coord| block_moves << [king_pos[0], coord] }
     block_moves
   end
 
+  def get_block_range(diff)
+    above = diff[0] < diff[1] # checks if attack is coming from above/left
+    diff = diff.sort
+    return (diff[0] + 1..diff[1]).to_a if above
+
+    (diff[0]...diff[1]).to_a
+  end
+
   def row_attk(king_pos, attk_pos)
     block_moves = []
-    diff = [king_pos[0], attk_pos[0]].sort
-    block_range = (diff[0]...diff[1]).to_a
+    diff = [king_pos[0], attk_pos[0]]
+    block_range = get_block_range(diff)
     block_range.each { |coord| block_moves << [coord, king_pos[1]] }
     block_moves
   end
