@@ -107,7 +107,7 @@ module KingCheck
       return true if q_r_check?(trans, row, moves)
 
       moves -= 1
-      return false if moves.abs > row + 1
+      return false if moves.abs > row
       # prevent wrapping onto other side of arr
     end
 

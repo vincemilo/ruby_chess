@@ -183,8 +183,27 @@ describe King do
         board.data[row + 7][col - 1] = 'k'
         board.data[row + 7][col + 1] = 'r'
         board.data[row][col + 3] = 'R'
-        display_board
         expect(king.hostile_squares?(col + 1, row)).to eq(false)
+      end
+    end
+
+    context 'when a b king is threatened and cant castle left' do
+      # arr = Array.new(8) { Array.new(8, '0') }
+      let(:board) { Board.new } # { instance_double(Board, data: arr, turn: 0) }
+      subject(:king) { described_class.new(board) }
+
+      before do
+        board.update_turn
+      end
+
+      it 'displays the correct results' do
+        row = 7
+        col = 4
+        board.data[row][col] = 'k'
+        board.data[row][col - 4] = 'r'
+        board.data[row - 2][col] = 'N'
+        display_board
+        expect(king.hostile_squares?(col - 1, row)).to eq(true)
       end
     end
   end

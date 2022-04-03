@@ -25,7 +25,6 @@ describe King do
         col = 6
         board.data[row][col] = 'K'
         board.data[row + 7][col + 1] = 'r'
-        display_board
         expect(king.hostile_r_col?(col + 1, row)).to eq(true)
       end
     end
@@ -267,6 +266,23 @@ describe King do
     end
   end
 
+  describe '#hostile_u_row_diag?' do
+    context 'when a white king can capture via right diag' do
+      # arr = Array.new(8) { Array.new(8, '0') }
+      let(:board) { Board.new } # { instance_double(Board, data: arr, turn: 0) }
+      subject(:king) { described_class.new(board) }
+
+      it 'displays the correct results' do
+        row = 0
+        col = 6
+        board.data[row][col] = 'K'
+        board.data[row + 1][col + 1] = 'r'
+        expect(king.hostile_u_row_diag?(col + 1, row + 1)).to eq(false)
+        expect(king.r_u_diag_invalid?(row, col)).to eq(false)
+      end
+    end
+  end
+
   describe '#hostile_d_row?' do
     context 'when a white king has a hostile up row' do
       arr = Array.new(8) { Array.new(8, '0') }
@@ -321,6 +337,23 @@ describe King do
         board.data[row][col] = 'k'
         board.data[row - 1][col + 3] = 'r'
         expect(king.hostile_d_row?(col, row - 1)).to eq(false)
+      end
+    end
+  end
+
+  describe '#hostile_d_row_diag?' do
+    context 'when a white king can capture via right diag' do
+      # arr = Array.new(8) { Array.new(8, '0') }
+      let(:board) { Board.new } # { instance_double(Board, data: arr, turn: 0) }
+      subject(:king) { described_class.new(board) }
+
+      it 'displays the correct results' do
+        row = 2
+        col = 6
+        board.data[row][col] = 'K'
+        board.data[row - 1][col + 1] = 'r'
+        expect(king.hostile_d_row_diag?(col + 1, row - 1)).to eq(false)
+        expect(king.r_d_diag_invalid?(row, col)).to eq(false)
       end
     end
   end

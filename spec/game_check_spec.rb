@@ -150,6 +150,65 @@ describe Game do
     end
   end
 
+  describe 'insfuff_mat?' do
+    context 'when there are just two kings left' do
+      # arr = Array.new(8) { Array.new(8, '0') }
+      let(:board) { Board.new } # { instance_double(Board, data: arr, turn: 0) }
+      subject(:game) { described_class.new(board) }
+
+      it 'returns true' do
+        row = 0
+        col = 4
+        board.data[row][col] = 'K'
+        board.data[row + 7][col] = 'k'
+        display_board
+        arr = []
+        16.times { arr << '♟' }
+        board.update_capture(0, arr)
+        expect(game.insuff_mat?).to eq(true)
+      end
+    end
+
+    context 'when there are just two kings left on opp sides' do
+      # arr = Array.new(8) { Array.new(8, '0') }
+      let(:board) { Board.new } # { instance_double(Board, data: arr, turn: 0) }
+      subject(:game) { described_class.new(board) }
+
+      before do
+        board.update_turn
+      end
+
+      it 'returns true' do
+        row = 7
+        col = 4
+        board.data[row][col] = 'K'
+        board.data[row - 7][col] = 'k'
+        arr = []
+        16.times { arr << '♟' }
+        board.update_capture(0, arr)
+        expect(game.insuff_mat?).to eq(true)
+      end
+    end
+
+    context 'when there are just two kings and a knight or bishop left' do
+      # arr = Array.new(8) { Array.new(8, '0') }
+      let(:board) { Board.new } # { instance_double(Board, data: arr, turn: 0) }
+      subject(:game) { described_class.new(board) }
+
+      it 'returns true' do
+        row = 0
+        col = 4
+        board.data[row][col] = 'K'
+        board.data[row + 7][col] = 'k'
+        board.data[row + 5][col] = 'n'
+        arr = []
+        16.times { arr << '♟' }
+        board.update_capture(0, arr)
+        expect(game.insuff_mat?).to eq(true)
+      end
+    end
+  end
+
   describe '#col_attk' do
     context 'when a white king is threated by an enemy rook' do
       arr = Array.new(8) { Array.new(8, '0') }

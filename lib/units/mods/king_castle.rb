@@ -98,6 +98,7 @@ module KingCastle
     return true if hostile_col?(col, row)
     return true if hostile_pos_diag?(col, row)
     return true if hostile_neg_diag?(col, row)
+    return true if hostile_pawns_kings_knights?(col, row)
 
     false
   end

@@ -175,6 +175,10 @@ class Board
     puts "Captured pieces: #{@captured}"
   end
 
+  def update_capture(turn, pieces)
+    @captured[turn] = pieces
+  end
+
   def en_passant_capture
     capture(@en_passant)
     @data[y_pos(@en_passant)][x_pos(@en_passant)] = '0'

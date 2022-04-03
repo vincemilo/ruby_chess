@@ -118,20 +118,50 @@ module GameCheck
     else
       puts 'White is checkmated, Black wins!'
     end
-    @game_over = true
-    @board.display_board
+    game_end
   end
 
   def stalemate?(pieces)
     return true if checkmate?(pieces)
-    
-    # insufficent material to do
 
     false
   end
 
   def stalemate
     puts 'Stalemate, game is drawn!'
+    game_end
+  end
+
+  def insuff_mat?
+    return false unless @board.captured[0].length >= 16 ||
+                        @board.captured[1].length >= 16
+
+    units = %w[p r n b q k]
+    arr = check_insuff_mat(units)
+    tally = arr.tally
+    return true if tally == { 'k' => 2 }
+    return true if tally == { 'k' => 2, 'n' => 1 }
+    return true if tally == { 'k' => 2, 'b' => 1 }
+
+    false
+  end
+
+  def check_insuff_mat(units)
+    arr = []
+    board.data.each do |row|
+      row.each do |square|
+        arr << square.downcase if units.include?(square.downcase)
+      end
+    end
+    arr
+  end
+
+  def insuff_mat
+    puts 'Insufficient material, game is drawn!'
+    game_end
+  end
+
+  def game_end
     @game_over = true
     @board.display_board
   end

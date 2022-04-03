@@ -81,7 +81,6 @@ describe King do
         board.data[row][col] = 'K'
         board.data[row + 5][col - 1] = 'r'
         board.data[row - 2][col + 1] = 'r'
-        display_board
         w_king = king.assign_moves([col, row], king)
         king_moves = [[0, 1], [0, -1]]
         expect(w_king.moves).to eq(king_moves)
@@ -323,6 +322,142 @@ describe King do
         board.data[row + 1][col - 1] = 'P'
         w_king = king.assign_moves([col, row], king)
         king_moves = [[1, 0], [-1, 0], [2, 0], [-2, 0]]
+        expect(w_king.moves).to eq(king_moves)
+      end
+    end
+
+    context 'when a white king can capture via right diag' do
+      # arr = Array.new(8) { Array.new(8, '0') }
+      let(:board) { Board.new } # { instance_double(Board, data: arr, turn: 0) }
+      subject(:king) { described_class.new(board) }
+
+      it 'displays the correct results' do
+        row = 0
+        col = 6
+        board.data[row][col] = 'K'
+        board.data[row + 1][col + 1] = 'r'
+        w_king = king.assign_moves([col, row], king)
+        king_moves = [[1, 1], [-1, 0]]
+        expect(w_king.moves).to eq(king_moves)
+      end
+    end
+
+    context 'when a w king cant capture via r col due to defended piece' do
+      # arr = Array.new(8) { Array.new(8, '0') }
+      let(:board) { Board.new } # { instance_double(Board, data: arr, turn: 0) }
+      subject(:king) { described_class.new(board) }
+
+      it 'displays the correct results' do
+        row = 3
+        col = 6
+        board.data[row][col] = 'K'
+        board.data[row][col + 1] = 'r'
+        board.data[row][col - 6] = 'r'
+        w_king = king.assign_moves([col, row], king)
+        king_moves = [[-1, -1], [-1, 1], [0, 1], [0, -1]]
+        expect(w_king.moves).to eq(king_moves)
+      end
+    end
+  end
+
+  describe '#check_1' do
+    context 'when a black king can capture via right up diag' do
+      # arr = Array.new(8) { Array.new(8, '0') }
+      let(:board) { Board.new } # { instance_double(Board, data: arr, turn: 0) }
+      subject(:king) { described_class.new(board) }
+
+      before do
+        board.update_turn
+      end
+
+      it 'displays the correct results' do
+        row = 6
+        col = 1
+        board.data[row][col] = 'k'
+        board.data[row + 1][col + 1] = 'B'
+        display_board
+        b_king = king.check_1(row, col, king)
+        king_moves = [[1, 1]]
+        expect(b_king.moves).to eq(king_moves)
+      end
+    end
+  end
+
+  describe '#check_l' do
+    context 'when a black king can capture via left col' do
+      # arr = Array.new(8) { Array.new(8, '0') }
+      let(:board) { Board.new } # { instance_double(Board, data: arr, turn: 0) }
+      subject(:king) { described_class.new(board) }
+
+      before do
+        board.update_turn
+      end
+
+      it 'displays the correct results' do
+        row = 6
+        col = 1
+        board.data[row][col] = 'k'
+        board.data[row][col - 1] = 'R'
+        b_king = king.check_l(row, col, king)
+        king_moves = [[-1, 0]]
+        expect(b_king.moves).to eq(king_moves)
+      end
+    end
+  end
+
+  describe '#check_r' do
+    context 'when a white king can capture via right col' do
+      # arr = Array.new(8) { Array.new(8, '0') }
+      let(:board) { Board.new } # { instance_double(Board, data: arr, turn: 0) }
+      subject(:king) { described_class.new(board) }
+
+      it 'displays the correct results' do
+        row = 3
+        col = 6
+        board.data[row][col] = 'K'
+        board.data[row][col + 1] = 'r'
+        w_king = king.check_r(row, col, king)
+        king_moves = [[1, 0]]
+        expect(w_king.moves).to eq(king_moves)
+      end
+    end
+  end
+
+  describe '#check_u' do
+    context 'when a black king can capture via up row' do
+      # arr = Array.new(8) { Array.new(8, '0') }
+      let(:board) { Board.new } # { instance_double(Board, data: arr, turn: 0) }
+      subject(:king) { described_class.new(board) }
+
+      before do
+        board.update_turn
+      end
+
+      it 'displays the correct results' do
+        row = 6
+        col = 1
+        board.data[row][col] = 'k'
+        board.data[row + 1][col] = 'R'
+        b_king = king.check_u(row, col, king)
+        king_moves = [[0, 1]]
+        expect(b_king.moves).to eq(king_moves)
+      end
+    end
+  end
+
+  describe '#check_d' do
+    context 'when a white king can capture via right col' do
+      # arr = Array.new(8) { Array.new(8, '0') }
+      let(:board) { Board.new } # { instance_double(Board, data: arr, turn: 0) }
+      subject(:king) { described_class.new(board) }
+
+      it 'displays the correct results' do
+        row = 3
+        col = 6
+        board.data[row][col] = 'K'
+        board.data[row][col - 1] = 'r'
+        w_king = king.check_d(row, col, king)
+        king_moves = [[0, -1]]
         expect(w_king.moves).to eq(king_moves)
       end
     end
