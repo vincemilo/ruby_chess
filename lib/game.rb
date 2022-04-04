@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require 'yaml'
 require_relative 'board'
 require_relative 'units/pawn'
 require_relative 'units/rook'
@@ -13,22 +14,25 @@ require_relative 'mods/comp_ai'
 class Game
   include GameCheck
   include CompAI
-  attr_reader :board, :game_over
+  attr_reader :board, :game_over, :game_type
 
   def initialize(board = Board.new)
     @board = board
     @game_over = false
+    @game_type = 0
   end
 
   def intro
     place_pieces
     puts 'Welcome to Chess!'
-    selection = nil
+    selection = 0
     while selection != 1 || selection != 2
       puts 'Press 1 to play vs a human or 2 to play vs the computer:'
       selection = gets.chomp.to_i
-      return play_select(1) if selection == 1
-      return play_select(2) if selection == 2
+      if [1, 2].include?(selection)
+        @game_type = selection
+        return play_select(selection)
+      end
 
       invalid_selection
     end
@@ -38,7 +42,10 @@ class Game
     while @game_over == false
       @board.display_board
       puts "Player #{@board.turn + 1} please select your piece (e.g. e2):"
+      puts "You may also enter 'save' to save your game or 'load' to load a previous game."
       start_pos = gets.chomp
+      return to_yaml if start_pos == 'save'
+      return from_yaml if start_pos == 'load'
       next unless check_alpha?(start_pos)
 
       start_pos = move_translator(start_pos)
@@ -50,19 +57,34 @@ class Game
     end
   end
 
+  def to_yaml
+    @board.display_board
+    yaml = YAML.dump(self)
+    File.open('save_game.yaml', 'w+') { |e| e.write yaml }
+    puts 'Game saved'
+    abort
+  end
+
+  def from_yaml
+    save_game = File.open('save_game.yaml')
+    @load = YAML.load(save_game)
+    puts 'Game loaded'
+    game_type = @load.game_type
+    @load.play_select(game_type)
+  end
+
   def check_alpha?(coords)
     return true if ('a'..'h').to_a.include?(coords[0])
 
-    invalid_selection
     false
   end
 
   def place_pieces
-    # @board.place_pawns
+    @board.place_pawns
     @board.place_rooks
-    # @board.place_knights
-    # @board.place_bishops
-    # @board.place_queens
+    @board.place_knights
+    @board.place_bishops
+    @board.place_queens
     @board.place_kings
   end
 
@@ -190,7 +212,7 @@ class Game
 
   def select_dest(end_pos, start_pos, unit)
     move_pieces(start_pos, end_pos, unit)
-    end_pos_cleanup(end_pos, unit)
+    end_pos_cleanup(start_pos, end_pos, unit)
     @board.update_turn
     pieces = get_moves(activation(@board.turn))
     return stalemate if !in_check? && stalemate?(pieces)
@@ -199,15 +221,15 @@ class Game
     checkmate(@board.turn)
   end
 
-  def end_pos_cleanup(end_pos, unit)
-    move_log(unit.class, coord_translator(end_pos))
+  def end_pos_cleanup(start_pos, end_pos, unit)
+    move_log(unit.class, coord_translator(start_pos), coord_translator(end_pos))
     unit = promote(end_pos) if promote?(end_pos, unit.class)
     remove_check if in_check?
     check(end_pos, unit) if check?(end_pos, unit)
   end
 
-  def move_log(unit, end_pos)
-    puts "Player #{@board.turn + 1} moves #{unit} to #{end_pos}."
+  def move_log(unit, start_pos, end_pos)
+    puts "Player #{@board.turn + 1} moves #{unit} from #{start_pos} to #{end_pos}."
   end
 
   def coord_translator(coords)
@@ -269,8 +291,8 @@ class Game
   end
 end
 
-game = Game.new
-game.intro
+# game = Game.new
+# game.intro
 # row = 1
 # col = 4
 # game.board.data[row][col] = 'P'
