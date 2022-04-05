@@ -22,20 +22,8 @@ class Game
     @game_type = 0
   end
 
-  def intro
-    place_pieces
-    puts 'Welcome to Chess!'
-    selection = 0
-    while selection != 1 || selection != 2
-      puts 'Press 1 to play vs a human or 2 to play vs the computer:'
-      selection = gets.chomp.to_i
-      if [1, 2].include?(selection)
-        @game_type = selection
-        return play_select(selection)
-      end
-
-      invalid_selection
-    end
+  def update_game_type(num)
+    @game_type = num
   end
 
   def play_select(selection)
@@ -67,7 +55,7 @@ class Game
 
   def from_yaml
     save_game = File.open('save_game.yaml')
-    @load = YAML.load(save_game)
+    @load = YAML.safe_load(save_game)
     puts 'Game loaded'
     game_type = @load.game_type
     @load.play_select(game_type)
@@ -293,8 +281,3 @@ end
 
 # game = Game.new
 # game.intro
-# row = 1
-# col = 4
-# game.board.data[row][col] = 'P'
-# game.select_unit([col, row])
-# game.board.display_board

@@ -10,41 +10,6 @@ class Rook < Unit
     super
   end
 
-  def check_horiz(start_pos, rook)
-    row = start_pos[0]
-    col = start_pos[1]
-    trans = @board.data[row]
-    r_moves = check_r(col, trans)
-    l_moves = check_l(col, trans)
-    @moves += r_moves + l_moves
-    rook
-  end
-
-  def check_r(col, trans)
-    options = []
-    moves = 1
-    while trans[col + moves] == '0' || @board.enemy_occupied?(trans[col + moves])
-      options << [moves, 0]
-      return options if enemy_check?(trans, col, moves)
-
-      moves += 1
-    end
-    options
-  end
-
-  def check_l(col, trans)
-    options = []
-    moves = -1
-    while col + moves >= 0 && (trans[col + moves] == '0' ||
-          @board.enemy_occupied?(trans[col + moves]))
-      options << [moves, 0]
-      return options if enemy_check?(trans, col, moves)
-
-      moves -= 1
-    end
-    options
-  end
-
   def assign_moves(start_pos, rook)
     @start_pos = start_pos
     start_pos = start_pos.reverse # reversed for array
