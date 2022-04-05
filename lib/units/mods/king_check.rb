@@ -162,7 +162,7 @@ module KingCheck
   end
 
   def hostile_neg_diag_d?(col, row, board = @board)
-    while ((row - 1).positive? && (col + 1) <= 7) &&
+    while ((row - 1) >= 0 && (col + 1) <= 7) &&
           (empty_check?(board.get_unit([col + 1, row - 1])) ||
           q_b_check?(board.get_unit([col + 1, row - 1])))
       return true if q_b_check?(board.data[row - 1][col + 1])
@@ -174,7 +174,7 @@ module KingCheck
   end
 
   def hostile_neg_diag_u?(col, row, board = @board)
-    while ((row + 1) <= 7 && (col - 1).positive?) &&
+    while ((row + 1) <= 7 && (col - 1) >= 0) &&
           (empty_check?(board.get_unit([col - 1, row + 1])) ||
           q_b_check?(board.get_unit([col - 1, row + 1])))
       return true if q_b_check?(board.data[row + 1][col - 1])
@@ -193,7 +193,7 @@ module KingCheck
   end
 
   def hostile_pos_diag_d?(col, row, board = @board)
-    while ((col - 1).positive? && (row - 1).positive?) &&
+    while ((col - 1) >= 0 && (row - 1) >= 0) &&
           (empty_check?(board.get_unit([col - 1, row - 1])) ||
           q_b_check?(board.get_unit([col - 1, row - 1])))
       return true if q_b_check?(board.data[row - 1][col - 1])

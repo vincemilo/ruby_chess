@@ -358,6 +358,49 @@ describe King do
         expect(w_king.moves).to eq(king_moves)
       end
     end
+
+    context 'when a black king is blocked via pos and neg diag' do
+      # arr = Array.new(8) { Array.new(8, '0') }
+      let(:board) { Board.new } # { instance_double(Board, data: arr, turn: 0) }
+      subject(:king) { described_class.new(board) }
+
+      before do
+        board.update_turn
+      end
+
+      it 'displays the correct results' do
+        row = 7
+        col = 3
+        board.data[row][col] = 'k'
+        board.data[row - 1][col] = 'p'
+        board.data[row - 2][col - 3] = 'B'
+        board.data[row - 3][col + 4] = 'Q'
+        b_king = king.assign_moves([col, row], king)
+        king_moves = [[1, -1], [-1, -1]]
+        expect(b_king.moves).to eq(king_moves)
+      end
+    end
+
+    context 'when a black king is checkmated via diag' do
+      # arr = Array.new(8) { Array.new(8, '0') }
+      let(:board) { Board.new } # { instance_double(Board, data: arr, turn: 0) }
+      subject(:king) { described_class.new(board) }
+
+      before do
+        board.update_turn
+      end
+
+      it 'displays the correct results' do
+        row = 7
+        col = 6
+        board.data[row][col] = 'k'
+        board.data[row - 2][col - 1] = 'B'
+        board.data[row - 1][col] = 'Q'
+        b_king = king.assign_moves([col, row], king)
+        king_moves = []
+        expect(b_king.moves).to eq(king_moves)
+      end
+    end
   end
 
   describe '#check_1' do
@@ -375,7 +418,6 @@ describe King do
         col = 1
         board.data[row][col] = 'k'
         board.data[row + 1][col + 1] = 'B'
-        display_board
         b_king = king.check_1(row, col, king)
         king_moves = [[1, 1]]
         expect(b_king.moves).to eq(king_moves)
@@ -384,6 +426,28 @@ describe King do
   end
 
   describe '#check_l' do
+    context 'when a black king is blocked via pos diag' do
+      # arr = Array.new(8) { Array.new(8, '0') }
+      let(:board) { Board.new } # { instance_double(Board, data: arr, turn: 0) }
+      subject(:king) { described_class.new(board) }
+
+      before do
+        board.update_turn
+      end
+
+      it 'displays the correct results' do
+        row = 7
+        col = 3
+        board.data[row][col] = 'k'
+        board.data[row - 1][col] = 'p'
+        board.data[row - 2][col - 3] = 'B'
+        board.data[row - 3][col + 4] = 'Q'
+        b_king = king.check_l(row, col, king)
+        king_moves = []
+        expect(b_king.moves).to eq(king_moves)
+      end
+    end
+
     context 'when a black king can capture via left col' do
       # arr = Array.new(8) { Array.new(8, '0') }
       let(:board) { Board.new } # { instance_double(Board, data: arr, turn: 0) }
@@ -406,6 +470,27 @@ describe King do
   end
 
   describe '#check_r' do
+    context 'when a black king is blocked via pos and neg diag' do
+      # arr = Array.new(8) { Array.new(8, '0') }
+      let(:board) { Board.new } # { instance_double(Board, data: arr, turn: 0) }
+      subject(:king) { described_class.new(board) }
+
+      before do
+        board.update_turn
+      end
+
+      it 'displays the correct results' do
+        row = 7
+        col = 3
+        board.data[row][col] = 'k'
+        board.data[row - 1][col] = 'p'
+        board.data[row - 3][col + 4] = 'Q'
+        b_king = king.check_r(row, col, king)
+        king_moves = []
+        expect(b_king.moves).to eq(king_moves)
+      end
+    end
+
     context 'when a white king can capture via right col' do
       # arr = Array.new(8) { Array.new(8, '0') }
       let(:board) { Board.new } # { instance_double(Board, data: arr, turn: 0) }

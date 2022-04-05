@@ -34,6 +34,7 @@ class King < Unit
   end
 
   def check_1(row, col, king)
+    # check up right
     return king if r_u_diag_invalid?(row, col) ||
                    hostile_pawns_kings_knights?(col + 1, row + 1)
 
@@ -43,6 +44,7 @@ class King < Unit
   end
 
   def check_2(row, col, king)
+    # check down right
     return king if r_d_diag_invalid?(row, col) ||
                    hostile_pawns_kings_knights?(col + 1, row - 1)
 
@@ -52,6 +54,7 @@ class King < Unit
   end
 
   def check_3(row, col, king)
+    # check down left
     return king if l_d_diag_invalid?(row, col) ||
                    hostile_pawns_kings_knights?(col - 1, row - 1)
 
@@ -61,6 +64,7 @@ class King < Unit
   end
 
   def check_4(row, col, king)
+    # check up left
     return king if l_u_diag_invalid?(row, col) ||
                    hostile_pawns_kings_knights?(col - 1, row + 1)
 
@@ -79,6 +83,7 @@ class King < Unit
     return king if (col - 1).negative?
     return king if hostile_rows?(col, row)
     return king if hostile_l_col?(col - 1, row)
+    return king if hostile_diags?(col - 1, row)
     return king if hostile_pawns_kings_knights?(col - 1, row)
 
     dest = @board.data[row][col - 1]
@@ -90,11 +95,19 @@ class King < Unit
     return king if (col + 1) > 7
     return king if hostile_rows?(col, row)
     return king if hostile_r_col?(col + 1, row)
+    return king if hostile_diags?(col + 1, row)
     return king if hostile_pawns_kings_knights?(col + 1, row)
 
     dest = @board.data[row][col + 1]
     @moves << [1, 0] if dest == '0' || @board.enemy_occupied?(dest)
     king
+  end
+
+  def hostile_diags?(col, row)
+    return true if hostile_pos_diag?(col, row)
+    return true if hostile_neg_diag?(col, row)
+
+    false
   end
 
   def hostile_rows?(col, row)
@@ -114,6 +127,7 @@ class King < Unit
     return king if (row + 1) > 7
     return king if hostile_cols?(col, row)
     return king if hostile_u_row?(col, row + 1)
+    return king if hostile_diags?(col, row + 1)
     return king if hostile_pawns_kings_knights?(col, row + 1)
 
     dest = @board.data[row + 1][col]
@@ -125,6 +139,7 @@ class King < Unit
     return king if (row - 1).negative?
     return king if hostile_cols?(col, row)
     return king if hostile_d_row?(col, row - 1)
+    return king if hostile_diags?(col, row - 1)
     return king if hostile_pawns_kings_knights?(col, row - 1)
 
     dest = @board.data[row - 1][col]
