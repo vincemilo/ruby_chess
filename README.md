@@ -1,5 +1,5 @@
 # ruby_chess
-Command line chess program written in Ruby.
+Command line chess program written in Ruby. View in [Replit](https://github.com/vincemilo/ruby_chess) or clone this repository for a faster and more stable version.
 
 Enforces the rules of chess including:
 
