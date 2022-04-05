@@ -11,6 +11,7 @@ class Knight < Unit
   end
 
   def check_1(row, col, knight)
+    # check up 2 right 1
     return knight if @board.off_the_board?([row + 2, col + 1])
 
     dest = @board.data[row + 2][col + 1]
@@ -19,7 +20,8 @@ class Knight < Unit
   end
 
   def check_2(row, col, knight)
-    return knight if @board.off_the_board?([row + 2, col + 1])
+    # check up 1 right 2
+    return knight if @board.off_the_board?([row + 1, col + 2])
 
     dest = @board.data[row + 1][col + 2]
     @moves << [2, 1] if dest == '0' || @board.enemy_occupied?(dest)
@@ -27,6 +29,7 @@ class Knight < Unit
   end
 
   def check_3(row, col, knight)
+    # check up 2 left 1
     return knight if @board.off_the_board?([row + 2, col - 1])
 
     dest = @board.data[row + 2][col - 1]
@@ -35,6 +38,7 @@ class Knight < Unit
   end
 
   def check_4(row, col, knight)
+    # check up 1 left 2
     return knight if @board.off_the_board?([row + 1, col - 2])
 
     dest = @board.data[row + 1][col - 2]
@@ -43,6 +47,7 @@ class Knight < Unit
   end
 
   def check_5(row, col, knight)
+    # check down 1 left 2
     return knight if @board.off_the_board?([row - 1, col - 2])
 
     dest = @board.data[row - 1][col - 2]
@@ -51,6 +56,7 @@ class Knight < Unit
   end
 
   def check_6(row, col, knight)
+    # check down 2 left 1
     return knight if @board.off_the_board?([row - 2, col - 1])
 
     dest = @board.data[row - 2][col - 1]
@@ -59,6 +65,7 @@ class Knight < Unit
   end
 
   def check_7(row, col, knight)
+    # check down 2 right 1
     return knight if @board.off_the_board?([row - 2, col + 1])
 
     dest = @board.data[row - 2][col + 1]
@@ -67,6 +74,7 @@ class Knight < Unit
   end
 
   def check_8(row, col, knight)
+    # check up 1 right 2
     return knight if @board.off_the_board?([row - 1, col + 2])
 
     dest = @board.data[row - 1][col + 2]

@@ -55,7 +55,7 @@ class Game
 
   def from_yaml
     save_game = File.open('save_game.yaml')
-    @load = YAML.safe_load(save_game)
+    @load = YAML.load(save_game)
     puts 'Game loaded'
     game_type = @load.game_type
     @load.play_select(game_type)

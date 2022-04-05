@@ -4,16 +4,16 @@ board: !ruby/object:Board
   - - R
     - '0'
     - '0'
-    - Q
+    - '0'
     - '0'
     - R
     - K
     - '0'
-  - - '0'
+  - - P
     - P
     - P
     - '0'
-    - B
+    - '0'
     - P
     - P
     - P
@@ -22,63 +22,68 @@ board: !ruby/object:Board
     - N
     - '0'
     - '0'
-    - N
+    - '0'
     - '0'
     - '0'
   - - '0'
-    - p
     - '0'
+    - B
+    - P
     - P
     - '0'
     - '0'
     - '0'
-    - p
   - - '0'
     - '0'
     - '0'
     - '0'
     - '0'
     - '0'
-    - B
+    - '0'
+    - '0'
+  - - n
+    - '0'
+    - p
+    - k
+    - '0'
+    - '0'
+    - '0'
+    - p
+  - - p
+    - '0'
+    - '0'
+    - N
+    - '0'
+    - p
+    - r
     - '0'
   - - r
     - '0'
     - '0'
     - '0'
-    - p
-    - P
     - '0'
-    - '0'
-  - - '0'
-    - p
-    - p
-    - p
-    - '0'
-    - p
-    - '0'
-    - '0'
-  - - '0'
-    - n
     - b
-    - q
     - '0'
-    - k
     - '0'
-    - r
   turn: 0
   en_passant: []
   captured:
-  - - "♞"
-    - "♝"
+  - - "♟"
     - "♟"
-  - - "♙"
+    - "♞"
+    - "♟"
+    - "♛"
+    - "♟"
+    - "♝"
+  - - "♗"
+    - "♕"
   castle:
     :w_king: 1
     :b_king: 1
     :w_r_rook: 1
     :w_l_rook: 0
-    :b_r_rook: 0
-    :b_l_rook: 1
+    :b_r_rook: 1
+    :b_l_rook: 0
   w_king_check:
     :check: 0
     :king_pos:
@@ -88,8 +93,10 @@ board: !ruby/object:Board
   b_king_check:
     :check: 0
     :king_pos:
+    - 3
     - 5
-    - 7
-    :attk_pos: []
+    :attk_pos:
+    - 3
+    - 6
 game_over: false
 game_type: 2

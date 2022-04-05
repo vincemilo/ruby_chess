@@ -65,11 +65,10 @@ describe Knight do
   end
 
   describe '#check_2' do
-    # arr = Array.new(8) { Array.new(8, '0') }
-    let(:board) { Board.new } # { instance_double(Board, data: arr) }
-    subject(:knight) { described_class.new(board) }
-
     context 'when there is an open space or enemy at destination' do
+      # arr = Array.new(8) { Array.new(8, '0') }
+      let(:board) { Board.new } # { instance_double(Board, data: arr) }
+      subject(:knight) { described_class.new(board) }
       before do
         allow(board).to receive(:enemy_occupied?).and_return(false)
       end
@@ -92,6 +91,23 @@ describe Knight do
         col = 1
         board.data[row][col] = 'N'
         board.data[row + 2][col + 1] = 'n'
+        w_knight = knight.check_2(row, col, knight)
+        knight_moves = [[2, 1]]
+        expect(w_knight.moves).to eq(knight_moves)
+      end
+    end
+
+    context 'when there is an enemy bishop on the edge of the board' do
+      # arr = Array.new(8) { Array.new(8, '0') }
+      let(:board) { Board.new } # { instance_double(Board, data: arr) }
+      subject(:knight) { described_class.new(board) }
+
+      it 'has the correct move options' do
+        row = 6
+        col = 3
+        board.data[row][col] = 'N'
+        board.data[row + 1][col + 2] = 'b'
+        display_board
         w_knight = knight.check_2(row, col, knight)
         knight_moves = [[2, 1]]
         expect(w_knight.moves).to eq(knight_moves)
