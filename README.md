@@ -18,3 +18,6 @@ Features to be added at a later date:
 - Algebraic notation movement log and PGN input/output
 - Simple AI move database for more challenging games
 - Improved graphic display
+
+Assignment:
+https://www.theodinproject.com/lessons/ruby-ruby-final-project
